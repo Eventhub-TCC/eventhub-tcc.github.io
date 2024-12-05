@@ -7,7 +7,7 @@
     --fonte-secundaria: "Inter", sans-serif;
 }
 
-body{
+#root{
     font-family: var(--fonte-principal);
 }
 

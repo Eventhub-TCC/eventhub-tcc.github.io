@@ -5,6 +5,7 @@ interface InputProps{
     dica: string;
     tipo: 'text' | 'number' | 'email' | 'password';
     obrigatorio: boolean;
+    onChange: (...args:any[])=>void
 }
 
 const Input = (props: InputProps) => {
@@ -13,6 +14,7 @@ const Input = (props: InputProps) => {
       className='input' 
       placeholder={props.dica}
       required={props.obrigatorio}
+      onChange={props.onChange}
     />
   )
 }
