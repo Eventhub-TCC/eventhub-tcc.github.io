@@ -1,0 +1,29 @@
+@import url(../../App.css);
+
+.input{
+    width: 100%;
+    border: solid #CED4DA 1px;
+    border-radius: 8px;
+    padding:  10px 16px;
+    font-family: var(--fonte-secundaria) ;
+    background-color: white ;
+    box-shadow: 0 3px 5px #ced4da79;
+}
+
+.input:invalid:not(:placeholder-shown){
+    border: solid #B2261D 2px;
+}
+
+.input:invalid:focus:invalid:not(:placeholder-shown){
+    border: solid #FF9500 2px;
+}
+
+.input:focus{
+    border: solid var(--purple-700) 2px;
+    outline: none;
+}
+
+.input::placeholder{
+    font-family: var(--fonte-secundaria);
+}
+

@@ -1,0 +1,5 @@
+@import url(../../App.css);
+
+.radio{
+    background-color: var(--purple-700);
+}

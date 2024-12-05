@@ -1,8 +1,11 @@
 import React from 'react'
+import Login from './paginas/login/Login'
 
 const App = () => {
   return (
-    <div>Hello World</div>
+    <div>
+        <Login/>
+    </div>
   )
 }
 
