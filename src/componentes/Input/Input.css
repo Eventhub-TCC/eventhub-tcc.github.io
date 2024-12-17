@@ -2,7 +2,7 @@
 
 .input{
     width: 100%;
-    border: solid #CED4DA 1px;
+    border: solid #CED4DA 2px;
     border-radius: 8px;
     padding:  10px 16px;
     font-family: var(--fonte-secundaria) ;

@@ -1,74 +1,59 @@
-import React, { ChangeEvent, Component } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 import Input from '../../componentes/Input/Input'
 import Botao from '../../componentes/Botao/Botao'
 import InputRadio from '../../componentes/InputRadio/InputRadio'
 import './Login.css'
 // import axios from 'axios'
 
-interface State{
-  tipoUsuario: 'organizador' | 'prestador'| ''
-  email: string
-  senha: string
-}
+const Login = () => {
+  const [ tipoUsuario, setTipoUsuario ] = useState('');
+  const [ email, setEmail ] = useState('');
+  const [ senha, setSenha ] = useState('');
 
-export default class Login extends Component {
-  
-  state:State={
-    tipoUsuario:'',
-    email:'',
-    senha:''
+  const onEmailAlterado = (event:ChangeEvent<HTMLInputElement>)=>{
+    setEmail(event.target.value)
   }
 
-  teste = (texto:string)=>{
-    alert(texto)
+  const onSenhaAlterada = (event:ChangeEvent<HTMLInputElement>)=>{
+    setSenha(event.target.value)
   }
 
-  onEmailAlterado = (event:ChangeEvent<HTMLInputElement>)=>{
-    this.setState({email:event.target.value})
-  }
-
-  onSenhaAlterada = (event:ChangeEvent<HTMLInputElement>)=>{
-    this.setState({senha:event.target.value})
-  }
-
-  logar = (event:Event, email:string,senha:string)=>{
+  const logar = (event: FormEvent<HTMLFormElement>, email:string, senha:string)=>{
     event.preventDefault()
-    if(this.state.tipoUsuario === ''){
+    if(tipoUsuario === ''){
       alert('Selecione um tipo de usuario para logar.')
     }
-    else if(this.state.tipoUsuario === 'organizador'){
+    else if(tipoUsuario === 'organizador'){
       alert(email + ' logando como organizador')
     }
-    else if(this.state.tipoUsuario === 'prestador'){
+    else if(tipoUsuario === 'prestador'){
       alert(email + ' logando como prestador')
     }
   }
 
-  render() {
-    return (
-      <div className="container-fundo">
-        <div className='container container-login'>
+  return (
+    <div className="container-fundo">
+      <div className='container container-login'>
         <form className='form'>
           <h1 className='titulo-login'>Login</h1>
           <div className='container-radio'>
             <p>Logar como:</p>
-            <InputRadio id='organizador-radio' nome='login' textoLabel='Organizador' funcao={()=>this.setState({tipoUsuario:'organizador'})}/>
-            <InputRadio id='prestador-radio' nome='login' textoLabel='Prestador' funcao={()=>this.setState({tipoUsuario:'prestador'})}/>
-          </div>
-          <div></div>
-          <div>
-            <Input dica='Insira seu email' tipo='email' onChange={this.onEmailAlterado}/>
+            <InputRadio id='organizador-radio' nome='login' textoLabel='Organizador' funcao={()=>setTipoUsuario("organizador")}/>
+            <InputRadio id='prestador-radio' nome='login' textoLabel='Prestador' funcao={()=>setTipoUsuario("prestador")}/>
           </div>
           <div>
-            <Input dica='Insira sua senha' tipo='password' onChange={this.onSenhaAlterada}/>
+            <Input dica='Insira seu email' tipo='email' onChange={onEmailAlterado}/>
           </div>
           <div>
-            <Botao  texto='Entrar' tamanho='med' funcao={(e)=>this.logar(e,this.state.email,this.state.senha)}/>
+            <Input dica='Insira sua senha' tipo='password' onChange={onSenhaAlterada}/>
+          </div>
+          <div>
+            <Botao  texto='Entrar' tamanho='med' funcao={(e: FormEvent<HTMLFormElement>)=>logar(e, email, senha)}/>
           </div>
         </form>
       </div>
-      </div>
-      
-    )
-  }
+    </div>
+  )
 }
+
+export default Login;

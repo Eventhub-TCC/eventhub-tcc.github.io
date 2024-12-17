@@ -1,23 +1,14 @@
 import React from 'react'
 import './Botao.css'
 
-interface BotaoProps {
-    texto: string;
-    cor: string & {};
-    tamanho: 'min' | 'med' | 'max';
-    funcao: (...args:any[])=>void;
-}
-
-
-
-const Botao = (props:BotaoProps) => {
+const Botao = ({tamanho, cor, funcao, texto}: any) => {
   return (
     <button 
-    className={`botao ${props.tamanho}`}
-    style={{'--cor-principal': props.cor} as React.CSSProperties}
-    onClick={props.funcao}
+      className={`botao ${tamanho}`}
+      style={{'--cor-principal': cor} as React.CSSProperties}
+      onClick={funcao}
     >
-        {props.texto}
+      {texto}
     </button>
   )
 }

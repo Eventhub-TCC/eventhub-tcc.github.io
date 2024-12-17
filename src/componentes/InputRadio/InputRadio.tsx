@@ -1,19 +1,10 @@
-import React from 'react'
 import './InputRadio'
 
-interface InputRadioProps{
-    nome: string;
-    textoLabel: string;
-    id: string;
-    funcao: (...args:any) => void
-}
-
-const InputRadio = (props:InputRadioProps) => {
+const InputRadio = ({nome, textoLabel, id, funcao}: any) => {
   return (
-    <label htmlFor={props.id}>
-        <input className='radio' type="radio" name={props.nome} id={props.id} onChange={props.funcao}/> {props.textoLabel}
+    <label htmlFor={id}>
+      <input className='radio' type="radio" name={nome} id={id} onChange={funcao}/> {textoLabel}
     </label>
-    
   )
 }
 
