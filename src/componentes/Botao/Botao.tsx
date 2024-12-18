@@ -1,7 +1,7 @@
 import React from 'react'
 import './Botao.css'
 
-const Botao = ({tamanho, cor, funcao, texto}: any) => {
+const Botao = ({tamanho = 'med', cor = 'var(--purple-700)', funcao, texto}: any) => {
   return (
     <button 
       className={`botao ${tamanho}`}
@@ -11,11 +11,6 @@ const Botao = ({tamanho, cor, funcao, texto}: any) => {
       {texto}
     </button>
   )
-}
-
-Botao.defaultProps = {
-    tamanho: 'med',
-    cor: 'var(--purple-700)'
 }
 
 export default Botao

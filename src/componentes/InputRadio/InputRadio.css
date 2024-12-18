@@ -1,5 +1,51 @@
 @import url(../../App.css);
 
 .radio{
+    display: none;
+}
+
+.label_radio{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio_span{
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    background-color: white;
+    border: 1px solid #ADB5BD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+}
+
+.radio:checked ~ .radio_span{
+    background-color: var(--purple-700);
+}
+
+.radio:not(:checked) ~ .radio_span:hover{
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.radio:checked ~ .radio_span::after{
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background-color: white;
+}
+
+.radio:checked ~ .radio_span:hover{
+    background-color: var(--purple-800);
+}
+
+.radio:checked ~ .radio_span:active{
     background-color: var(--purple-700);
 }

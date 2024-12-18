@@ -9,6 +9,7 @@ const Login = () => {
   const [ tipoUsuario, setTipoUsuario ] = useState('');
   const [ email, setEmail ] = useState('');
   const [ senha, setSenha ] = useState('');
+  const [ senhaOculta, setSenhaOculta ] = useState(true);
 
   const onEmailAlterado = (event:ChangeEvent<HTMLInputElement>)=>{
     setEmail(event.target.value)
@@ -16,6 +17,10 @@ const Login = () => {
 
   const onSenhaAlterada = (event:ChangeEvent<HTMLInputElement>)=>{
     setSenha(event.target.value)
+  }
+
+  const mostrarSenha = () => {
+    setSenhaOculta(!senhaOculta)
   }
 
   const logar = (event: FormEvent<HTMLFormElement>, email:string, senha:string)=>{
@@ -42,10 +47,10 @@ const Login = () => {
             <InputRadio id='prestador-radio' nome='login' textoLabel='Prestador' funcao={()=>setTipoUsuario("prestador")}/>
           </div>
           <div>
-            <Input dica='Insira seu email' tipo='email' onChange={onEmailAlterado}/>
+            <Input dica='Insira seu email' tipo='email' onChange={onEmailAlterado} icone="fa fa-search" />
           </div>
           <div>
-            <Input dica='Insira sua senha' tipo='password' onChange={onSenhaAlterada}/>
+            <Input dica='Insira sua senha' tipo={senhaOculta ? 'password' : 'text'} onChange={onSenhaAlterada} icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} funcaoIcone={mostrarSenha} />
           </div>
           <div>
             <Botao  texto='Entrar' tamanho='med' funcao={(e: FormEvent<HTMLFormElement>)=>logar(e, email, senha)}/>

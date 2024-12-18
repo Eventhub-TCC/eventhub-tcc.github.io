@@ -1,13 +1,32 @@
 @import url(../../App.css);
 
+.container-input{
+    position: relative;
+}
+
 .input{
     width: 100%;
     border: solid #CED4DA 2px;
     border-radius: 8px;
-    padding:  10px 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     font-family: var(--fonte-secundaria) ;
     background-color: white ;
     box-shadow: 0 3px 5px #ced4da79;
+}
+
+.input-padding-sem-icone{
+    padding:  10px 16px;
+}
+
+.input-padding-direita{
+    padding-right: 48px;
+    padding-left: 16px;
+}
+
+.input-padding-esquerda{
+    padding-right: 16px;
+    padding-left: 48px;
 }
 
 .input:invalid:not(:placeholder-shown){
@@ -27,3 +46,36 @@
     font-family: var(--fonte-secundaria);
 }
 
+.icone-input{
+    position: absolute;
+    top: 35%;
+}
+
+.icone-input-direita{
+    right: 1.1rem;
+}
+
+.icone-input-esquerda{
+    left: 1.1rem;
+}
+
+.icone-input-botao{
+    position: absolute;
+    top: 25.55%;
+}
+
+.icone-input-botao-direita{
+    right: 1.035rem;
+}
+
+.icone-input-botao-esquerda{
+    left: 1.035rem;
+}
+
+.icone-botao{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    width: 20px;
+    color: inherit;
+}
