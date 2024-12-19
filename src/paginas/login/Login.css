@@ -20,17 +20,6 @@
     gap: 20px;
 }
 
-.container-radio{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap:10px;
-}
-
-.container-radio p{
-    margin-bottom: 0;
-}
-
 .titulo-login{
     text-align: center;
 }

@@ -1,38 +1,25 @@
+import axios from 'axios'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import Input from '../../componentes/Input/Input'
 import Botao from '../../componentes/Botao/Botao'
-import InputRadio from '../../componentes/InputRadio/InputRadio'
 import './Login.css'
-// import axios from 'axios'
 
 const Login = () => {
-  const [ tipoUsuario, setTipoUsuario ] = useState('');
   const [ email, setEmail ] = useState('');
   const [ senha, setSenha ] = useState('');
   const [ senhaOculta, setSenhaOculta ] = useState(true);
 
-  const onEmailAlterado = (event:ChangeEvent<HTMLInputElement>)=>{
-    setEmail(event.target.value)
-  }
-
-  const onSenhaAlterada = (event:ChangeEvent<HTMLInputElement>)=>{
-    setSenha(event.target.value)
-  }
-
-  const mostrarSenha = () => {
-    setSenhaOculta(!senhaOculta)
-  }
-
-  const logar = (event: FormEvent<HTMLFormElement>, email:string, senha:string)=>{
-    event.preventDefault()
-    if(tipoUsuario === ''){
-      alert('Selecione um tipo de usuario para logar.')
+  const logar = async (event: FormEvent<HTMLFormElement>, email:string, senha:string)=>{
+    try{
+      event.preventDefault()
+      const { data } = await axios.post('http://localhost:3000/signin', {
+        emailLogin: email,
+        senhaLogin: senha
+      })
+      console.log(`Usuário autenticado! Token: ${data.token}`)
     }
-    else if(tipoUsuario === 'organizador'){
-      alert(email + ' logando como organizador')
-    }
-    else if(tipoUsuario === 'prestador'){
-      alert(email + ' logando como prestador')
+    catch(erro){
+      console.log('Usuário ou senha inválido')
     }
   }
 
@@ -41,19 +28,27 @@ const Login = () => {
       <div className='container container-login'>
         <form className='form'>
           <h1 className='titulo-login'>Login</h1>
-          <div className='container-radio'>
-            <p>Logar como:</p>
-            <InputRadio id='organizador-radio' nome='login' textoLabel='Organizador' funcao={()=>setTipoUsuario("organizador")}/>
-            <InputRadio id='prestador-radio' nome='login' textoLabel='Prestador' funcao={()=>setTipoUsuario("prestador")}/>
+          <div>
+            <Input 
+              dica='Insira seu email' 
+              tipo='email' 
+              onChange={(event:ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)} 
+            />
           </div>
           <div>
-            <Input dica='Insira seu email' tipo='email' onChange={onEmailAlterado} icone="fa fa-search" />
+            <Input 
+              dica='Insira sua senha' tipo={senhaOculta ? 'password' : 'text'} 
+              onChange={(event:ChangeEvent<HTMLInputElement>) => setSenha(event.target.value)} 
+              icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} 
+              funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
+            />
           </div>
           <div>
-            <Input dica='Insira sua senha' tipo={senhaOculta ? 'password' : 'text'} onChange={onSenhaAlterada} icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} funcaoIcone={mostrarSenha} />
-          </div>
-          <div>
-            <Botao  texto='Entrar' tamanho='med' funcao={(e: FormEvent<HTMLFormElement>)=>logar(e, email, senha)}/>
+            <Botao 
+              texto='Entrar' 
+              tamanho='med' 
+              funcao={(e: FormEvent<HTMLFormElement>)=>logar(e, email, senha)}
+            />
           </div>
         </form>
       </div>
