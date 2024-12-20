@@ -7,9 +7,13 @@
     --purple-400: #8135E6;
     --fonte-principal: "Bree Serif", serif;
     --fonte-secundaria: "Inter", sans-serif;
+
 }
 
 #root{
     font-family: var(--fonte-principal);
+min-height: 100vh;
 }
-
+body{
+    min-height: 100vh;
+}
