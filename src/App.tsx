@@ -1,5 +1,6 @@
-import Login from './paginas/Login_m/Login'
-import Cadastro from './paginas/Cadastro/Cadastro'
+import Login from './paginas/Login/Login'
+import Cadastro from './paginas/CadastroUsuario/Cadastro'
+import CadastroEvento from './paginas/CadastroEvento/CadastroEvento'
 import { BrowserRouter, Routes, Route } from 'react-router'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
         <Routes>
           <Route path='login' element={<Login />}/>
           <Route path= 'cadastro' element={<Cadastro />}/>
+          <Route path='criar-evento' element={<CadastroEvento />}/>
         </Routes>
       </BrowserRouter>
     </div>

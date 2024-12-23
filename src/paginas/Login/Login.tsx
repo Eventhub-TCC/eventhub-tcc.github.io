@@ -12,9 +12,9 @@ const Login = () => {
   const logar = async (event: FormEvent<HTMLFormElement>, email:string, senha:string)=>{
     try{
       event.preventDefault()
-      const { data } = await axios.post('http://localhost:3000/signin', {
-        emailLogin: email,
-        senhaLogin: senha
+      const { data } = await axios.post('http://localhost:3000/users/signin', {
+        email,
+        senha
       })
       console.log(`Usuário autenticado! Token: ${data.token}`)
     }

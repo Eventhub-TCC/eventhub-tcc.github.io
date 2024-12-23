@@ -1,14 +1,19 @@
 import './Input.css'
 
-const Input = ({tipo = 'text', dica, obrigatorio = true, onChange, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null}: any) => {
+const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null,name}: any) => {
   return (
-    <div className="container-input">
+    <div>
+      <div className={cabecalho === true? 'd-block' : 'd-none'}>
+        <label htmlFor={name}>{cabecalhoTexto}</label>
+      </div>
+      <div className="container-input">
       <input type={tipo}
         className={`input ${!icone && posicaoIcone === 'sem-icone' ? 'input-padding-sem-icone' : (icone && posicaoIcone === 'sem-icone') || posicaoIcone === 'direita' ? 'input-padding-direita' : 'input-padding-esquerda'}`} 
         placeholder={dica}
         required={obrigatorio}
         onChange={onChange}
-        name='input'
+        name={name}
+        id={name}
       />
       {
         !icone && posicaoIcone === 'sem-icone' ?
@@ -22,6 +27,8 @@ const Input = ({tipo = 'text', dica, obrigatorio = true, onChange, icone = null,
             </button>
       }
     </div>
+    </div>
+    
   )
 }
 
