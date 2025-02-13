@@ -1,0 +1,38 @@
+@import url('../../App.css');
+.checkbox{
+    display:none;
+}
+
+.label_checkbox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox:checked ~ .checkbox_span{
+    background-color: var(--cor-principal);
+    border: none;
+}
+.icone-checkbox{
+    color: white;
+    font-size: 10px;
+    transition: all 250ms ease-in-out;
+}
+.checkbox_span{
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid #ADB5BD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+}
+
+.checkbox_span:hover{
+    background-color: #F1F3F5;
+}

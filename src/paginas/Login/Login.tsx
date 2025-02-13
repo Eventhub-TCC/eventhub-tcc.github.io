@@ -2,12 +2,14 @@ import axios from 'axios'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import Input from '../../componentes/Input/Input'
 import Botao from '../../componentes/Botao/Botao'
+import CheckBox from '../../componentes/CheckBox/CheckBox'
 import './Login.css'
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
   const [ senha, setSenha ] = useState('');
   const [ senhaOculta, setSenhaOculta ] = useState(true);
+  const [ lembrar, setLembrar ] = useState(false);
 
   const logar = async (event: FormEvent<HTMLFormElement>, email:string, senha:string)=>{
     try{
@@ -42,6 +44,9 @@ const Login = () => {
               icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} 
               funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
             />
+          </div>
+          <div>
+            <CheckBox texto='Lembre-me' id='1' ativado={true} cor='yellow' funcao={()=>{setLembrar(!lembrar)}}/>
           </div>
           <div>
             <Botao 
