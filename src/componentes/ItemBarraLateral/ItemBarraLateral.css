@@ -1,0 +1,51 @@
+.item-barra{
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s ease-out, background-color 0.3s ease-out;
+}
+
+.item-barra:hover,
+.item-barra--ativo{
+    color: white;
+}
+
+.item-barra--ativo{
+    background-color: var(--cor-barra-lateral);
+}
+
+.item-barra svg path{
+    stroke: white;
+    stroke-opacity: 0.6;
+    stroke-width: 2;
+    transition: stroke-opacity 0.3s ease-out;
+}
+
+.item-barra--ativo svg path,
+.item-barra:hover svg path{
+    stroke-opacity: 1;
+}
+
+.item-barra__icone-container{
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.item-barra__icone{
+    font-size: 24px;
+}
+
+.item-barra__texto{
+    font-size: 1rem;
+    font-weight: 700;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
