@@ -1,7 +1,7 @@
 @import url('../../App.css');
 
 .botao{
-    border-radius: 100px;
+    border-radius: 1rem;
     border: none;
     cursor: pointer;
     color:white;
