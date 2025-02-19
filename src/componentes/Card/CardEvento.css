@@ -1,0 +1,136 @@
+
+.card-evento{
+    height: 296px;
+    width: 352px;
+    background-color: transparent;
+    border-radius: 8px;
+    perspective: 1000px;
+}
+
+.card-evento__centro{
+    border-radius: 8px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    position:relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card-evento__frente{
+    display: flex;
+    flex-direction: column;
+}
+
+.card-evento__verso{
+    display: flex;
+    flex-direction: column;
+    transform: rotateY(180deg);
+    background-color: var(--cor-status);
+    border-radius: 8px;
+}
+
+.card-evento__imagem{
+    width: 100%;
+    height: 100%;
+    background-color: #c4c4c4;
+    border-radius: 8px 8px 0px 0px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-evento__titulo{
+    font-size:20px;
+    font-weight:600;
+    color: #2f2f2f;
+}
+
+.card-evento__container-titulo{
+    padding: 32px 24px;
+    border-bottom: 4px solid var(--cor-status);
+    border-radius: 0px 0px 8px 8px;
+}
+
+.card-evento:hover .card-evento__centro{
+    transform: rotateY(180deg);
+}
+
+.card-evento__frente, .card-evento__verso{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.card-evento__container-info{
+    flex-grow: 1;
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 24px;
+    gap: 24px;
+    
+}
+
+.card-evento__info{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: white;
+}
+
+.card-evento__info-texto{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.card-evento__verso-branco{
+    background-color: white;
+    border-bottom: solid 4px var(--cor-status);
+    height: 88px;
+    border-radius: 0px 0px 8px 8px;
+}
+
+.card-evento__info-endereco{
+    width: 100%;
+    white-space: normal;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    text-overflow: ellipsis;
+}
+
+.card-evento__sem-imagem{
+    font-size: 92px;
+    opacity: 0.25;
+    color: black;
+}
+
+.card-evento__icone-calendario{
+    stroke:white;
+    stroke-width:2; 
+    stroke-linecap: round; 
+    stroke-linejoin: round;
+}
+
+.card-evento__icone-relogio{
+    fill: white;
+}
+
+.card-evento__icone-pin{
+    stroke: white;
+    stroke-width: 2;
+}
+
+
+
