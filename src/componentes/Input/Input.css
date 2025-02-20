@@ -6,17 +6,17 @@
 
 .input{
     width: 100%;
-    border: solid #CED4DA 2px;
+    border: solid #CED4DA 1px;
     border-radius: 8px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 9px;
+    padding-bottom: 9px;
     font-family: var(--fonte-principal) ;
     background-color: white ;
-    box-shadow: 0 3px 5px #ced4da79;
+    box-shadow: 0px 2px 2px 0px rgba(33, 37, 41, 0.06), 0px 0px 1px 0px rgba(33, 37, 41, 0.08);
 }
 
 .input-padding-sem-icone{
-    padding:  10px 16px;
+    padding: 9px 16px;
 }
 
 .input-padding-direita{
@@ -29,17 +29,21 @@
     padding-left: 48px;
 }
 
-.input:invalid:not(:placeholder-shown){
-    border: solid #B2261D 2px;
+.input[type='text']:invalid:not(:placeholder-shown),
+.input[type='email']:invalid:not(:placeholder-shown),
+.input[type='password']:invalid:not(:placeholder-shown){
+    outline: solid #B2261D 2px;
+    border-color: transparent;
 }
 
 .input:invalid:focus:invalid:not(:placeholder-shown){
-    border: solid #FF9500 2px;
+    outline: solid #FF9500 2px;
+    border-color: transparent;
 }
 
 .input:focus{
-    border: solid var(--purple-700) 2px;
-    outline: none;
+    outline: solid var(--purple-700) 2px;
+    border-color: transparent;
 }
 
 .input::placeholder{

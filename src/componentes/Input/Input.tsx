@@ -1,6 +1,6 @@
 import './Input.css'
 
-const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null,name}: any) => {
+const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete}: any) => {
   return (
     <div>
       <div className={cabecalho === true? 'd-block' : 'd-none'}>
@@ -8,12 +8,22 @@ const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, ob
       </div>
       <div className="container-input">
       <input type={tipo}
-        className={`input ${!icone && posicaoIcone === 'sem-icone' ? 'input-padding-sem-icone' : (icone && posicaoIcone === 'sem-icone') || posicaoIcone === 'direita' ? 'input-padding-direita' : 'input-padding-esquerda'}`} 
+        className={
+          `input ${!icone && posicaoIcone === 'sem-icone' ? 
+            'input-padding-sem-icone' 
+          : (icone && posicaoIcone === 'sem-icone') || posicaoIcone === 'direita' ? 
+            'input-padding-direita' : 'input-padding-esquerda'}`
+        } 
         placeholder={dica}
         required={obrigatorio}
         onChange={onChange}
         name={name}
         id={name}
+        min={min}
+        max={max}
+        minLength={tamanhoMin}
+        maxLength={tamanhoMax}
+        autoComplete={autoComplete}
       />
       {
         !icone && posicaoIcone === 'sem-icone' ?
