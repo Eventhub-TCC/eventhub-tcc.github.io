@@ -1,19 +1,20 @@
-import Login from './paginas/Login/Login'
-import Cadastro from './paginas/CadastroUsuario/Cadastro'
-import CadastroEvento from './paginas/CadastroEvento/CadastroEvento'
 import { BrowserRouter, Routes, Route } from 'react-router'
+import Login from './paginas/Login/Login'
+import CadastroUsuario from './paginas/CadastroUsuario/CadastroUsuario'
+import CadastroEvento from './paginas/CadastroEvento/CadastroEvento'
+import UsuarioLayout from './componentes/UsuarioLayout/UsuarioLayout'
 
 const App = () => {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<UsuarioLayout />}>
           <Route path='login' element={<Login />}/>
-          <Route path= 'cadastro' element={<Cadastro />}/>
-          <Route path='criar-evento' element={<CadastroEvento />}/>
-        </Routes>
-      </BrowserRouter>
-    </div>
+          <Route path='cadastro' element={<CadastroUsuario />}/>
+        </Route>
+        <Route path='criar-evento' element={<CadastroEvento />}/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
