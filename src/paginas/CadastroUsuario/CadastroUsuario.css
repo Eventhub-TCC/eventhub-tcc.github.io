@@ -1,32 +1,34 @@
-/* .cadastro-usuario__instrucao{
-
-} */
-
 .cadastro-usuario__titulo-instrucao{
     color: var(--purple-800);
-    font-size: 22px;
+    font-size: 1.375rem;
     font-weight: 400;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
 }
 
 .cadastro-usuario__texto-instrucao{
     color: black;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 300;
-    line-height: 28px;
+    line-height: 1.75rem;
     margin: 0;
+}
+
+.cadastro-usuario__opcoes-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .cadastro-usuario__opcoes{
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 2rem;
 }
 
 .cadastro-usuario__opcao{
-    border-radius: 8px;
+    border-radius: .5rem;
     border: 2px solid var(--purple-700);
-    padding: 16px 10px;
+    padding: 1rem .625rem;
     cursor: pointer;
     transition: background-color 0.3s ease-out;
 }
@@ -47,20 +49,34 @@
     color: white;
 }
 
+.cadastro-usuario__opcoes-erro{
+    color: rgb(227, 19, 19);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.cadastro-usuario__opcoes-erro p{
+    font-size: .875rem;
+    font-weight: 400;
+    margin: 0;
+}
+
 .cadastro-usuario__botao-conta{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 1.5rem;
 }
 
 .cadastro-usuario__container-botao{
-    width: 225px;
+    width: 14.0625rem;
 }
 
 .cadastro-usuario__texto-login{
     color: black;
-    font-size: 14px;
+    font-size: .875rem;
     font-weight: 300;
     margin: 0;
 }
@@ -86,10 +102,10 @@
 
 @media screen and (max-width: 460px){
     .cadastro-usuario__titulo-instrucao{
-        font-size: 20px;
+        font-size: 1.25rem;
     }
     
     .cadastro-usuario__texto-instrucao{
-        font-size: 16px;
+        font-size: 1rem;
     }
 }
