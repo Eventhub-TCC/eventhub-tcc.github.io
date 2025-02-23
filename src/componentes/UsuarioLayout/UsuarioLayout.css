@@ -22,3 +22,11 @@
         background-position: left;
     }
 }
+
+@media screen and (max-width: 700px){
+    .usuario-layout__conteudo{
+        align-items: self-start;
+        background-image: none;
+        background-color: white;
+    }
+}

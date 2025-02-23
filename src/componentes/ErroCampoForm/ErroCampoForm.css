@@ -1,0 +1,14 @@
+.erro-campo-form{
+    color: rgb(227, 19, 19);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+
+.erro-campo-form p{
+    font-size: .875rem;
+    font-weight: 400;
+    margin: 0;
+}

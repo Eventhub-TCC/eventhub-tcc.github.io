@@ -1,13 +1,27 @@
 import "./CadastroUsuario.css"
 import { ChangeEvent, FormEvent, ReactElement, useState } from 'react'
+import { Link } from 'react-router'
 import Botao from '../../componentes/Botao/Botao'
 import Formulario from '../../componentes/Formulario/Formulario'
-import { Link } from 'react-router'
 import IndicadorDePassos from '../../componentes/IndicadorDePassos/IndicadorDePassos'
 import Input from "../../componentes/Input/Input"
+import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
+
+interface Usuarios{
+    organizador: boolean;
+    prestador: boolean;
+}
+
+interface Erro{
+    ativo: boolean;
+    tipo: string;
+    mensagem: string;
+}
+
 interface Instrucao{
     titulo: string;
     texto: string;
+    usuarios: Usuarios;
     campos?: ReactElement[]; 
 }
 
@@ -30,34 +44,27 @@ const CadastroUsuario = () => {
 
     const [ passoAtual, setPassoAtual ] = useState(0);
     const [ qtdPassos, setQtdPassos ] = useState(0);
-    const [ erro, setErro ] = useState(false);
-
-    const avancarPasso = (e: FormEvent<HTMLFormElement>) => {
-        if(passoAtual === 0){
-            if(!organizador && !prestador){
-                setErro(true);
-                return;
-            }
-            setQtdPassos(organizador && prestador ? 4 : 3);
-        }
-        else{
-            e.preventDefault();
-        }
-        setPassoAtual(passoAtual + 1);
-    }
-
-    const voltarPasso = () => {
-        setPassoAtual(passoAtual - 1);
-    }
+    const [ erros, setErros ] = useState<Erro[]>([
+        {ativo: false, tipo: 'funcao', mensagem: 'Selecione pelo menos uma função'},
+        {ativo: false, tipo: 'confirmar-senha', mensagem: 'A confirmação da senha não confere'},
+    ]);
 
     const instrucoes: Instrucao[] = [
         {
             titulo: 'Função na Plataforma',
-            texto: 'Escolha uma ou mais funções que deseja realizar na plataforma. Caso selecione apenas uma, não se preocupe. Você poderá acessar a outra mais tarde.'
+            texto: 'Selecione uma ou mais funções que deseja realizar na plataforma. Caso escolha apenas uma, não se preocupe, você poderá acessar a outra mais tarde.',
+            usuarios: {
+                organizador: true,
+                prestador: true,
+            },
         },
         {
             titulo: 'Informações Pessoais',
-            texto: 'Preencha os campos com as suas informações pessoais.',
+            texto: 'Preencha os campos abaixo com as suas informações pessoais.',
+            usuarios: {
+                organizador: true,
+                prestador: false,
+            },
             campos: [
                 <Input 
                     cabecalho
@@ -101,12 +108,16 @@ const CadastroUsuario = () => {
                     name='data-nascimento'
                     autoComplete='bday'
                     min='1900-01-01'
-                />
+                /> 
             ]
         },
         {
             titulo: 'Informações da Empresa',
-            texto: 'Preencha os campos com as informações da sua empresa.',
+            texto: 'Preencha os campos abaixo com as informações da sua empresa.',
+            usuarios: {
+                organizador: false,
+                prestador: true,
+            },
             campos: [
                 <Input 
                     cabecalho
@@ -132,7 +143,7 @@ const CadastroUsuario = () => {
                     cabecalho
                     cabecalhoTexto='Localização'
                     tipo='text'
-                    dica='Digite o endereço completo da empresa'
+                    dica='Digite o endereço da empresa'
                     obrigatorio
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalizacao(e.target.value)}
                     valor={localizacao}
@@ -142,7 +153,11 @@ const CadastroUsuario = () => {
         },
         {
             titulo: 'Contato',
-            texto: 'Preencha os campos com as suas informações de contato.',
+            texto: 'Preencha os campos abaixo com as suas informações de contato.',
+            usuarios: {
+                organizador: true,
+                prestador: true,
+            },
             campos: [
                 <Input 
                     cabecalho
@@ -170,7 +185,11 @@ const CadastroUsuario = () => {
         },
         {
             titulo: 'Segurança',
-            texto: 'Preencha os campos com uma senha segura que será utilizada junto ao seu e-mail para acessar sua conta.',
+            texto: 'Preencha os campos abaixo com uma senha segura que será utilizada junto ao seu e-mail para acessar sua conta.',
+            usuarios: {
+                organizador: true,
+                prestador: true,
+            },
             campos: [
                 <Input 
                     cabecalho
@@ -182,6 +201,7 @@ const CadastroUsuario = () => {
                     valor={senha}
                     name='senha'
                     autoComplete='new-password'
+                    tamanhoMin={8}
                     icone={
                         senha !== '' ? 
                             `fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
@@ -195,7 +215,17 @@ const CadastroUsuario = () => {
                     tipo={confirmarSenhaOculta ? 'password' : 'text'}
                     dica='Confirme sua senha'
                     obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        setConfirmarSenha(e.target.value);
+                        if(senha === e.target.value){
+                            setErros(erros => erros.map(erro => {
+                                if(erro.tipo === 'confirmar-senha'){
+                                    erro.ativo = false;
+                                }
+                                return erro;
+                            }));
+                        }
+                    }}
                     valor={confirmarSenha}
                     name='confirmar-senha'
                     icone={
@@ -208,6 +238,62 @@ const CadastroUsuario = () => {
             ]
         }
     ]
+
+    const definirInstrucoesFiltradas = () => {
+        if(organizador && prestador){
+            return instrucoes;
+        }
+        if(organizador){
+            return instrucoes.filter(({usuarios}) => usuarios.organizador);
+        }
+        return instrucoes.filter(({usuarios}) => usuarios.prestador);
+    }
+
+    const instrucoesFiltradas = definirInstrucoesFiltradas();
+
+    const avancarPasso = (e: FormEvent<HTMLFormElement>) => {
+        if(passoAtual === 0){
+            if(!organizador && !prestador){
+                setErros(erros => erros.map(erro => {
+                    if(erro.tipo === 'funcao'){
+                        erro.ativo = true;
+                    }
+                    return erro;
+                }));
+                return;
+            }
+            setQtdPassos(instrucoesFiltradas.length - 1);
+        }
+        else{
+            e.preventDefault();
+        }
+        setPassoAtual(passoAtual + 1);
+    }
+
+    const voltarPasso = () => {
+        setPassoAtual(passoAtual - 1);
+    }
+
+    const cadastrarUsuario = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if(senha !== confirmarSenha){
+            setErros(erros => erros.map(erro => {
+                if(erro.tipo === 'confirmar-senha'){
+                    erro.ativo = true;
+                }
+                return erro;
+            }));
+            return;
+        }
+        else{
+            setErros(erros => erros.map(erro => {
+                if(erro.tipo === 'confirmar-senha'){
+                    erro.ativo = false;
+                }
+                return erro;
+            }));
+        }
+    }
   
     return (
         <Formulario titulo="Cadastro" tag='div'>
@@ -221,56 +307,76 @@ const CadastroUsuario = () => {
             }
             <div>
                 <h3 className='cadastro-usuario__titulo-instrucao'>
-                    {instrucoes[passoAtual]?.titulo}
+                    {instrucoesFiltradas[passoAtual]?.titulo}
                 </h3>
                 <p className='cadastro-usuario__texto-instrucao'>
-                    {instrucoes[passoAtual]?.texto}
+                    {instrucoesFiltradas[passoAtual]?.texto}
                 </p>
             </div>
             {
                 passoAtual === 0 ? 
-                    <div className='cadastro-usuario__opcoes-container'>
-                        <div className='cadastro-usuario__opcoes'>
-                            <div 
-                                className={`cadastro-usuario__opcao ${organizador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
-                                onClick={() => {
-                                    setOrganizador(!organizador);
-                                    setErro(false);
-                                }}
-                            >
-                                <span>Organizar eventos</span>
-                            </div>
-                            <div 
-                                className={`cadastro-usuario__opcao ${prestador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
-                                onClick={() => {
-                                    setPrestador(!prestador);
-                                    setErro(false);
-                                }}
-                            >
-                                <span>Prestar serviços</span>
-                            </div>
-                        </div>
-                        {
-                            erro ?
-                                <div className='cadastro-usuario__opcoes-erro'>
-                                    <i className="fa-solid fa-circle-exclamation"></i>
-                                    <p>Selecione pelo menos uma função</p>
+                    <>
+                        <div className='cadastro-usuario__opcoes-container'>
+                            <div className='cadastro-usuario__opcoes'>
+                                <div 
+                                    className={`cadastro-usuario__opcao ${organizador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
+                                    onClick={() => {
+                                        setOrganizador(!organizador);
+                                        setErros(erros => erros.map(erro => {
+                                            if(erro.tipo === 'funcao'){
+                                                erro.ativo = false;
+                                            }
+                                            return erro;
+                                        }))
+                                    }}
+                                >
+                                    <span>Organizar eventos</span>
                                 </div>
-                            : ''
-                        }
-                    </div>
-                : ''
-            }
-            {
-                passoAtual > 0 ?
-                    <form onSubmit={avancarPasso} className="cadastro-usuario__formulario">
+                                <div 
+                                    className={`cadastro-usuario__opcao ${prestador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
+                                    onClick={() => {
+                                        setPrestador(!prestador);
+                                        setErros(erros => erros.map(erro => {
+                                            if(erro.tipo === 'funcao'){
+                                                erro.ativo = false;
+                                            }
+                                            return erro;
+                                        }))
+                                    }}
+                                >
+                                    <span>Prestar serviços</span>
+                                </div>
+                            </div>
+                            {
+                                erros.find(({tipo}) => tipo === 'funcao')?.ativo ?
+                                    <ErroCampoForm mensagem={erros.find(({tipo}) => tipo === 'funcao')?.mensagem}/>
+                                : ''
+                            }
+                        </div>
+                        <div className='cadastro-usuario__botao-conta'>
+                            <div className='cadastro-usuario__container-botao'>
+                                <div className='cadastro-usuario__container-botao-passo0'>
+                                    <Botao 
+                                        tamanho='max'
+                                        texto='Próximo'
+                                        funcao={avancarPasso}
+                                    />
+                                </div>
+                            </div>
+                            <p className='cadastro-usuario__texto-login'>
+                                Já possui uma conta? <Link to='/login' className='cadastro-usuario__faca-login'>Faça login</Link>
+                            </p> 
+                        </div>
+                    </>
+                : 
+                    <form onSubmit={passoAtual !== qtdPassos ? avancarPasso : cadastrarUsuario} className="cadastro-usuario__formulario">
                         <div className="row g-4">
                             {
-                                instrucoes[passoAtual].campos?.map((input, index) => {
-                                    const qtdInputs = instrucoes[passoAtual].campos!.length;
+                                instrucoesFiltradas[passoAtual]?.campos?.map((input, index) => {
+                                    const qtdInputs = instrucoesFiltradas[passoAtual].campos!.length;
                                     return (
                                         <div 
-                                            key={index} 
+                                            key={index}
                                             className={`${ 
                                                 qtdInputs === 1 || qtdInputs === 2 ? 'col-12' 
                                                 : qtdInputs%2 === 0 ? 'col-md-6'
@@ -278,50 +384,36 @@ const CadastroUsuario = () => {
                                                 : 'col-md-6'
                                             }`}
                                         >
-                                            {input}
+                                            <div>
+                                                {input}
+                                            </div>
+                                            {
+                                                erros.find(({tipo}) => tipo === input.props.name)?.ativo ?
+                                                    <ErroCampoForm mensagem={erros.find(({tipo}) => tipo === input.props.name)?.mensagem}/>
+                                                : ''
+                                            }
                                         </div>
                                     )
                                 })
                             }
                         </div>
                         <div className='cadastro-usuario__botoes'>
-                            {
-                                passoAtual > 0 ?
-                                    <div className='cadastro-usuario__container-botao'>
-                                        <Botao 
-                                            tamanho='max'
-                                            texto='Anterior'
-                                            funcao={voltarPasso}
-                                        />
-                                    </div>
-                                : ''
-                            }
                             <div className='cadastro-usuario__container-botao'>
                                 <Botao 
                                     tamanho='max'
-                                    texto={passoAtual !== 4 ? 'Próximo' : 'Enviar'}
+                                    texto='Anterior'
+                                    funcao={voltarPasso}
+                                />
+                            </div>
+                            <div className='cadastro-usuario__container-botao'>
+                                <Botao 
+                                    tamanho='max'
+                                    texto={passoAtual !== qtdPassos ? 'Próximo' : 'Enviar'}
                                     submit
                                 />
                             </div>
                         </div>
                     </form>
-                : ''
-            }
-            {
-                passoAtual === 0 ? 
-                    <div className='cadastro-usuario__botao-conta'>
-                        <div className='cadastro-usuario__container-botao'>
-                            <Botao 
-                                tamanho='max'
-                                texto='Próximo'
-                                funcao={avancarPasso}
-                            />
-                        </div>
-                        <p className='cadastro-usuario__texto-login'>
-                            Já possui uma conta? <Link to='/login' className='cadastro-usuario__faca-login'>Faça login</Link>
-                        </p> 
-                    </div>
-                : ''
             }
         </Formulario>
     )
