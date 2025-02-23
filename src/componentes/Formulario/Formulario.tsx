@@ -1,11 +1,23 @@
 import './Formulario.css'
 
-const Formulario = ({onSubmit, titulo, children}: any) => {
+const Formulario = ({onSubmit, titulo, children, tag = 'form'}: any) => {
   return (
-    <form onSubmit={onSubmit} className='formulario'>
-      {titulo ? <h2 className='formulario__titulo'>{titulo}</h2> : ''}
-      {children}
-    </form>
+    <>
+      {
+        tag === 'form' ?
+          <form onSubmit={onSubmit} className='formulario'>
+            {titulo ? <h2 className='formulario__titulo'>{titulo}</h2> : ''}
+            {children}
+          </form>
+        : 
+        tag === 'div' ?
+          <div className='formulario'>
+            {titulo ? <h2 className='formulario__titulo'>{titulo}</h2> : ''}
+            {children}
+          </div>
+        : ''
+      }
+    </>
   )
 }
 

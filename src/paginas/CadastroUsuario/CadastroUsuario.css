@@ -63,6 +63,12 @@
     margin: 0;
 }
 
+.cadastro-usuario__formulario{
+    display:  flex;
+    flex-direction: column;
+    gap: 2.625rem;
+}
+
 .cadastro-usuario__botao-conta{
     display: flex;
     flex-direction: column;
@@ -70,8 +76,15 @@
     gap: 1.5rem;
 }
 
+.cadastro-usuario__botoes{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
 .cadastro-usuario__container-botao{
-    width: 14.0625rem;
+    width: 50%;
 }
 
 .cadastro-usuario__texto-login{
