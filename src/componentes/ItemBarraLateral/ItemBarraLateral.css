@@ -1,45 +1,49 @@
 .item-barra{
-    background-color: transparent;
-    border-radius: 8px;
-    padding: 10px 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.6);
-    transition: color 0.3s ease-out, background-color 0.3s ease-out;
+    list-style-type: none;
 }
 
-.item-barra:hover,
-.item-barra--ativo{
+.item-barra__link{
+    background-color: transparent;
+    border-radius: 8px;
+    padding: .625rem 1.125rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s ease-out;
+}
+
+.item-barra__link:hover,
+.item-barra__link--ativo{
     color: white;
 }
 
-.item-barra--ativo{
+.item-barra__link--ativo{
     background-color: var(--cor-barra-lateral);
 }
 
-.item-barra svg path{
+.item-barra__link svg path{
     stroke: white;
     stroke-opacity: 0.6;
     stroke-width: 2;
     transition: stroke-opacity 0.3s ease-out;
 }
 
-.item-barra--ativo svg path,
-.item-barra:hover svg path{
+.item-barra__link--ativo svg path,
+.item-barra__link:hover svg path{
     stroke-opacity: 1;
 }
 
 .item-barra__icone-container{
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     display: flex;
     align-items: center;
 }
 
 .item-barra__icone{
-    font-size: 24px;
+    font-size: 1.5rem;
 }
 
 .item-barra__texto{

@@ -7,7 +7,7 @@ const CheckBox = ({texto, id, funcao ,ativado=false,cor='var(--purple-700)'}: an
   const [ativa, setAtiva] = useState(ativado);
 
   const alterar = ()=>{
-    funcao();
+    if(funcao) funcao();
     setAtiva(!ativa);
   }
   return (
