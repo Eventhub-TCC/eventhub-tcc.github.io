@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     gap: 2.625rem;
-    animation: feedback-form-entrada 1s forwards ease-in;
+    animation: feedback-form-entrada 1.2s forwards ease-in;
 }
 
 @keyframes feedback-form-entrada{
@@ -60,6 +60,12 @@
     width: 14.0625rem;
 }
 
+@media screen and (max-width: 700px){
+    .feedback-form__container-botao{
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 460px){
 
     .feedback-form__icone{
@@ -71,9 +77,5 @@
 
     .feedback-form__texto{
         font-size: 1rem;
-    }
-
-    .feedback-form__container-botao{
-        width: fit-content;
     }
 }
