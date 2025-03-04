@@ -1,10 +1,10 @@
 import './Input.css'
 
-const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete}: any) => {
+const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor, ...props}: any) => {
   return (
     <div>
       <div className={cabecalho === true? 'd-block' : 'd-none'}>
-        <label htmlFor={name}>{cabecalhoTexto}</label>
+        <label className='label-input' htmlFor={name}>{cabecalhoTexto}</label>
       </div>
       <div className="container-input">
       <input type={tipo}
@@ -17,6 +17,7 @@ const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, ob
         placeholder={dica}
         required={obrigatorio}
         onChange={onChange}
+        onBlur={onBlur}
         name={name}
         id={name}
         min={min}
@@ -24,6 +25,8 @@ const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, ob
         minLength={tamanhoMin}
         maxLength={tamanhoMax}
         autoComplete={autoComplete}
+        value={valor}
+        {...props}
       />
       {
         !icone && posicaoIcone === 'sem-icone' ?
@@ -33,7 +36,7 @@ const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, ob
             <i className={`${icone} icone-input ${(icone && posicaoIcone === 'sem-icone') || posicaoIcone === 'direita' ? `icone-input-direita` : `icone-input-esquerda`}`}></i>
           :
             <button type='button' className={`icone-botao icone-input-botao ${(icone && posicaoIcone === 'sem-icone') || posicaoIcone === 'direita' ? `icone-input-botao-direita` : `icone-input-botao-esquerda`}`} onClick={funcaoIcone}>
-              <i className={`${icone}`}></i>
+              <i className={`${icone} icone-estilo`}></i>
             </button>
       }
     </div>

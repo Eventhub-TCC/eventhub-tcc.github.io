@@ -1,7 +1,8 @@
 .formulario{
     background-color: white;
-    max-width: 554px;
+    max-width: 34.625rem;
     width: 100%;
+    margin: 4rem 0;
     border-radius: 2rem;
     border: 2px solid var(--purple-700);
     box-shadow: 0px 0px 15px 4px rgba(140, 93, 255, 0.40);
@@ -18,11 +19,20 @@
     margin: 0;
 }
 
+@media screen and (max-width: 700px){
+    .formulario{
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+
 @media screen and (max-width: 460px){
     .formulario{
         padding: 3rem 1.5rem;
     }
-    
+
     .formulario__titulo{
         font-size: 2.5rem;
     }

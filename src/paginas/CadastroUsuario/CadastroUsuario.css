@@ -1,0 +1,122 @@
+.cadastro-usuario__titulo-instrucao{
+    color: var(--purple-800);
+    font-size: 1.375rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.cadastro-usuario__texto-instrucao{
+    color: black;
+    text-align: justify;
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.75rem;
+    margin: 0;
+}
+
+.cadastro-usuario__opcoes-container{
+    margin: 1.1rem 0;
+}
+
+.cadastro-usuario__opcoes{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.cadastro-usuario__opcao{
+    border-radius: .5rem;
+    border: 2px solid var(--purple-700);
+    padding: 1rem .625rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-out;
+}
+
+.cadastro-usuario__opcao--selecionada{
+    background-color: var(--purple-900);
+}
+
+.cadastro-usuario__opcao span{
+    display: block;
+    text-align: center;
+    color: var(--purple-900);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.cadastro-usuario__opcao--selecionada span{
+    color: white;
+}
+
+.cadastro-usuario__formulario{
+    display:  flex;
+    flex-direction: column;
+    gap: 2.625rem;
+}
+
+.cadastro-usuario__botao-conta{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.cadastro-usuario__botoes{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.cadastro-usuario__container-botao{
+    width: 100%;
+    min-width: fit-content;
+    display: flex;
+    justify-content: center;
+}
+
+.cadastro-usuario__container-botao-passo0{
+    width: 14.0625rem;
+}
+
+.cadastro-usuario__texto-login{
+    color: black;
+    font-size: .875rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+.cadastro-usuario__faca-login{
+    color: var(--purple-700);
+    transition: text-decoration 0.3s ease-in-out;
+}
+
+.cadastro-usuario__faca-login:hover{
+    text-decoration-color: transparent;
+}
+
+@media screen and (min-width: 1025px){
+    .cadastro-usuario__opcao:hover{
+        background-color: var(--purple-800);
+    }
+
+    .cadastro-usuario__opcao:hover span{
+        color: white;
+    }
+}
+
+@media screen and (max-width: 700px){
+    .cadastro-usuario__container-botao-passo0{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 460px){
+    .cadastro-usuario__titulo-instrucao{
+        font-size: 1.25rem;
+    }
+    
+    .cadastro-usuario__texto-instrucao{
+        font-size: 1rem;
+    }
+}

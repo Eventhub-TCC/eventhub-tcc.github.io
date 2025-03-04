@@ -1,5 +1,12 @@
 @import url(../../App.css);
 
+.label-input{
+    font-weight: 300;
+    color: black;
+    font-size: 1rem;
+    margin-bottom: .5rem;
+}
+
 .container-input{
     position: relative;
 }
@@ -13,6 +20,14 @@
     font-family: var(--fonte-principal) ;
     background-color: white ;
     box-shadow: 0px 2px 2px 0px rgba(33, 37, 41, 0.06), 0px 0px 1px 0px rgba(33, 37, 41, 0.08);
+    text-overflow: ellipsis;
+}
+
+.input[type='date']{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    min-height: 2.75rem;
 }
 
 .input-padding-sem-icone{
@@ -82,4 +97,8 @@
     padding: 0;
     width: 20px;
     color: inherit;
+}
+
+.icone-estilo{
+    color: #a3a3a3;
 }

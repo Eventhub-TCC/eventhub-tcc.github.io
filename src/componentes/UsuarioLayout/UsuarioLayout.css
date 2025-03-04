@@ -1,0 +1,32 @@
+.usuario-layout{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.usuario-layout__conteudo{
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F5F5F5;
+    background-image: url('/src/assets/fundo_paginas_usuario.png');
+    background-repeat: no-repeat;
+    background-size: 100% 75%;
+    background-position: bottom;
+}
+
+@media screen and (max-width: 900px){
+    .usuario-layout__conteudo{
+        background-size: cover;
+        background-position: left;
+    }
+}
+
+@media screen and (max-width: 700px){
+    .usuario-layout__conteudo{
+        align-items: self-start;
+        background-image: none;
+        background-color: white;
+    }
+}

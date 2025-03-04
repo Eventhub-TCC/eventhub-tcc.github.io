@@ -34,48 +34,44 @@ const Login = () => {
   }
 
   return (
-    <div className="container-fundo">
-      <div className='container container-login'>
-        <Formulario titulo='Login'>
-          <div className='Conteudo'>
-            <div className='Inputs'>
-              <Input 
-                cabecalho={true}
-                cabecalhoTexto='Email'
-                dica='Digite seu e-mail' 
-                tipo='email' 
-                onChange={(event:ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}></Input>
-                <Input 
-                  cabecalho={true}
-                  cabecalhoTexto='Senha'
-                  dica='Digite sua senha' tipo={senhaOculta ? 'password' : 'text'} 
-                  onChange={(event:ChangeEvent<HTMLInputElement>) => setSenha(event.target.value)} 
-                  icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} 
-                  funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
-                />
-            </div>
-            <div className='Opcoes'> 
-              <CheckBox 
-                checked={senhaOculta} 
-                funcao={() => setLembrar(!lembrar)} 
-                texto='Lembrar-me'></CheckBox>
-              <a className='links' href=''>Esqueceu a senha?</a>
-            </div>
-          </div>
-          <div className="Botoes">
-            <div className="Botao">
-              <Botao 
-                tamanho='max'
-                texto='Entrar' 
-                funcao={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)}></Botao>
-            </div>
-            <div>
-              <span>Não possui uma conta? <a className='links' href='/cadastro'>Cadastre-se</a></span>
-            </div>
-          </div>
-        </Formulario>
+    <Formulario titulo='Login'>
+      <div className='Conteudo'>
+        <div className='Inputs'>
+          <Input 
+            cabecalho={true}
+            cabecalhoTexto='Email'
+            dica='Digite seu e-mail' 
+            tipo='email' 
+            onChange={(event:ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}></Input>
+            <Input 
+              cabecalho={true}
+              cabecalhoTexto='Senha'
+              dica='Digite sua senha' tipo={senhaOculta ? 'password' : 'text'} 
+              onChange={(event:ChangeEvent<HTMLInputElement>) => setSenha(event.target.value)} 
+              icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} 
+              funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
+            />
+        </div>
+        <div className='Opcoes'> 
+          <CheckBox 
+            checked={senhaOculta} 
+            funcao={() => setLembrar(!lembrar)} 
+            texto='Lembrar-me'></CheckBox>
+          <a className='links' href=''>Esqueceu a senha?</a>
+        </div>
       </div>
-    </div>
+      <div className="Botoes">
+        <div className="Botao">
+          <Botao 
+            tamanho='max'
+            texto='Entrar' 
+            funcao={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)}></Botao>
+        </div>
+        <div>
+          <span>Não possui uma conta? <a className='links' href='/cadastro'>Cadastre-se</a></span>
+        </div>
+      </div>
+    </Formulario>
   )
 }
 
