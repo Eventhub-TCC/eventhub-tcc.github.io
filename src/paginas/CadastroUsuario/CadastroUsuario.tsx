@@ -8,6 +8,7 @@ import Input from "../../componentes/Input/Input"
 import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
 import axios from "axios"
 import FeedbackFormulario from "../../componentes/FeedbackFormulario/FeedbackFormulario"
+import { PatternFormat } from "react-number-format"
 
 interface Usuarios{
     organizador: boolean;
@@ -53,48 +54,46 @@ const CadastroUsuario = () => {
     const [ erros, setErros ] = useState<Erro[]>([
         {ativo: false, tipo: 'funcao', mensagem: 'Selecione pelo menos uma função'},
         {ativo: false, tipo: 'confirmar-senha', mensagem: 'A confirmação da senha não confere'},
-        {ativo: false, tipo: 'cpf', mensagem: ''},
-        {ativo: false, tipo: 'cnpj', mensagem: ''},
-        {ativo: false, tipo: 'email', mensagem: ''},
+        {ativo: false, tipo: 'cpf', mensagem: 'CPF inválido'},
+        {ativo: false, tipo: 'cnpj', mensagem: 'CNPJ inválido'},
+        {ativo: false, tipo: 'email', mensagem: 'E-mail inválido'},
+        {ativo: false, tipo: 'telefone-pessoal', mensagem: 'Telefone inválido'},
+        {ativo: false, tipo: 'telefone-empresa', mensagem: 'Telefone inválido'}
     ]);
 
-    const [ requisicao, setRequisicao ] = useState(false);
     const [ carregando, setCarregando ] = useState(false);
-    const [ falha , setFalha ] = useState(false);
-    const [ sucesso, setSucesso ] = useState(false);
+    const [ formSucesso, setFormSucesso ] = useState<boolean | null>(null);
 
     const dataLimiteMaiorIdade = new Date();
     dataLimiteMaiorIdade.setFullYear(dataLimiteMaiorIdade.getFullYear() - 18);
     dataLimiteMaiorIdade.setHours(0, 0, 0, 0);
 
     const validarCampo = async (campo: string, nomeCampo: string, campoBackend: string, tamanho: number | null = null) => {
-        if(!tamanho){
-            if(erros.find(({tipo}) => tipo === nomeCampo)?.ativo){
-                return;
-            }
+        const erroAtivado = erros.find(({tipo}) => tipo === nomeCampo)?.ativo;
+        if((erroAtivado && !tamanho) || erroAtivado){
+            return false;
         }
-        else{
-            if(campo.length !== tamanho || erros.find(({tipo}) => tipo === nomeCampo)?.ativo){
-                return;
-            }
+        if(tamanho && campo.length !== tamanho){
+            setErros(erros => erros.map(erro => {
+                if(erro.tipo === nomeCampo){
+                    erro.ativo = true;
+                }
+                return erro;
+            }));
+            return false;
         }
         try{
-            setRequisicao(true);
+            setCarregando(true);
             await axios.post(`http://localhost:3000/users/validate-${nomeCampo}`, {
                 [campoBackend]: campo
             });
-            setCarregando((prevCarregando) => {
-                if(prevCarregando){
-                    setPassoAtual(passoAtual + 1);
-                }
-                return prevCarregando;
-            });
+            return true;
         }
         catch(e: any){
             if(e.code === 'ERR_NETWORK'){
                 setCarregando((prevCarregando) => {
                     if(prevCarregando){
-                        setPassoAtual(passoAtual + 1);
+                        setPassoAtual(prevPassoAtual => prevPassoAtual + 1);
                     }
                     return prevCarregando;
                 });
@@ -107,9 +106,9 @@ const CadastroUsuario = () => {
                 }
                 return erro;
             }));
+            return false;
         }
         finally{
-            setRequisicao(false);
             setCarregando(false);
         }
     }
@@ -143,6 +142,8 @@ const CadastroUsuario = () => {
                     valor={nome}
                     name='nome'
                     autoComplete='given-name'
+                    pattern="([A-Za-zÀ-ÖØ-öø-ÿ]+(\s[A-Za-zÀ-ÖØ-öø-ÿ]+)*)+"
+                    title="Nome deve conter apenas letras"
                 />,
                 <Input 
                     cabecalho
@@ -154,15 +155,15 @@ const CadastroUsuario = () => {
                     valor={sobrenome}
                     name='sobrenome'
                     autoComplete='family-name'
+                    pattern="([A-Za-zÀ-ÖØ-öø-ÿ]+(\s[A-Za-zÀ-ÖØ-öø-ÿ]+)*)+"
+                    title="Sobrenome deve conter apenas letras"
                 />,
-                <Input 
-                    cabecalho
-                    cabecalhoTexto='CPF'
-                    tipo='text'
-                    dica='Digite seu CPF'
-                    obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setCpf(e.target.value);
+                <PatternFormat 
+                    format="###.###.###-##"
+                    mask="_"
+                    value={cpf}
+                    onValueChange={(values) => {
+                        setCpf(values.value);
                         setErros(erros => erros.map(erro => {
                             if(erro.tipo === 'cpf'){
                                 erro.ativo = false;
@@ -170,11 +171,12 @@ const CadastroUsuario = () => {
                             return erro;
                         }));
                     }}
-                    onBlur={() => validarCampo(cpf, 'cpf', 'cpfUsu', 11)}
-                    valor={cpf}
+                    customInput={Input}
+                    cabecalho
+                    cabecalhoTexto='CPF'
+                    dica='Digite seu CPF'
+                    obrigatorio
                     name='cpf'
-                    tamanhoMin={11}
-                    tamanhoMax={11}
                 />,
                 <Input 
                     cabecalho
@@ -199,14 +201,12 @@ const CadastroUsuario = () => {
                 ambos: true
             },
             campos: [
-                <Input 
-                    cabecalho
-                    cabecalhoTexto='CNPJ'
-                    tipo='text'
-                    dica='Digite seu CNPJ'
-                    obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setCnpj(e.target.value)
+                <PatternFormat 
+                    format="##.###.###/####-##"
+                    mask="_"
+                    value={cnpj}
+                    onValueChange={(values) => {
+                        setCnpj(values.value);
                         setErros(erros => erros.map(erro => {
                             if(erro.tipo === 'cnpj'){
                                 erro.ativo = false;
@@ -214,11 +214,12 @@ const CadastroUsuario = () => {
                             return erro;
                         }));
                     }}
-                    valor={cnpj}
+                    customInput={Input}
+                    cabecalho
+                    cabecalhoTexto='CNPJ'
+                    dica='Digite seu CNPJ'
+                    obrigatorio
                     name='cnpj'
-                    onBlur={() => validarCampo(cnpj, 'cnpj', 'cnpjEmpresa', 14)}
-                    tamanhoMin={14}
-                    tamanhoMax={14}
                 />,
                 <Input 
                     cabecalho
@@ -229,6 +230,8 @@ const CadastroUsuario = () => {
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setNomeEmpresa(e.target.value)}
                     valor={nomeEmpresa}
                     name='nome-empresa'
+                    pattern="([A-Za-zÀ-ÖØ-öø-ÿ0-9&'\-]+(\s[A-Za-zÀ-ÖØ-öø-ÿ0-9&'\-]+)*)+"
+                    title="Nome da empresa deve conter somente letras e números"
                 />,
                 <Input 
                     cabecalho
@@ -269,16 +272,26 @@ const CadastroUsuario = () => {
                     valor={email}
                     name='email'
                     autoComplete='email'
-                    onBlur={() => validarCampo(email, 'email', 'emailUsu')}
                 />,
-                <Input 
+                <PatternFormat 
+                    format={"(##) #####-####"}
+                    mask="_"
+                    value={telefonePessoal}
+                    onValueChange={(values) => {
+                        setTelefonePessoal(values.value);
+                        setErros(erros => erros.map(erro => {
+                            if(erro.tipo === 'telefone-pessoal'){
+                                erro.ativo = false;
+                            }
+                            return erro;
+                        }));
+                    }}
+                    type="tel"
+                    customInput={Input}
                     cabecalho
                     cabecalhoTexto='Telefone'
-                    tipo='text'
                     dica='Digite seu telefone'
                     obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTelefonePessoal(e.target.value)}
-                    valor={telefonePessoal}
                     name='telefone-pessoal'
                     autoComplete='tel'
                 />
@@ -313,14 +326,25 @@ const CadastroUsuario = () => {
                     autoComplete='email'
                     onBlur={() => validarCampo(email, 'email', 'emailUsu')}
                 />,
-                <Input 
+                <PatternFormat 
+                    format="(##) #####-####"
+                    mask="_"
+                    value={telefoneEmpresa}
+                    onValueChange={(values) => {
+                        setTelefoneEmpresa(values.value)
+                        setErros(erros => erros.map(erro => {
+                            if(erro.tipo === 'telefone-empresa'){
+                                erro.ativo = false;
+                            }
+                            return erro;
+                        }));
+                    }}
+                    type="tel"
+                    customInput={Input}
                     cabecalho
                     cabecalhoTexto='Telefone da empresa'
-                    tipo='text'
                     dica='Digite o telefone da empresa'
                     obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTelefoneEmpresa(e.target.value)}
-                    valor={telefoneEmpresa}
                     name='telefone-empresa'
                     autoComplete='tel'
                 />
@@ -335,25 +359,47 @@ const CadastroUsuario = () => {
                 ambos: true
             },
             campos: [
-                <Input 
+                <PatternFormat 
+                    format="(##) #####-####"
+                    mask="_"
+                    value={telefonePessoal}
+                    onValueChange={(values) => {
+                        setTelefonePessoal(values.value);
+                        setErros(erros => erros.map(erro => {
+                            if(erro.tipo === 'telefone-pessoal'){
+                                erro.ativo = false;
+                            }
+                            return erro;
+                        }));
+                    }}
+                    type="tel"
+                    customInput={Input}
                     cabecalho
                     cabecalhoTexto='Telefone pessoal'
-                    tipo='text'
                     dica='Digite seu telefone pessoal'
                     obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTelefonePessoal(e.target.value)}
-                    valor={telefonePessoal}
                     name='telefone-pessoal'
                     autoComplete='tel'
                 />,
-                <Input 
+                <PatternFormat 
+                    format="(##) #####-####"
+                    mask="_"
+                    value={telefoneEmpresa}
+                    onValueChange={(values) => {
+                        setTelefoneEmpresa(values.value);
+                        setErros(erros => erros.map(erro => {
+                            if(erro.tipo === 'telefone-empresa'){
+                                erro.ativo = false;
+                            }
+                            return erro;
+                        }));
+                    }}
+                    type="tel"
+                    customInput={Input}
                     cabecalho
                     cabecalhoTexto='Telefone da empresa'
-                    tipo='text'
                     dica='Digite o telefone da empresa'
                     obrigatorio
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTelefoneEmpresa(e.target.value)}
-                    valor={telefoneEmpresa}
                     name='telefone-empresa'
                     autoComplete='tel'
                 />,
@@ -448,7 +494,8 @@ const CadastroUsuario = () => {
 
     const instrucoesFiltradas: Instrucao[] = definirInstrucoesFiltradas();
 
-    const avancarPasso = (e: FormEvent<HTMLFormElement>) => {
+    const avancarPasso = async (e: FormEvent<HTMLFormElement>) => {
+        let erroValidacao = false;
         if(passoAtual === 0){
             if(!organizador && !prestador){
                 setErros(erros => erros.map(erro => {
@@ -459,23 +506,77 @@ const CadastroUsuario = () => {
                 }));
                 return;
             }
+            setEmail('');
+            setSenha('');
+            setSenhaOculta(true);
+            setConfirmarSenhaOculta(true);
+            setConfirmarSenha('');
+            setCnpj('');
+            setNomeEmpresa('');
+            setLocalizacao('');
+            setTelefoneEmpresa('');
+            setNome('');
+            setSobrenome('');
+            setCpf('');
+            setDataNascimento(null);
+            setTelefonePessoal('');
+            setErros(erros => erros.map(erro => {
+                erro.ativo = false;
+                return erro;
+            }));
             setQtdPassos(instrucoesFiltradas.length - 1);
         }
         else{
             e.preventDefault();
             if(erros.some(erro => erro.ativo && instrucoesFiltradas[passoAtual].campos?.some(input => input.props.name === erro.tipo))){
-                return;
+                erroValidacao = true;
             }
-            if(requisicao){
-                setCarregando(true);
-                return;
+            if(instrucoesFiltradas[passoAtual].campos?.some(input => input.props.name === 'cpf')){
+                if(!await validarCampo(cpf, 'cpf', 'cpfUsu', 11)){
+                    erroValidacao = true;
+                }
+            }
+            if(instrucoesFiltradas[passoAtual].campos?.some(input => input.props.name === 'cnpj')){
+                if(!await validarCampo(cnpj, 'cnpj', 'cnpjEmpresa', 14)){
+                    erroValidacao = true;
+                }
+            }
+            if(instrucoesFiltradas[passoAtual].campos?.some(input => input.props.name === 'email')){
+                if(!await validarCampo(email, 'email', 'emailUsu')){
+                    erroValidacao = true;
+                }
+            }
+            if(instrucoesFiltradas[passoAtual].campos?.some(input => input.props.name === 'telefone-pessoal')){
+                if(telefonePessoal.length < 10){
+                    setErros(erros => erros.map(erro => {
+                        if(erro.tipo === 'telefone-pessoal'){
+                            erro.ativo = true;
+                        }
+                        return erro;
+                    }));
+                    erroValidacao = true;
+                }
+            }
+            if(instrucoesFiltradas[passoAtual].campos?.some(input => input.props.name === 'telefone-empresa')){
+                if(telefoneEmpresa.length < 10){
+                    setErros(erros => erros.map(erro => {
+                        if(erro.tipo === 'telefone-empresa'){
+                            erro.ativo = true;
+                        }
+                        return erro;
+                    }));
+                    erroValidacao = true;
+                }
             }
         }
-        setPassoAtual(passoAtual + 1);
+        if(erroValidacao){
+            return;
+        }
+        setPassoAtual(prevPassoAtual => prevPassoAtual + 1);
     }
 
     const voltarPasso = () => {
-        setPassoAtual(passoAtual - 1);
+        setPassoAtual(prevPassoAtual => prevPassoAtual - 1);
     }
 
     const cadastrarUsuario = async (e: FormEvent<HTMLFormElement>) => {
@@ -514,10 +615,10 @@ const CadastroUsuario = () => {
                 cnpjEmpresa: cnpj,
                 localizacaoEmpresa: localizacao,
             });
-            setSucesso(true);
+            setFormSucesso(true);
         }
         catch(e){
-            setFalha(true);
+            setFormSucesso(false);
         }
         finally{
             setCarregando(false);
@@ -663,7 +764,16 @@ const CadastroUsuario = () => {
                 : ''
             }
             {
-                falha ?
+                formSucesso ?
+                    <FeedbackFormulario 
+                        icone='fa-regular fa-circle-check'
+                        titulo='Tudo certo!'
+                        texto='Seu cadastro foi concluído com sucesso! Agora você já pode fazer login e explorar todos os recursos da nossa plataforma.'
+                        textoBotao='Fazer login'
+                        caminhoBotao='/login'
+                    />
+                :
+                formSucesso === false ?
                     <FeedbackFormulario 
                         erro
                         icone='fa-regular fa-circle-xmark'
@@ -672,16 +782,8 @@ const CadastroUsuario = () => {
                         textoBotao='Voltar ao início'
                         caminhoBotao='/'
                     />
-                :
-                sucesso ?
-                    <FeedbackFormulario 
-                        icone='fa-regular fa-circle-check'
-                        titulo='Tudo certo!'
-                        texto='Seu cadastro foi concluído com sucesso! Agora você já pode fazer login e explorar todos os recursos da nossa plataforma.'
-                        textoBotao='Fazer login'
-                        caminhoBotao='/login'
-                    />
-                : ''
+                : ""
+                    
             }
         </Formulario>
     )

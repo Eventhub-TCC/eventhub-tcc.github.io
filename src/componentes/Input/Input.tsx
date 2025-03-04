@@ -1,6 +1,6 @@
 import './Input.css'
 
-const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor}: any) => {
+const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor, ...props}: any) => {
   return (
     <div>
       <div className={cabecalho === true? 'd-block' : 'd-none'}>
@@ -26,6 +26,7 @@ const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, ob
         maxLength={tamanhoMax}
         autoComplete={autoComplete}
         value={valor}
+        {...props}
       />
       {
         !icone && posicaoIcone === 'sem-icone' ?
