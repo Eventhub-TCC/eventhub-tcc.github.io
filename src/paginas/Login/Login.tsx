@@ -5,7 +5,7 @@ import Botao from '../../componentes/Botao/Botao'
 import CheckBox from '../../componentes/CheckBox/CheckBox'
 import './Login.css'
 import Formulario from '../../componentes/Formulario/Formulario'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
@@ -30,11 +30,12 @@ const Login = () => {
     }
     catch(erro){
       console.log('Usuário ou senha inválido')
+      return alert('Usuário ou senha inválido');
     }
   }
 
   return (
-    <Formulario titulo='Login'>
+    <Formulario onSubmit={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)} titulo='Login'>
       <div className='Conteudo'>
         <div className='Inputs'>
           <Input 
@@ -48,16 +49,16 @@ const Login = () => {
               cabecalhoTexto='Senha'
               dica='Digite sua senha' tipo={senhaOculta ? 'password' : 'text'} 
               onChange={(event:ChangeEvent<HTMLInputElement>) => setSenha(event.target.value)} 
-              icone={`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}`} 
+              icone={senha.length ?`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}` : '' } 
               funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
             />
         </div>
         <div className='Opcoes'> 
-          <CheckBox 
+          <CheckBox
             checked={senhaOculta} 
             funcao={() => setLembrar(!lembrar)} 
             texto='Lembrar-me'></CheckBox>
-          <a className='links' href=''>Esqueceu a senha?</a>
+          <Link className='links' to='/esqueci-senha'>Esqueceu a senha?</Link>
         </div>
       </div>
       <div className="Botoes">
@@ -65,10 +66,10 @@ const Login = () => {
           <Botao 
             tamanho='max'
             texto='Entrar' 
-            funcao={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)}></Botao>
+            submit></Botao>
         </div>
         <div>
-          <span>Não possui uma conta? <a className='links' href='/cadastro'>Cadastre-se</a></span>
+          <span className='texto'>Não possui uma conta? <Link className='links' to='/cadastro'>Cadastre-se</Link></span>
         </div>
       </div>
     </Formulario>
