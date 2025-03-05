@@ -1,0 +1,16 @@
+.esqueci-senha__container-botao{
+    width: 100%;
+    min-width: fit-content;
+    display: flex;
+    justify-content: center;
+}
+
+.esqueci-senha__botao{
+    width: 14.0625rem;
+}
+
+@media screen and (max-width: 700px){
+    .esqueci-senha__botao{
+        width: 100%;
+    }
+}

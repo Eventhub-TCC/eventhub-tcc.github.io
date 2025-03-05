@@ -1,19 +1,3 @@
-.cadastro-usuario__titulo-instrucao{
-    color: var(--purple-800);
-    font-size: 1.375rem;
-    font-weight: 400;
-    margin-bottom: 1rem;
-}
-
-.cadastro-usuario__texto-instrucao{
-    color: black;
-    text-align: justify;
-    font-size: 1.125rem;
-    font-weight: 300;
-    line-height: 1.75rem;
-    margin: 0;
-}
-
 .cadastro-usuario__opcoes-container{
     margin: 1.1rem 0;
 }
@@ -108,15 +92,5 @@
 @media screen and (max-width: 700px){
     .cadastro-usuario__container-botao-passo0{
         width: 100%;
-    }
-}
-
-@media screen and (max-width: 460px){
-    .cadastro-usuario__titulo-instrucao{
-        font-size: 1.25rem;
-    }
-    
-    .cadastro-usuario__texto-instrucao{
-        font-size: 1rem;
     }
 }
