@@ -1,0 +1,15 @@
+.erro404{
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F2F2F2;
+}
+
+.erro404__imagem{
+    background-image: url(../../assets/404-imagem.svg);
+    background-repeat: no-repeat;
+    width: 500px;
+    height: 500px;
+}

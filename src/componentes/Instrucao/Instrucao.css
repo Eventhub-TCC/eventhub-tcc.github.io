@@ -1,0 +1,25 @@
+.instrucao__titulo{
+    color: var(--purple-800);
+    font-size: 1.375rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.instrucao__texto{
+    color: black;
+    text-align: justify;
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.75rem;
+    margin: 0;
+}
+
+@media screen and (max-width: 460px){
+    .instrucao__titulo{
+        font-size: 1.25rem;
+    }
+    
+    .instrucao__texto{
+        font-size: 1rem;
+    }
+}

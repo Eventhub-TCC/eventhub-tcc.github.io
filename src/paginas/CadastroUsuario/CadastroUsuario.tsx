@@ -9,6 +9,7 @@ import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
 import axios from "axios"
 import FeedbackFormulario from "../../componentes/FeedbackFormulario/FeedbackFormulario"
 import { PatternFormat } from "react-number-format"
+import Instrucoes from "../../componentes/Instrucao/Instrucao"
 
 interface Usuarios{
     organizador: boolean;
@@ -642,14 +643,10 @@ const CadastroUsuario = () => {
             }
             {
                 passoAtual <= qtdPassos ?
-                    <div>
-                        <h3 className='cadastro-usuario__titulo-instrucao'>
-                            {instrucoesFiltradas[passoAtual]?.titulo}
-                        </h3>
-                        <p className='cadastro-usuario__texto-instrucao'>
-                            {instrucoesFiltradas[passoAtual]?.texto}
-                        </p>
-                    </div>
+                    <Instrucoes
+                        titulo={instrucoesFiltradas[passoAtual]?.titulo}
+                        texto={instrucoesFiltradas[passoAtual]?.texto}
+                    />
                 : ''
             }
             {
