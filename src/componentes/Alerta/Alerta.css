@@ -1,0 +1,35 @@
+.alerta{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border-radius: 8px;
+    padding: 12px 20px;
+    
+}
+
+.alerta__icone{
+    font-size: 20px;
+}
+
+.alerta__texto{
+    width: 100%;
+    padding: 0px 20px 0px 8px;
+}
+
+.alerta__fechar{
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.alerta__botao{
+    border: none;
+    background-color: transparent;
+    padding:0;
+    display: flex;
+    align-items: center;
+    color: inherit;
+}
+
+.alerta__invisivel{
+    display: none;
+}
