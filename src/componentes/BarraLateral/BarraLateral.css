@@ -1,19 +1,21 @@
+:root{
+    --barra-lateral-largura: 16rem;
+    --barra-lateral-largura-minimizada: 5.75rem;
+}
+
 .barra-lateral{
     background-color: var(--cor-barra-lateral);
     padding: 3rem 1rem;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 16rem;
+    width: var(--barra-lateral-largura);
     transition: width .3s ease-out;
 }
 
 .barra-lateral--minimizada{
-    width: 5.75rem;
+    width: var(--barra-lateral-largura-minimizada);
 }
 
 .barra-lateral__itens{

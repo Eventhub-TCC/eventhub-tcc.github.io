@@ -1,0 +1,30 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .cabecalho-layout{
+    position: fixed;
+    width: 100%;
+  }
+
+  .barra-layout {
+    height: calc(100vh - 80px);
+    position: fixed;
+  }
+
+
+  .layout-conteudo {
+    margin-top: 80px;
+  }
+  
+  .layout-info {
+    margin-left: var(--barra-lateral-largura);
+    transition: margin-left .3s ease-out;
+  }
+
+  .layout-info-minimizada {
+    margin-left: var(--barra-lateral-largura-minimizada);
+  }
+
+
