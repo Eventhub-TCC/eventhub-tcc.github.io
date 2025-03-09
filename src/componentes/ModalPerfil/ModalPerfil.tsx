@@ -1,7 +1,6 @@
 import './ModalPerfil.css';
 
-
-const Modal = ({children} : any) => {
+const ModalPerfil = ({children} : any) => {
     return (
         <div className="modal-perfil">
             {children}
@@ -9,5 +8,5 @@ const Modal = ({children} : any) => {
     );
 }
 
-export default Modal
+export default ModalPerfil
 
