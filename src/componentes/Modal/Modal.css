@@ -1,0 +1,54 @@
+.modall{
+    display: flex;
+    padding: 20px;
+    gap: 16px;
+    flex-direction: column;
+    border: solid 1px #CED4DA;
+    border-radius: 20px;
+    box-shadow: 0px 2px 2px 0px rgba(33, 37, 41, 0.06), 0px 0px 1px 0px rgba(33, 37, 41, 0.08);
+}
+
+.modal__conteudo{
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+.modall[open]::backdrop{
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal__cabecalho{
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.modal__botao-fechar{
+    border:none;
+    background-color: transparent;
+}
+
+.modal__fechar{
+    cursor: pointer;
+    color: #212529;
+    font-size: 20px;
+}
+
+.modal__titulo{
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--purple-800);
+}
+
+.modal__container-botoes{
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+}
+
+.modal__container-botao{
+   min-width: 110px;
+}
+
+
