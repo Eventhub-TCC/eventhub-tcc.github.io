@@ -2,12 +2,22 @@
 
 .botao{
     border-radius: 1rem;
-    border: none;
     cursor: pointer;
-    color:white;
     font-family: var(--fonte-principal);
-    background-color: var(--cor-principal);
     transition: background-color .5s, filter .5s;
+    font-weight: 500;
+}
+
+.botao--solido{
+    background-color: var(--cor-principal);
+    border: none;
+    color:white;
+}
+
+.botao--vazado{
+    background-color: transparent;
+    border: 1px solid var(--cor-principal);
+    color: var(--cor-principal);
 }
 
 .botao:focus{
