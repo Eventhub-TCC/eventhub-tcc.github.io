@@ -19,7 +19,7 @@
     align-self: stretch;
 }
 
-.div-caixa{
+.caixa-perfil{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -76,7 +76,7 @@
 }
 
 
-.div-caixa2{
+.caixa-input-perfil{
   display: flex;
   padding: 48px 40px;
   flex-direction: column;
@@ -140,11 +140,12 @@
   align-items: center;
   gap: 24px;
   align-self: stretch;
+  justify-content: space-between;
 }
 
 .botao-editar{
   display: flex;
-  width: 150px;
+  width: 190px;
   padding: 12px 24px;
   justify-content: center;
   align-items: center;
@@ -154,12 +155,11 @@
   border-radius: 16px;
   background:#F5F5F5;
   display: flex;
-  width: 150px;
+  width: 190px;
   padding: 12px 24px;
   justify-content: center;
   align-items: center;
 }
-
 
 .foto-perfil {
     display: flex;
