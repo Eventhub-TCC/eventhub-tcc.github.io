@@ -7,6 +7,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { PatternFormat } from 'react-number-format'
 import { motion } from 'framer-motion'
+import { Modal } from '../../componentes/Modal/Modal'
 
 interface Usuario { 
   nomeUsu: string;
@@ -24,7 +25,7 @@ const MeuPerfil = () => {
   const [senhaAtual, setSenhaAtual] = useState<string>('');
   const [novaSenha, setNovaSenha] = useState<string>('');
   const [confirmarSenha, setConfirmarSenha] = useState<string>('');
-
+  const [excluir, setExcluir] = useState<boolean>(false);
 
   const transicao = {
     initial: { opacity: 0, y: -10 },
@@ -48,6 +49,10 @@ const MeuPerfil = () => {
     }
     obterUsuario();
   },[]);
+
+  const setarExcluir = () => {
+    setExcluir(false);
+  }
 
   const deletarPerfil = async () => {
     try {
@@ -305,8 +310,11 @@ const MeuPerfil = () => {
                     <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' />
                   </div>
                   <div className='botao-deletar'>
-                    <Botao tamanho='max' funcao={deletarPerfil} texto='Excluir conta' />
+                    <Botao tamanho='max' funcao={() => setExcluir(true)} texto='Excluir conta' />
                   </div>
+                  {excluir ? 
+                    <Modal titulo="Excluir conta" enviaModal={setarExcluir} textoBotao="Excluir" funcaoSalvar={deletarPerfil}> Tem certeza que deseja excluir sua conta? </Modal>
+                  : ""}
                 </div>
               </motion.div>
               
