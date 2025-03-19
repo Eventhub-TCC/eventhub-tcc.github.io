@@ -26,7 +26,7 @@ const Login = () => {
       })
       console.log(`Usuário autenticado! Token: ${data.token}`)
       localStorage.setItem('token', data.token);
-      navigate('/');
+      navigate('/meu-perfil');
     }
     catch(erro){
       console.log('Usuário ou senha inválido')

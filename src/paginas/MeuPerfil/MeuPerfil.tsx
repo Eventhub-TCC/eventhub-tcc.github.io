@@ -3,9 +3,11 @@ import './MeuPerfil.css'
 import Botao from '../../componentes/Botao/Botao'
 import Input from '../../componentes/Input/Input'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { PatternFormat } from 'react-number-format'
+import { motion } from 'framer-motion'
+
 interface Usuario { 
   nomeUsu: string;
   sobrenomeUsu: string;
@@ -18,8 +20,18 @@ interface Usuario {
 
 const MeuPerfil = () => {
   const [usuario, setUsuario] = useState<Usuario | null> (null);
+  const [modoEdicao, setModoEdicao] = useState<boolean>(false);
+  const [senhaAtual, setSenhaAtual] = useState<string>('');
+  const [novaSenha, setNovaSenha] = useState<string>('');
+  const [confirmarSenha, setConfirmarSenha] = useState<string>('');
 
 
+  const transicao = {
+    initial: { opacity: 0, y: -10 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, y: 10, transition: { duration: 0.2 } },
+  };
+  
   useEffect(() => {
     const obterUsuario = async () => {
       try {
@@ -36,9 +48,48 @@ const MeuPerfil = () => {
     }
     obterUsuario();
   },[]);
+
+  const deletarPerfil = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token não encontrado');
+      }
+      const emailDecodificado: {email:string} = jwtDecode(token);
+      await axios.delete(`http://localhost:3000/users/delete-user/${emailDecodificado.email}`);
+      localStorage.removeItem('token');
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Erro ao deletar usuário');
+    }
+  }
+
+  const editarPerfil = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token não encontrado');
+      }
+      const emailDecodificado: {email:string} = jwtDecode(token);
+      const res = await axios.put(`http://localhost:3000/users/update-user/${emailDecodificado.email}`, {
+        ...usuario, 
+        senhaAtual, 
+        novaSenha, 
+        confirmarSenha
+      });
+      console.log(res);
+      setModoEdicao(false);
+    }
+    catch (error) {
+      console.error('Erro ao editar usuário');
+      console.error(error); 
+
+    }
+  }
+
   return (
     <div>
-          <div className='perfil'>
+        <div className='perfil'>
             <h1 className='titulo-h1'>Perfil</h1>
             <div className='caixa-perfil'>
               <div className='formulario-perfil'>
@@ -65,7 +116,6 @@ const MeuPerfil = () => {
               </div>
             </div>
 
-
             <div className='caixa-input-perfil'>
               <div className='informacoes-pessoais-perfil-organizador'>
                 <p className='texto-informacoes-pessoal'>Informações Pessoais</p>
@@ -79,9 +129,10 @@ const MeuPerfil = () => {
                               dica='Digite seu nome'
                               obrigatorio
                               name='nome'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeUsu: event.target.value})}
                               cabecalho
                               cabecalhoTexto='Nome'
-                              disabled="true"/>
+                              disabled={!modoEdicao}/>
                       </div>
                     </div>
                     <div className='titulo-input-perfil'>
@@ -91,27 +142,28 @@ const MeuPerfil = () => {
                               dica='Digite seu sobrenome'
                               obrigatorio
                               name='sobrenome'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, sobrenomeUsu: event.target.value})}
                               cabecalho
                               cabecalhoTexto='Sobrenome'
-                              disabled="true"/>
+                              disabled={!modoEdicao}/>
                     </div>
                   </div>
                 </div>
                 <div className='alinhamento-campos'>
                       <div className='titulo-input-perfil'>
-                        {/* <h1 className='texto-input-perfil'>CPF</h1> */}
                         <div className='inputs-perfil'>
-                              <PatternFormat 
+                            <PatternFormat 
                               format="###.###.###-##"
                               mask="_"
                               value={usuario?.cpfUsu}
                               customInput={Input}
+                              onValueChange={(values) => {setUsuario({...usuario!, cpfUsu:values.value});}}
                               dica='Digite seu CPF'
                               obrigatorio
                               name='cpf'
                               cabecalho
                               cabecalhoTexto='CPF'
-                              disabled="true"
+                              disabled={!modoEdicao}
                               />
                         </div>
                     </div>
@@ -122,9 +174,10 @@ const MeuPerfil = () => {
                               dica='Digite sua data de nascimento'
                               obrigatorio
                               name='dataNascimento'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, dtNasUsu: event.target.value})}
                               cabecalho
                               cabecalhoTexto='Data de Nascimento'
-                              disabled="true"
+                              disabled={!modoEdicao}
                               type="date"/>
                     </div>
                   </div>
@@ -147,7 +200,8 @@ const MeuPerfil = () => {
                               name='email'
                               cabecalho
                               cabecalhoTexto='Email'
-                              disabled="true"/>
+                              disabled
+                              />
                       </div>
                     </div>
                     <div className='titulo-input-perfil'>
@@ -158,11 +212,12 @@ const MeuPerfil = () => {
                               customInput={Input} 
                               value={usuario?.telUsu}           
                               dica='Digite seu telefone'
+                              onValueChange={(values) => {setUsuario({...usuario!, telUsu:values.value});}}
                               obrigatorio
                               name='telefone'
                               cabecalho
                               cabecalhoTexto='Telefone'
-                              disabled="true"
+                              disabled={!modoEdicao}
                               type="tel"
                               pattern="[0-9]{2}-[0-9]{5}-[0-9]{4}"/>
                     </div>
@@ -171,30 +226,91 @@ const MeuPerfil = () => {
               </div>
             </div>
 
-            <div className='caixa-input-perfil'>
-              <div className='informacoes-pessoais-perfil-organizador'>
-                <p className='texto-informacoes-pessoal'>Segurança</p>
-                </div>
-                  <div className='campos-informacoes-pessoais-perfil-organizador'>
-                    <div className='alinhamento-campos'>
-                      <div className='titulo-input-perfil'>
-                        <h1 className='texto-input-perfil'>Senha atual</h1>
-                      <div className='inputs-perfil'>
-                       <Input disabled="true" dica='************'/>
+
+
+            {modoEdicao ? 
+            (
+            <motion.div key="modoEdicao" {...transicao} className='perfil-modo-edicao'>
+              <div className='caixa-input-perfil'>
+                <div className='informacoes-pessoais-perfil-organizador'>
+                  <p className='texto-informacoes-pessoal'>Segurança</p>
+                  </div>
+                    <div className='campos-informacoes-pessoais-perfil-organizador'>
+                      <div className='alinhamento-campos'>
+                        <div className='titulo-input-perfil'>
+                          <h1 className='texto-input-perfil'>Senha atual</h1>
+                          <div className='inputs-perfil'>
+                            <Input onChange={(event: ChangeEvent<HTMLInputElement>) => setSenhaAtual(event.target.value)}/>
+                          </div>
+                        </div>
                       </div>
+                      <div className='alinhamento-campos'>
+                        <div className='titulo-input-perfil'>
+                        <div className='inputs-perfil'>
+                          <Input           
+                              dica='Digite sua nova senha'
+                              obrigatorio
+                              name='nova-senha'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setNovaSenha(event.target.value)}
+                              cabecalho
+                              cabecalhoTexto='Nova senha'
+                              />
+                          </div>
+                        </div>
+                        <div className='titulo-input-perfil'>
+                        <div className='inputs-perfil'>
+                        <Input                    
+                              dica='Confirme sua nova senha'
+                              obrigatorio
+                              name='Confirme'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(event.target.value)}
+                              cabecalho
+                              cabecalhoTexto='Confirme sua nova senha'
+                              />
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
-
             <div className='botoes-alterar-perfil'>
               <div className='botao-editar'>
-                <Botao tamanho='max' texto='Editar' />
+                <Botao tamanho='max' funcao={() => setModoEdicao(false)} texto='Cancelar' />
               </div>
-              <div className='botao-deletar'>
-                <Botao tamanho='max' texto='Excuir conta' />
+              <div className='botao-editar'>
+                <Botao tamanho='max' funcao={editarPerfil} texto='Salvar' />
               </div>
-            </div>
+              </div>
+            </motion.div>
+            ) 
+            : 
+            (
+              <motion.div key="foraModoEdicao" {...transicao} className='perfil-fora-modo-edicao'>
+                <div className='caixa-input-perfil'>
+                  <div className='informacoes-pessoais-perfil-organizador'>
+                  <p className='texto-informacoes-pessoal'>Segurança</p>
+                  </div>
+                    <div className='campos-informacoes-pessoais-perfil-organizador'>
+                      <div className='alinhamento-campos'>
+                        <div className='titulo-input-perfil'>
+                          <h1 className='texto-input-perfil'>Senha atual</h1>
+                        <div className='inputs-perfil'>
+                        <Input disabled="true" dica='************'/>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+                <div className='botoes-alterar-perfil'>
+                  <div className='botao-editar'>
+                    <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' />
+                  </div>
+                  <div className='botao-deletar'>
+                    <Botao tamanho='max' funcao={deletarPerfil} texto='Excluir conta' />
+                  </div>
+                </div>
+              </motion.div>
+              
+            )}
           </div>
     </div>
   )

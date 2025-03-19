@@ -8,6 +8,7 @@ import RedefinirSenha from './paginas/RedefinirSenha/RedefinirSenha'
 import Erro404 from './paginas/Erro404/Erro404'
 import MeuPerfil from './paginas/MeuPerfil/MeuPerfil'
 import OrganizadorLayout from './componentes/OrganizadorLayout/OrganizadorLayout'
+import ProtecaoDeRota from './componentes/ProtecaoDeRota/ProtecaoDeRota'
 
 const App = () => {
   return (
@@ -20,9 +21,11 @@ const App = () => {
           <Route path='redefinir-senha' element={<RedefinirSenha />}/>
           <Route path='*' element={<Erro404 />}/>
         </Route>
-        <Route element={<OrganizadorLayout />}>
-          <Route path='criar-evento' element={<CadastroEvento />}/>
-          <Route path='meu-perfil' element={<MeuPerfil />}/>
+        <Route element={<ProtecaoDeRota />}>
+          <Route element={<OrganizadorLayout />}>
+            <Route path='criar-evento' element={<CadastroEvento />}/>
+            <Route path='meu-perfil' element={<MeuPerfil />}/>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

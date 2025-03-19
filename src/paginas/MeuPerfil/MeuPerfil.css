@@ -155,7 +155,7 @@
   border-radius: 16px;
   background:#F5F5F5;
   display: flex;
-  width: 190px;
+  width: 195px;
   padding: 12px 24px;
   justify-content: center;
   align-items: center;
@@ -171,4 +171,20 @@
     display: flex;
     align-items: center;
     gap: 28px; 
+}
+
+.perfil-fora-modo-edicao{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.perfil-modo-edicao{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
 }
