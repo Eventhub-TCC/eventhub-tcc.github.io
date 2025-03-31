@@ -3,8 +3,9 @@ import BarraLateral from "../BarraLateral/BarraLateral";
 import "./OrganizadorLayout.css";
 import { useState } from "react";
 import ItemBarraLateral from "../ItemBarraLateral/ItemBarraLateral";
+import { Outlet } from "react-router";
 
-const OrganizadorLayout = ({ children }: any) => {
+const OrganizadorLayout = () => {
   const [minimizada, setMinimizada] = useState(false);
 
     function guardarMinimizada(dado:boolean){
@@ -42,7 +43,7 @@ const OrganizadorLayout = ({ children }: any) => {
           </BarraLateral>
         </div>
         <div className={`layout-info ${minimizada ? 'layout-info-minimizada' : ''}`}>
-          {children}
+          <Outlet />
         </div>
       </div>
     </div>

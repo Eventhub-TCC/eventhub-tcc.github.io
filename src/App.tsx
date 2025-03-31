@@ -6,6 +6,10 @@ import UsuarioLayout from './componentes/UsuarioLayout/UsuarioLayout'
 import EsqueciSenha from './paginas/EsqueciSenha/EsqueciSenha'
 import RedefinirSenha from './paginas/RedefinirSenha/RedefinirSenha'
 import Erro404 from './paginas/Erro404/Erro404'
+import ProtecaoDeRota from './componentes/ProtecaoDeRota/ProtecaoDeRota'
+import MeusEventos from './paginas/MeusEventos/MeusEventos'
+import OrganizadorLayout from './componentes/OrganizadorLayout/OrganizadorLayout'
+
 
 const App = () => {
   return (
@@ -17,6 +21,11 @@ const App = () => {
           <Route path='esqueci-senha' element={<EsqueciSenha />}/>
           <Route path='redefinir-senha' element={<RedefinirSenha />}/>
           <Route path='*' element={<Erro404 />}/>
+        </Route>
+        <Route element={<ProtecaoDeRota/>}>
+          <Route element={<OrganizadorLayout />}>
+            <Route path="/meus-eventos" element={<MeusEventos />} />
+          </Route>
         </Route>
         <Route path='criar-evento' element={<CadastroEvento />}/>
       </Routes>
