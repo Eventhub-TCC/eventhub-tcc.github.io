@@ -26,6 +26,14 @@
     align-self: stretch;
 }
 
+.ordenacao-meus-eventos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    align-self: stretch;
+}
+
 .icone-sem-eventos{
     display: flex;
     justify-content: center;
@@ -52,3 +60,108 @@
     align-items: center;
 }
 
+.botao-ordernar-eventos.crescente{
+    display: flex;
+    width: 44px;
+    height: 44px;
+    padding: 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--Purple-700, #8C5DFF);
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform 0.3s; 
+}
+
+.botao-ordernar-eventos.decrescente{
+    display: flex;
+    width: 44px;
+    height: 44px;
+    padding: 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--Purple-700, #8C5DFF);
+    cursor: pointer;
+    transform: rotate(180deg);
+    transition: transform 0.3s; 
+}
+
+
+
+.seta-eventos{
+    width: 21px;
+    height: 21px;
+    flex-shrink: 0;
+}
+
+.ordenacao-ordem-exibicao{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.meus-eventos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 72px;
+    align-self: stretch;
+}
+
+.sumario-eventos{
+    color: var(--Purple-900, #55379D);
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.exibicao-eventos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+}
+
+.eventos-concluidos-em-andamento-finalizados{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    align-self: stretch;
+    flex-wrap: wrap;
+}
+
+.numero-de-eventos{
+    font-size: 14px;
+}
+
+.botao-criar-eventos{
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+}
+
+.botao-criar-eventos-meus-eventos{
+    display: flex;
+    width: 75px;
+    height: 75px;
+    padding: 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 46.5px;
+    background: var(--Purple-700, #8C5DFF);
+    cursor: pointer;
+}
+
+.botao-criar-eventos-meus-eventos:hover{
+    background: var(--Purple-900, #55379D);
+
+    
+}
