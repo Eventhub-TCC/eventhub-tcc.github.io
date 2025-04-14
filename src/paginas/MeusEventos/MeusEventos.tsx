@@ -3,100 +3,23 @@ import CardEvento from '../../componentes/CardEvento/CardEvento'
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario'
 import './MeusEventos.css'
 import { useEffect, useState } from "react";
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 interface Evento{
-  id: number;
-  titulo: string;
+  idEvento: number;
+  nomeEvento: string;
   status?: string;
   dataEvento: string;
   horaInicio: string;
   horaFim: string;
-  endereco: string;
+  localEvento: string;
   imagem?: string;
   tipoEvento?: string;
 }
 
 const MeusEventos = () => {
-  const eventos: Evento[] = [
-    {
-      id: 1,
-      titulo: 'Aniversário de João',
-      status: '',
-      dataEvento: '2022-03-31',
-      horaInicio: '21:00',
-      horaFim: '22:00',
-      endereco: 'Rua A, 123',
-      imagem: '',
-      tipoEvento: ''
-    },
-    {
-      id: 2,
-      titulo: 'Formatura do Matheus',
-      status: '',
-      dataEvento: '2021-10-02',
-      horaInicio: '14:00',
-      horaFim: '16:00',
-      endereco: 'Rua B, 456',
-      imagem: '',
-      tipoEvento: ''
-    },
-    {
-      id: 3,
-      titulo: 'Apresentação TCC',
-      status: '',
-      dataEvento: '2025-10-20',
-      horaInicio: '18:00',
-      horaFim: '20:00',
-      endereco: 'Rua C, 789',
-      imagem: '',
-      tipoEvento: ''
-    },
-    {
-      id: 4,
-      titulo: 'Role Aletório',
-      status: '',
-      dataEvento: '2025-04-03',
-      horaInicio: '10:00',
-      horaFim: '21:40',
-      endereco: 'Rua D, 1011',
-      imagem: '',
-      tipoEvento: ''
-    },
-    {
-      id: 5,
-      titulo: 'Piquinique no Parque',
-      status: '',
-      dataEvento: '2025-07-09',
-      horaInicio: '14:00',
-      horaFim: '16:00',
-      endereco: 'Rua E, 1213',
-      imagem: '',
-      tipoEvento: ''
-    },
-    {
-      id: 6,
-      titulo: 'Festa de Casamento',
-      status: '',
-      dataEvento: '2025-04-05',
-      horaInicio: '18:00',
-      horaFim: '20:00',
-      endereco: 'Rua F, 1415',
-      imagem: '',
-      tipoEvento: ''
-    },
-    {
-      id: 7,
-      titulo: 'Chá de Bebê',
-      status: '',
-      dataEvento: '2025-05-07',
-      horaInicio: '18:00',
-      horaFim: '22:40',
-      endereco: 'Rua G, 1617',
-      imagem: '',
-      tipoEvento: ''
-    }
-
-  ];
+  const [eventos, setEventos] = useState<Evento[]>([]);
   const [ordemCrescente, setOrdemCrescente] = useState<boolean>(true);
   const [criterioOrdenacao, setCriterioOrdenacao] = useState<string>('');
   const [eventosClassificados, setEventosClassificados] = useState<{
@@ -109,6 +32,24 @@ const MeusEventos = () => {
     confirmados: [],
   });
 
+  const obterEventos = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token não encontrado no localStorage');
+      }
+      const emailDecodificado: {email:string} = jwtDecode(token);
+      const response = await axios.get<Evento[]>(`http://localhost:3000/users/events/${emailDecodificado.email}`);
+      setEventos(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Erro ao obter eventos', error);
+    }
+  };
+
+
+ 
+
   const ordenarEventos = (eventos: Evento[], criterio: string, crescente: boolean): Evento[] => {
     const eventosOrdenados = [...eventos];
   
@@ -118,13 +59,19 @@ const MeusEventos = () => {
         const dataB = new Date(`${b.dataEvento}T${b.horaInicio}`);
         return crescente ? dataA.getTime() - dataB.getTime() : dataB.getTime() - dataA.getTime();
       } else if (criterio === 'nome') {
-        return crescente ? a.titulo.localeCompare(b.titulo) : b.titulo.localeCompare(a.titulo);
+        return crescente ? a.nomeEvento.localeCompare(b.nomeEvento) : b.nomeEvento.localeCompare(a.nomeEvento);
       }
       return 0;
     });
   
     return eventosOrdenados;
   };
+
+  useEffect(() => {
+    obterEventos();
+  }, []);
+
+
   useEffect(() => {
     const hoje = new Date();
   
@@ -157,7 +104,7 @@ const MeusEventos = () => {
     });
   
     setEventosClassificados(classificados);
-  }, [criterioOrdenacao, ordemCrescente]);
+  }, [eventos, criterioOrdenacao, ordemCrescente]);
 
   const formatarData = (dataISO: string): string => {
     const [ano, mes, dia] = dataISO.split('-');
@@ -195,16 +142,16 @@ const MeusEventos = () => {
                 <div className='eventos-concluidos-em-andamento-finalizados'>
                 {eventosClassificados.emAndamento.map((evento) => (
                     <CardEvento 
-                      key={evento.id}
-                      titulo={evento.titulo}
+                      key={evento.idEvento}
+                      titulo={evento.nomeEvento}
                       status={evento.status}
                       dataEvento={formatarData(evento.dataEvento)}
                       horaInicio={evento.horaInicio}
                       horaFim={evento.horaFim}
-                      endereco={evento.endereco}
+                      endereco={evento.localEvento}
                       imagem={evento.imagem}
                       tipoEvento={evento.tipoEvento}
-                      id={evento.id}
+                      id={evento.idEvento}
                     />
               ))}
               </div>
@@ -217,16 +164,16 @@ const MeusEventos = () => {
                 <div className='eventos-concluidos-em-andamento-finalizados'>
                   {eventosClassificados.confirmados.map((evento) => (
                       <CardEvento 
-                        key={evento.id}
-                        titulo={evento.titulo}
+                        key={evento.idEvento}
+                        titulo={evento.nomeEvento}
                         status={evento.status}
                         dataEvento={formatarData(evento.dataEvento)}
                         horaInicio={evento.horaInicio}
                         horaFim={evento.horaFim}
-                        endereco={evento.endereco}
+                        endereco={evento.localEvento}
                         imagem={evento.imagem}
                         tipoEvento={evento.tipoEvento}
-                        id={evento.id}
+                        id={evento.idEvento}
                       />
                 ))}
                 </div>
@@ -239,16 +186,16 @@ const MeusEventos = () => {
               <div className='eventos-concluidos-em-andamento-finalizados'>
                 {eventosClassificados.concluidos.map((evento) => (
                     <CardEvento 
-                      key={evento.id}
-                      titulo={evento.titulo}
+                      key={evento.idEvento}
+                      titulo={evento.nomeEvento}
                       status={evento.status}
                       dataEvento={formatarData(evento.dataEvento)}
                       horaInicio={evento.horaInicio}
                       horaFim={evento.horaFim}
-                      endereco={evento.endereco}
+                      endereco={evento.localEvento}
                       imagem={evento.imagem}
                       tipoEvento={evento.tipoEvento}
-                      id={evento.id}
+                      id={evento.idEvento}
                     />
               ))}
               </div>
