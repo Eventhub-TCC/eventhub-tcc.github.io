@@ -9,6 +9,9 @@ import Erro404 from './paginas/Erro404/Erro404'
 import MeuPerfil from './paginas/MeuPerfil/MeuPerfil'
 import OrganizadorLayout from './componentes/OrganizadorLayout/OrganizadorLayout'
 import ProtecaoDeRota from './componentes/ProtecaoDeRota/ProtecaoDeRota'
+import MeusEventos from './paginas/MeusEventos/MeusEventos'
+
+
 
 const App = () => {
   return (
@@ -25,6 +28,7 @@ const App = () => {
           <Route element={<OrganizadorLayout />}>
             <Route path='criar-evento' element={<CadastroEvento />}/>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
+            <Route path="meus-eventos" element={<MeusEventos />} />
           </Route>
         </Route>
       </Routes>

@@ -39,12 +39,15 @@ const Login = () => {
       <div className='Conteudo'>
         <div className='Inputs'>
           <Input 
+            name='email'
+            autoComplete='email'
             cabecalho={true}
             cabecalhoTexto='Email'
             dica='Digite seu e-mail' 
             tipo='email' 
             onChange={(event:ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}></Input>
             <Input 
+              name='senha'
               cabecalho={true}
               cabecalhoTexto='Senha'
               dica='Digite sua senha' tipo={senhaOculta ? 'password' : 'text'} 
@@ -55,6 +58,7 @@ const Login = () => {
         </div>
         <div className='Opcoes'> 
           <CheckBox
+            name='lembrar'
             checked={senhaOculta} 
             funcao={() => setLembrar(!lembrar)} 
             texto='Lembrar-me'></CheckBox>
