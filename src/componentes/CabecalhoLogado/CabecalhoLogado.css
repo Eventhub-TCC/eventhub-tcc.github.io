@@ -41,3 +41,8 @@
     transform: scale(1.05);
     transition: 0.5s;
 }
+
+.logo_fundo_branco{
+    width: 160px;
+    height: 60px;
+}
