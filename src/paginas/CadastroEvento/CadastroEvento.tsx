@@ -9,11 +9,19 @@ import IndicadorDePassos from '../../componentes/IndicadorDePassos/IndicadorDePa
 import TextArea from '../../componentes/TextArea/TextArea'
 import './CadastroEvento.css'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
+import { PatternFormat } from "react-number-format"
+import { jwtDecode } from 'jwt-decode'
+
 
 interface Instrucao {
     titulo: string;
     texto: string;
     campos?: ReactElement[];
+}
+
+interface TipoEvento {
+  idTipoEvento: string;
+  descricaoTipoEvento: string;
 }
 
 const CadastroEvento = () => {
@@ -27,7 +35,7 @@ const CadastroEvento = () => {
   const [localEvento, setLocalEvento] = useState({
     cep: '',
     endereco: '',
-    numero: 0,
+    numero: '',
     complemento: '',
     bairro: '',
     cidade: '',
@@ -40,20 +48,11 @@ const CadastroEvento = () => {
   const [travado, setTravado] = useState(false)
 
   const [erroCampo, setErroCampo] = useState({
-    nomeEvento : false,
     tipoEvento : false,
-    descricaoEvento : false,
-    dataEvento : false,
-    horaInicio : false,
-    horaFim : false,
     cep : false,
-    endereco : false,
-    numero : false,
-    complemento : false,
-    bairro : false,
-    cidade : false,
-    estado : false
   })
+
+  const [localObrigatorio, setLocalObrigatorio] = useState(false)
 
   const inputImagemref = useRef<HTMLInputElement>(null)
 
@@ -78,17 +77,40 @@ const CadastroEvento = () => {
       setTravado(false)
   }, [localEvento.cep])
 
+  useEffect(()=>{
+    Object.values(localEvento).some((value) => value.length > 0) ? setLocalObrigatorio(true) : setLocalObrigatorio(false)
+  },[localEvento])
+
+  const dataLimite = new Date()
+  dataLimite.setFullYear(dataLimite.getFullYear() + 50)
+  dataLimite.setHours(0, 0, 0, 0)
+
+  const dataMinima = new Date()
+  dataMinima.setHours(0, 0, 0, 0)
+
   const qntPassos = 4
 
   const botaoProximo = <Botao texto='Próximo' tamanho='max' submit/>
   const botaoCadastrar = <Botao texto='Cadastrar' submit tamanho='max'/>
 
-  const tiposDeEventos = [
-    {id:'1', tipo:'Aniversario'},
-    {id:'2', tipo:'Casamento'},
-    {id:'3', tipo:'Corporativo'},
-    {id:'4', tipo:'Cultural'}
-  ]
+  
+const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>([])
+ 
+ useEffect(()=>{
+  const buscarTiposDeEventos = async () => {
+    try{
+      const tipoEvento = await axios.get('http://localhost:3000/users/tipo-evento')
+      setTipoEventoDisponiveis(tipoEvento.data)
+    }
+    catch (error) {
+      console.log('ocorreu algum erro: ',error)
+      setErroCampo(prevState => ({...prevState, tipoEvento: true}))
+      return
+    }
+  }
+  buscarTiposDeEventos()
+ },[])
+
 
   const estadosBrasil = [
     "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", 
@@ -116,7 +138,7 @@ const CadastroEvento = () => {
           funcao={(e: ChangeEvent<HTMLSelectElement>) => setTipoEvento(Number(e.target.value))}
           required={true}
         >
-              {tiposDeEventos.map(tipo => <option value={tipo.id}>{tipo.tipo}</option>)}
+              {tipoEventoDisponiveis.map(tipo => <option value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
         </Select>,
         <TextArea 
           titulo='Descrição do evento (opcional)' 
@@ -159,6 +181,8 @@ const CadastroEvento = () => {
           onChange={(e: ChangeEvent<HTMLInputElement>) => setDataEvento(new Date(e.target.value))}
           valor={dataEvento && !isNaN(new Date(dataEvento).getTime()) ? dataEvento.toISOString().split('T')[0] : ''}
           obrigatorio={false}
+          max={dataLimite.toISOString().split('T')[0]}
+          min={dataMinima.toISOString().split('T')[0]}
         />,
         <Input 
           cabecalho cabecalhoTexto='Hora de Início' 
@@ -179,60 +203,76 @@ const CadastroEvento = () => {
       titulo:'Local do Evento',
       texto:'Preencha os campos com os detalhes do local onde o seu evento será realizado.',
       campos:[
-        <Input 
-          cabecalho
-          cabecalhoTexto='CEP (opcional)' 
-          placeholder='Digite o CEP do local' 
-          tipo='number' 
-          valor={localEvento.cep} 
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, cep: e.target.value })} 
+        <PatternFormat
+        format={'#####-###'}
+        mask={'_'}
+        value={localEvento.cep}
+        onValueChange={(values) => {
+          setLocalEvento({ ...localEvento, cep: values.value })
+        }}
+        customInput={Input}
+        cabecalho
+        cabecalhoTexto={`CEP ${localObrigatorio?'':'(opcional)'}`} 
+        placeholder='Digite o CEP do local' 
+        obrigatorio={localObrigatorio}
         />,
         <Input 
           cabecalho 
-          cabecalhoTexto='Endereço (opcional)' 
+          cabecalhoTexto={`Endereço ${localObrigatorio?'':'(opcional)'}`}
           placeholder='Digite o endereço do local' 
           tipo='text' valor={localEvento.endereco} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, endereco: e.target.value })} 
           disabled={travado} 
+          obrigatorio={localObrigatorio}
+        />,
+        <PatternFormat   
+          format={'#####'}                
+          value={localEvento.numero}
+          onValueChange={(values) => {
+            setLocalEvento({ ...localEvento, numero: values.value })
+          } }
+          customInput={Input}
+          cabecalho 
+          cabecalhoTexto={`Número ${localObrigatorio?'':'(opcional)'}`}
+          placeholder='Digite o número do local'   
+          obrigatorio={localObrigatorio}    
         />,
         <Input 
           cabecalho 
-          cabecalhoTexto='Número (opcional)' 
-          placeholder='Digite o número do local' 
-          tipo='number' valor={localEvento.numero} 
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, numero: Number(e.target.value) })} 
-        />,
-        <Input 
-          cabecalho 
-          cabecalhoTexto='Complemento (opcional)' 
+          cabecalhoTexto={`Complemento ${localObrigatorio?'':'(opcional)'}`} 
           placeholder='Digite o complemento do local' 
           tipo='text' valor={localEvento.complemento} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, complemento: e.target.value })} 
+          obrigatorio={localObrigatorio}
         />,
         <Input 
           cabecalho 
-          cabecalhoTexto='Bairro (opcional)' 
+          cabecalhoTexto={`Bairro ${localObrigatorio?'':'(opcional)'}`} 
           placeholder='Digite o bairro do local do evento' 
           tipo='text' valor={localEvento.bairro} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, bairro: e.target.value })} 
           disabled={travado} 
+          obrigatorio={localObrigatorio}
         />,
         <Input 
           cabecalho 
-          cabecalhoTexto='Cidade (opcional)' 
+          cabecalhoTexto={`Cidade ${localObrigatorio?'':'(opcional)'}`} 
           placeholder='Digite a cidade do local do evento' 
           tipo='text' 
           valor={localEvento.cidade} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, cidade: e.target.value })} 
           disabled={travado} 
+          obrigatorio={localObrigatorio}
         />,
         <Select 
           cabecalho 
-          cabecalhoTexto='UF (opcional)' 
+          cabecalhoTexto={`UF ${localObrigatorio?'':'(opcional)'}`} 
           textoPadrao='Selecione a UF'
           dica='Selecione a UF' valor={localEvento.estado} 
           funcao={(e: ChangeEvent<HTMLSelectElement>) => setLocalEvento(prevState => ({... prevState, estado:e.target.value}))} 
           disabled={travado}
+          required={localObrigatorio}
+          esconderValorPadrao={false}
         >
             {estadosBrasil.map(estado => <option value={estado}>{estado}</option>)}
         </Select>
@@ -250,6 +290,7 @@ const CadastroEvento = () => {
         </div>
         <div className='col-lg-6'>
           {instrucoes[passoAtual].campos && instrucoes[passoAtual].campos[1]}
+          {erroCampo.tipoEvento?<ErroCampoForm mensagem='não foi possível carregar os tipos de evento'/>:''}
         </div>
         <div className='col-lg-12'>
           {instrucoes[passoAtual].campos && instrucoes[passoAtual].campos[2]}
@@ -320,11 +361,44 @@ const CadastroEvento = () => {
     </div>
   ]
 
-  const CadastrarEvento = (e: FormEvent) => {
+  const CadastrarEvento = async(e: FormEvent) => {
     e.preventDefault()
-    console.log(localEvento)
-    alert('Cadastrando evento...')
-  }
+    if(Object.values(erroCampo).some((value) => value === true))
+      alert('Corrija os erros antes de continuar')
+    else {
+     try{
+      const token = localStorage.getItem('token')
+      const tokenDecodificado:{email:string} = jwtDecode(token as string)
+      try {
+        const userResponse = await axios.get(`http://localhost:3000/users/get-user/${tokenDecodificado.email}`);
+        const idUsuario = userResponse.data.codigoUsu;
+        await axios.post(`http://localhost:3000/users/${idUsuario}/events`, {
+          idTipoEvento: tipoEvento,
+          nomeEvento,
+          descricaoEvento,
+          file: imagemEvento,
+          horaInicio,
+          horaFim,
+          dataEvento,
+          cepLocal: localEvento.cep,
+          enderecoLocal: localEvento.endereco,
+          numeroLocal: localEvento.numero,
+          complementoLocal: localEvento.complemento,
+          bairroLocal: localEvento.bairro,
+          cidadeLocal: localEvento.cidade,
+          ufLocal: localEvento.estado
+        },
+        { headers: { 'Content-Type': 'multipart/form-data' } });
+      } catch (error) {
+        console.log('ocorreu algum erro: ',error)
+        alert('Ocorreu um erro ao cadastrar o evento. Tente novamente mais tarde.')
+       }
+      }
+    catch (error) {
+        console.log('ocorreu algum erro: ',error)
+      }
+      }}
+
   const avancarPasso = (e: FormEvent) => {
     e.preventDefault()
     if (passoAtual + 1 < qntPassos) 
@@ -333,7 +407,7 @@ const CadastroEvento = () => {
   return (
     <div className='cadastro-evento'>
       <h1 className='cadastro-evento__titulo'>Criar evento</h1>
-      <form onSubmit={passoAtual+1===qntPassos?(e:FormEvent)=>CadastrarEvento(e):avancarPasso} className='cadastro-evento__form'>
+      <form onSubmit={passoAtual+1===qntPassos?(e:FormEvent)=>CadastrarEvento(e):avancarPasso} className='cadastro-evento__form' encType="multipart/form-data">
         <IndicadorDePassos passoAtual={passoAtual + 1} qtdPassos={qntPassos}/>
         <Instrucao titulo={instrucoes[passoAtual].titulo} texto={instrucoes[passoAtual].texto}/>
         <div>
