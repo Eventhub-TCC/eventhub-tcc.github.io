@@ -3,10 +3,12 @@ import { useState } from 'react';
 import ModalPerfil from '../ModalPerfil/ModalPerfil';
 import ItemModal from '../ItemModalPerfil/ItemModalPerfil';
 import logo from '../../assets/logo_eventhub-sem-fundo.png';
+import { useNavigate } from 'react-router-dom';
 
 
 const CabecalhoLogado = () => {
     const [ModalAberto, setModalAberto] = useState(false);
+    const navigate = useNavigate();
 
     const AbrirModal = () => {
         setModalAberto(!ModalAberto);  
@@ -22,7 +24,7 @@ const CabecalhoLogado = () => {
                 </svg>
             </div>  
                 {ModalAberto && <div className='modal1'>
-                    <ModalPerfil fecharModal={AbrirModal}> <ItemModal texto='Perfil' icone="fa fa-user"/> <ItemModal texto='Sair' icone="fa fa-sign-out"/> </ModalPerfil>
+                    <ModalPerfil fecharModal={AbrirModal}> <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => navigate('/meu-perfil')} /> <ItemModal texto='Sair' icone="fa fa-sign-out" funcao={() => {navigate('/login'); localStorage.removeItem("token") }}/> </ModalPerfil>
                 </div>}
         </div>
     ); 
