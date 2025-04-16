@@ -209,7 +209,7 @@ const InformacoesMeusEventos = () => {
             </div>
         </div>
 
-        <div className='resumo-convites'>
+        {/* <div className='resumo-convites'>
             <div className='texto-resumo-convite'>Resumo Convites</div>
             <div className='botoes-convites'>
                 <div className='convites-confirmados-pendentes-recusados'>
@@ -234,7 +234,7 @@ const InformacoesMeusEventos = () => {
                     <div className='numero'>5</div>    
                 </div>
             </div>
-        </div>
+        </div> */}
 
         {
             modoEdicaoEvento ? 

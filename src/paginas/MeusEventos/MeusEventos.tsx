@@ -14,8 +14,15 @@ interface Evento{
   dataEvento: string;
   horaInicio: string;
   horaFim: string;
-  localEvento: string;
   imagem?: string;
+  cepLocal: string;
+  enderecoLocal: string;
+  numeroLocal: string;
+  complementoLocal: string;
+  bairroLocal: string;
+  cidadeLocal: string;
+  ufLocal: string;
+  imagemEvento?: string;
   tipoEvento?: string;
 }
 
@@ -151,8 +158,8 @@ const MeusEventos = () => {
                       dataEvento={formatarData(evento.dataEvento)}
                       horaInicio={evento.horaInicio}
                       horaFim={evento.horaFim}
-                      endereco={evento.localEvento}
-                      imagem={evento.imagem}
+                      endereco={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                       imagem={evento.imagemEvento}
                       tipoEvento={evento.tipoEvento}
                       id={evento.idEvento}
                     />
@@ -173,8 +180,8 @@ const MeusEventos = () => {
                         dataEvento={formatarData(evento.dataEvento)}
                         horaInicio={evento.horaInicio}
                         horaFim={evento.horaFim}
-                        endereco={evento.localEvento}
-                        imagem={evento.imagem}
+                        endereco={evento.enderecoLocal +', ' + evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                        imagem={evento.imagemEvento}
                         tipoEvento={evento.tipoEvento}
                         id={evento.idEvento}
                       />
@@ -195,8 +202,8 @@ const MeusEventos = () => {
                       dataEvento={formatarData(evento.dataEvento)}
                       horaInicio={evento.horaInicio}
                       horaFim={evento.horaFim}
-                      endereco={evento.localEvento}
-                      imagem={evento.imagem}
+                      endereco={evento.enderecoLocal +', ' + evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                      imagem={evento.imagemEvento}
                       tipoEvento={evento.tipoEvento}
                       id={evento.idEvento}
                     />
