@@ -7,6 +7,7 @@ import './Convidados.css';
 import Botao from "../../componentes/Botao/Botao";
 
 
+
 interface Evento{
     idEvento: number;
     nomeEvento: string;
@@ -20,6 +21,7 @@ interface Evento{
   }
 
   export interface Convidado {
+    id: string;
     nome: string;
     email: string;
     dataNascimento: string;
@@ -27,61 +29,48 @@ interface Evento{
     status: 'Confirmado' | 'Recusado' | 'Pendente';
   }
 
-const Teste = () => {
+const Convidados = () => {
     const { idEvento } = useParams();
     const [evento, setEvento] = useState<Evento | null>(null);
     const [modoEdicaoEvento, setModoEdicaoEvento] = useState(false);
     const [modoApagarEvento, setModoApagarvento] = useState(false);
+    const [convidados, setConvidados] = useState<Convidado[]>([]);
 
-    const convidadosMock: Convidado[] = [
-        {
-          nome: "Ana da Silva",
-          email: "ana.silva@gmail.com",
-          dataNascimento: "12/02/2004",
-          rg: "55.432.323-5",
-          status: "Confirmado",
-        },
-        {
-          nome: "José Pereira",
-          email: "jose.pereira@outlook.com",
-          dataNascimento: "25/03/1985",
-          rg: "52.418.953-4",
-          status: "Recusado",
-        },
-        {
-          nome: "Daniel Carvalho",
-          email: "dani.c@gmail.com",
-          dataNascimento: "31/12/1999",
-          rg: "51.834.216-1",
-          status: "Pendente",
-        },
-      ];
+
+    const buscarConvidados = async (idEvento: string, setConvidados: Function) => {
+        try {
+          const response = await axios.get(`http://localhost:3000/users/obter-convidados/${idEvento}`);
+          setConvidados(response.data);
+        } catch (error) {
+          console.error('Erro ao buscar convidados:', error);
+        }
+      };
 
     useEffect(() => {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('Token não encontrado no localStorage');
-        }
-        const emailDecodificado: {email:string} = jwtDecode(token);
-        axios.get(`http://localhost:3000/users/get-user/${emailDecodificado.email}`)
-        .then((res) => {
-            const idUsuario = res.data.idUsuario;
-            axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
-                .then((res) => {
-                    setEvento(res.data);
-                })
-                .catch((err) => {
-                    console.error("Erro ao buscar o evento", err);
-                });
-        }) 
-        .catch((err) => {
-            console.error("Erro obter usuário", err);
-          });
-    } 
-    catch (error) {
-        console.error('Erro ao obter eventos', error);
-    }}, [idEvento]);
+        const ObterEventoeUsuario = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) throw new Error('Token não encontrado no localStorage');
+            
+                const { email }: { email: string } = jwtDecode(token);
+            
+                const usuario = await axios.get(`http://localhost:3000/users/get-user/${email}`);
+                const idUsuario = usuario.data.idUsuario;
+            
+                const evento = await axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`);
+                setEvento(evento.data);
+    
+                if (idEvento) {
+                    await buscarConvidados(idEvento, setConvidados);
+                } else {
+                    console.error('idEvento está indefinido.');
+                }
+              } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+              }
+            }
+            ObterEventoeUsuario();
+        }, [idEvento]);
     
 
     function guardarModo(setState: React.Dispatch<React.SetStateAction<boolean>>, valor: boolean) {
@@ -108,7 +97,7 @@ const Teste = () => {
                     <div className="botoes-convidados">
                         <div className="atualizar-lista-convidados">
                             <div className='texto-atualizar-convidados'>Atualizar convidados </div>
-                            <button className="botao-atualizar">
+                            <button className="botao-atualizar" onClick={() => idEvento && buscarConvidados(idEvento, setConvidados)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                     <path d="M18.1055 8.74955H18.4375C18.957 8.74955 19.375 8.33158 19.375 7.81205V2.81205C19.375 2.43314 19.1484 2.08939 18.7969 1.94486C18.4453 1.80033 18.043 1.87845 17.7734 2.14798L16.1484 3.77298C12.7266 0.394079 7.21484 0.405797 3.8125 3.81205C0.394531 7.23002 0.394531 12.7691 3.8125 16.187C7.23047 19.605 12.7695 19.605 16.1875 16.187C16.6758 15.6988 16.6758 14.9058 16.1875 14.4175C15.6992 13.9292 14.9062 13.9292 14.418 14.4175C11.9766 16.8589 8.01953 16.8589 5.57812 14.4175C3.13672 11.9761 3.13672 8.01908 5.57812 5.57767C8.00781 3.14798 11.9336 3.13627 14.3789 5.53861L12.7734 7.14798C12.5039 7.41752 12.4258 7.81986 12.5703 8.17142C12.7148 8.52298 13.0586 8.74955 13.4375 8.74955H18.1055Z" fill="white"/>
                                 </svg>
@@ -130,19 +119,16 @@ const Teste = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {convidadosMock.map((convidado, index) => (
-                            <tr key={index}>
+                            {convidados.map(convidado => (
+                            <tr key={convidado.id}>
                                 <td>{convidado.nome}</td>
                                 <td>{convidado.email}</td>
-                                <td>{convidado.dataNascimento}</td>
+                                <td>{new Date(convidado.dataNascimento).toLocaleDateString()}</td>
                                 <td>{convidado.rg}</td>
                                 <td>
                                 <span className={`status-convidado ${convidado.status.toLowerCase()}`}>
-                                    ● {convidado.status}
+                                    {convidado.status}
                                 </span>
-                                </td>
-                                <td>
-                                <button className="remover-convidado">✕</button>
                                 </td>
                             </tr>
                             ))}
@@ -154,4 +140,4 @@ const Teste = () => {
 )
 }
 
-export default Teste
+export default Convidados
