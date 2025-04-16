@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ModalPerfil from '../ModalPerfil/ModalPerfil';
 import ItemModal from '../ItemModalPerfil/ItemModalPerfil';
 import logo from '../../assets/logo_eventhub-sem-fundo.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 
 const CabecalhoLogado = () => {

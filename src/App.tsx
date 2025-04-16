@@ -26,7 +26,7 @@ const App = () => {
           <Route element={<OrganizadorLayout />}>
             <Route path='criar-evento' element={<CadastroEvento />}/>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
-            <Route path='informacoes-meus-eventos/:idEvento' element={<InformacoesMeusEventos />}/>
+            <Route path='meus-eventos/:idEvento/informacoes-meus-eventos' element={<InformacoesMeusEventos />}/>
           </Route>
         </Route>
       </Routes>

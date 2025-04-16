@@ -3,21 +3,125 @@ import './InformacoesMeusEventos.css';
 import { Modal } from '../../componentes/Modal/Modal';
 import Input from '../../componentes/Input/Input';
 import Botao from '../../componentes/Botao/Botao';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import { useParams } from 'react-router';
 // import Select from '../../componentes/Select/Select';
 
-const InformacoesMeusEventos = () => {
+interface Evento{
+    idEvento: number;
+    nomeEvento: string;
+    status?: string;
+    dataEvento: string;
+    horaInicio: string;
+    horaFim: string;
+    localEvento: string;
+    imagem?: string;
+    tipoEvento?: string;
+  }
 
-    const [ModalEditarEventoAberto, setModalEditarEventoAberto] = React.useState(false)
+
+const InformacoesMeusEventos = () => {
+    const { idEvento } = useParams();
+    const [evento, setEvento] = useState<Evento | null>(null);
+    const [modoEdicaoEvento, setModoEdicaoEvento] = useState(false);
+    const [modoApagarEvento, setModoApagarvento] = useState(false);
+
+    
+    
+     
+    useEffect(() => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token não encontrado no localStorage');
+            }
+            const emailDecodificado: {email:string} = jwtDecode(token);
+            axios.get(`http://localhost:3000/users/get-user/${emailDecodificado.email}`)
+            .then((res) => {
+                const idUsuario = res.data.idUsuario;
+                axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+                    .then((res) => {
+                        setEvento(res.data);
+                        const status = definirStatusEvento(res.data);
+                        setEvento({ ...res.data, status });
+                    })
+                    .catch((err) => {
+                        console.error("Erro ao buscar o evento", err);
+                    });
+            }) 
+            .catch((err) => {
+                console.error("Erro obter usuário", err);
+              });
+        } 
+        catch (error) {
+            console.error('Erro ao obter eventos', error);
+        }}, [idEvento]);
+        
+    
+        function guardarModo(setState: React.Dispatch<React.SetStateAction<boolean>>, valor: boolean) {
+            setState(valor);
+          }
+    
+          if (!evento) return <p>Carregando evento...</p>;
+
+          function definirStatusEvento(evento: Evento): string {
+            const agora = new Date();
+    
+            const dataEvento = new Date(evento.dataEvento);
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            dataEvento.setHours(0, 0, 0, 0);
+    
+            const dataEhHoje = dataEvento.getTime() === hoje.getTime();
+    
+            const [horaIni, minIni] = evento.horaInicio.split(':').map(Number);
+            const [horaFim, minFim] = evento.horaFim.split(':').map(Number);
+    
+            const inicio = new Date(evento.dataEvento);
+            inicio.setHours(horaIni, minIni, 0, 0);
+    
+            const fim = new Date(evento.dataEvento);
+            fim.setHours(horaFim, minFim, 0, 0);
+    
+            if (dataEhHoje) {
+                if (agora >= inicio && agora <= fim) return 'Em Progresso';
+                else if (agora < inicio) return 'Proximos Eventos';
+                else return 'Evento Finalizado';
+            } else if (dataEvento > hoje) {
+                return 'Proximos Eventos';
+            } else {
+                return 'Evento Finalizado';
+            }
+        }
+
+
 
     const AbrirModalEditarEvento = () => {
-        setModalEditarEventoAberto(!ModalEditarEventoAberto)
+        setModoEdicaoEvento(!modoEdicaoEvento)
     }
+
+    const AbrirModalApagarEvento = () => {
+        setModoApagarvento(!modoApagarEvento)
+    }
+
 
     
   return (
+    <div>
+        <CabecalhoEvento
+                idEvento={idEvento} 
+                EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
+                EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
+                tituloEvento={evento.nomeEvento}
+                dataEvento={evento.dataEvento}
+                horaInicio={evento.horaInicio}
+                horaFim={evento.horaFim}
+                localEvento={evento.localEvento}
+            />
     <div className='informacoes-meus-eventos'>
-        <Botao texto='Editar evento' funcao={AbrirModalEditarEvento} tamanho='minimo' className='botao-editar-evento'/>
         <div className='detalhes-eventos'>
             <p className='texto-detalhes-eventos'>Detalhes do evento</p>
             <div className='linhas'>
@@ -27,28 +131,28 @@ const InformacoesMeusEventos = () => {
                         <svg className='bolinha' xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                             <circle cx="7" cy="7" r="7" fill="#8C5DFF"/>
                         </svg>
-                        <div className='texto-proximos-eventos'>Próximos Eventos</div>
+                        <div className='texto-proximos-eventos'>{evento.status}</div>
                     </div>
                 </div>
                 <div className='categoria'>
                     <div className='texto-status-categoria-data-horario-endereco'>Categoria</div>
-                    <div>Apresentação educacional</div>
+                    <div>{evento.nomeEvento}</div>
                 </div>
             </div>
             <div className='linhas'>
                 <div className='data'>
                     <div className='texto-status-categoria-data-horario-endereco'>Data</div>
-                    <div>Sexta-feira, 27 de junho de 2025</div>
+                    <div>{evento.dataEvento}</div>
                 </div>
                 <div className='horario'>
                     <div className='texto-status-categoria-data-horario-endereco'>Horário</div>
-                    <div>19:00 - 19:30</div>
+                    <div>{evento.horaInicio} - {evento.horaFim}</div>
                 </div>
             </div>
             <div className='linhas'>
                 <div className='endereco'>
                     <div className='texto-status-categoria-data-horario-endereco'>Endereço</div>
-                    <div>Rua dos bobos, número 0</div>
+                    <div>{evento.localEvento}</div>
                 </div>        
             </div>
         </div>
@@ -81,7 +185,7 @@ const InformacoesMeusEventos = () => {
         </div>
 
         {
-            ModalEditarEventoAberto ? 
+            modoEdicaoEvento ? 
             <Modal titulo='Editar evento' enviaModal={AbrirModalEditarEvento}>
             <div className='modal-editar-evento'>
                 <div className='campos-editar-evento'>
@@ -193,8 +297,19 @@ const InformacoesMeusEventos = () => {
         :
         ''
         }
+
+        { modoApagarEvento ?
+        <Modal titulo='Apagar evento' textoBotao="Apagar" enviaModal={AbrirModalApagarEvento}>
+            <div className='modal-apagar-evento'>
+                <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o evento "{evento.nomeEvento}"?</div>
+            </div>
+        </Modal>
+        :
+        ''
+        }
            
     </div>
+</div>
   )
 }
 
