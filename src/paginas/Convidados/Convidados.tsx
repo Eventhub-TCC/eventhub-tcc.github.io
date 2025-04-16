@@ -5,6 +5,7 @@ import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento'
 import { jwtDecode } from "jwt-decode";
 import './Convidados.css';
 import Botao from "../../componentes/Botao/Botao";
+import { Modal } from "../../componentes/Modal/Modal";
 
 
 
@@ -21,7 +22,7 @@ interface Evento{
   }
 
   export interface Convidado {
-    id: string;
+    idConvidado: string;
     nome: string;
     email: string;
     dataNascimento: string;
@@ -35,7 +36,24 @@ const Convidados = () => {
     const [modoEdicaoEvento, setModoEdicaoEvento] = useState(false);
     const [modoApagarEvento, setModoApagarvento] = useState(false);
     const [convidados, setConvidados] = useState<Convidado[]>([]);
+    const [modalConfirmarPresencas, setModalConfirmarPresencas] = useState(false);
+    const [indiceConvidadoPendente, setIndiceConvidadoPendente] = useState(0);
 
+
+    const convidadosPendentes = convidados.filter(convidado => convidado.status === 'Pendente');
+    const convidadoPendenteAtual = convidadosPendentes[indiceConvidadoPendente];
+
+        const irParaProximoConvidado = () => {
+        if (indiceConvidadoPendente < convidadosPendentes.length - 1) {
+            setIndiceConvidadoPendente(indiceConvidadoPendente + 1);
+        }
+        };
+
+        const irParaConvidadoAnterior = () => {
+        if (indiceConvidadoPendente > 0) {
+            setIndiceConvidadoPendente(indiceConvidadoPendente - 1);
+        }
+        };
 
     const buscarConvidados = async (idEvento: string, setConvidados: Function) => {
         try {
@@ -45,6 +63,8 @@ const Convidados = () => {
           console.error('Erro ao buscar convidados:', error);
         }
       };
+
+
 
     useEffect(() => {
         const ObterEventoeUsuario = async () => {
@@ -71,6 +91,30 @@ const Convidados = () => {
             }
             ObterEventoeUsuario();
         }, [idEvento]);
+
+        const atualizarStatusConvidado = async (idConvidado: string, novoStatus: 'Confirmado' | 'Recusado') => {
+            try {
+              await axios.put(`http://localhost:3000/users/atualizar-status-convidado/${idConvidado}`, {
+                status: novoStatus
+              });
+
+              setConvidados(prevConvidados =>
+                prevConvidados.map(convidado =>
+                  convidado.idConvidado === idConvidado ? { ...convidado, status: novoStatus } : convidado
+                )
+              );
+          
+
+              if (indiceConvidadoPendente < convidadosPendentes.length - 1) {
+                setIndiceConvidadoPendente(indiceConvidadoPendente);
+              } else {
+                setModalConfirmarPresencas(false);
+              }
+          
+            } catch (error) {
+              console.error('Erro ao atualizar status do convidado:', error);
+            }
+          };
     
 
     function guardarModo(setState: React.Dispatch<React.SetStateAction<boolean>>, valor: boolean) {
@@ -104,7 +148,7 @@ const Convidados = () => {
                             </button>
                         </div>
                         <div className="confirmar-presencas">
-                            <Botao texto='Confirmar Presenças'/>
+                            <Botao funcao={() => setModalConfirmarPresencas(true)} texto='Confirmar Presenças'/>
                         </div>
                     </div>
                     <table className="tabela-convidados">
@@ -120,7 +164,7 @@ const Convidados = () => {
                         </thead>
                         <tbody>
                             {convidados.map(convidado => (
-                            <tr key={convidado.id}>
+                            <tr key={convidado.idConvidado}>
                                 <td>{convidado.nome}</td>
                                 <td>{convidado.email}</td>
                                 <td>{new Date(convidado.dataNascimento).toLocaleDateString()}</td>
@@ -134,6 +178,65 @@ const Convidados = () => {
                             ))}
                         </tbody>
                         </table>
+                        { modalConfirmarPresencas ? 
+                        <Modal botoes={false} textoBotao='Confirmar' funcaoSalvar={() => setModalConfirmarPresencas(false)} enviaModal={() => setModalConfirmarPresencas(false)} titulo="Confirmar Presenças">
+                        <div className="modal-confirmar-presenca">
+                            <div className="caixa-convidados-pendentes-botoes">
+                                <div className="convidados-pendentes-botoes">
+                                <div className="numero-pendentes">{convidadosPendentes.length}</div>
+                                <div className="texto-convidados-pendentes">Convidados pendentes</div>
+                                <div className="botoes-convidados-pendentes">
+                                    <div className="botoes-anterior-proximo">
+                                    <Botao texto="Anterior" funcao={irParaConvidadoAnterior} />
+                                    <Botao texto="Próximo" funcao={irParaProximoConvidado} />
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                            {convidadoPendenteAtual && (
+                                <>
+                                <div className="inputs-dados">
+                                    <div className="titulo-campos">Nome do convidado</div>
+                                    <div className="dados-convidado">{convidadoPendenteAtual.nome}</div>
+                                </div>
+                                <div className="inputs-dados">
+                                    <div className="titulo-campos">E-mail</div>
+                                    <div className="dados-convidado">{convidadoPendenteAtual.email}</div>
+                                </div>
+                                <div className="inputs-dados">
+                                    <div className="titulo-campos">Data de Nascimento</div>
+                                    <div className="dados-convidado">
+                                    {new Date(convidadoPendenteAtual.dataNascimento).toLocaleDateString()}
+                                    </div>
+                                </div>
+                                <div className="inputs-dados">
+                                    <div className="titulo-campos">RG</div>
+                                    <div className="dados-convidado">{convidadoPendenteAtual.rg}</div>
+                                </div>
+                                </>
+                            )}
+                            <div className="botoes-acoes-convidado">
+                                <Botao
+                                    texto="Recusar"
+                                    funcao={() => {
+                                    if (convidadoPendenteAtual) {
+                                        atualizarStatusConvidado(convidadoPendenteAtual.idConvidado, 'Recusado');
+                                    }
+                                    }}
+                                />
+                                <Botao
+                                    texto="Confirmar"
+                                    funcao={() => {
+                                    if (convidadoPendenteAtual) {
+                                        atualizarStatusConvidado(convidadoPendenteAtual.idConvidado, 'Confirmado');
+                                    }
+                                    }}
+                                />
+                                </div>
+                            </div>
+                    </Modal>:
+                    ''}
                 </div>
             </div>
         </div>
