@@ -11,6 +11,7 @@ import OrganizadorLayout from './componentes/OrganizadorLayout/OrganizadorLayout
 import ProtecaoDeRota from './componentes/ProtecaoDeRota/ProtecaoDeRota'
 import MeusEventos from './paginas/MeusEventos/MeusEventos'
 import Convidados from './paginas/Convidados/Convidados'
+import Convites from './paginas/Convites/Convites'
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
             <Route path='meu-perfil' element={<MeuPerfil />}/>
             <Route path="meus-eventos" element={<MeusEventos />} />
             <Route path="meus-eventos/:idEvento/convidados" element={<Convidados/>} />
+            <Route path="meus-eventos/:idEvento/convites" element={<Convites/>} />
           </Route>
         </Route>
       </Routes>
