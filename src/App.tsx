@@ -12,6 +12,9 @@ import ProtecaoDeRota from './componentes/ProtecaoDeRota/ProtecaoDeRota'
 import MeusEventos from './paginas/MeusEventos/MeusEventos'
 import InformacoesMeusEventos from './paginas/InformacoesMeusEventos/InformacoesMeusEventos'
 import ConfirmarPresenca from './paginas/ConfirmarPresenca/ConfirmarPresenca'
+import Convidados from './paginas/Convidados/Convidados'
+import Convites from './paginas/Convites/Convites'
+
 
 const App = () => {
   return (
@@ -30,6 +33,8 @@ const App = () => {
             <Route path='meu-perfil' element={<MeuPerfil />}/>
             <Route path="meus-eventos" element={<MeusEventos />} />
             <Route path='meus-eventos/:idEvento/informacoes-meus-eventos' element={<InformacoesMeusEventos />}/>
+            <Route path="meus-eventos/:idEvento/convidados" element={<Convidados/>} />
+            <Route path="meus-eventos/:idEvento/convites" element={<Convites/>} />
           </Route>
         </Route>
         <Route path='ConfirmarPresenca' element={<ConfirmarPresenca/>}/>

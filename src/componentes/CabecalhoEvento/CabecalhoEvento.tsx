@@ -68,9 +68,9 @@ const CabecalhoEvento = ({
                 Convidados
             </NavLink>
             <NavLink 
-                to={`/meus-eventos/${idEvento}/pedidos`} 
+                to={`/meus-eventos/${idEvento}/convites`} 
                 className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)} >
-                Pedidos
+                Convites
             </NavLink>
             
 
