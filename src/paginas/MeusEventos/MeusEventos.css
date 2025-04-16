@@ -165,3 +165,11 @@
 
     
 }
+
+.formulario-sem-eventos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+}

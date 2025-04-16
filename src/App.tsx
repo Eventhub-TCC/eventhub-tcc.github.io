@@ -10,8 +10,8 @@ import MeuPerfil from './paginas/MeuPerfil/MeuPerfil'
 import OrganizadorLayout from './componentes/OrganizadorLayout/OrganizadorLayout'
 import ProtecaoDeRota from './componentes/ProtecaoDeRota/ProtecaoDeRota'
 import MeusEventos from './paginas/MeusEventos/MeusEventos'
-
-
+import InformacoesMeusEventos from './paginas/InformacoesMeusEventos/InformacoesMeusEventos'
+import ConfirmarPresenca from './paginas/ConfirmarPresenca/ConfirmarPresenca'
 
 const App = () => {
   return (
@@ -29,8 +29,10 @@ const App = () => {
             <Route path='criar-evento' element={<CadastroEvento />}/>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
             <Route path="meus-eventos" element={<MeusEventos />} />
+            <Route path='meus-eventos/:idEvento/informacoes-meus-eventos' element={<InformacoesMeusEventos />}/>
           </Route>
         </Route>
+        <Route path='ConfirmarPresenca' element={<ConfirmarPresenca/>}/>
       </Routes>
     </BrowserRouter>
   )

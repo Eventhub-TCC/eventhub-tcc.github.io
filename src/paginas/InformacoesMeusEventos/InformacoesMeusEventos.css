@@ -1,0 +1,419 @@
+.informacoes-meus-eventos{
+    display: flex;
+    padding: 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.detalhes-eventos{
+    display: flex;
+    padding: 48px 40px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 42px;
+    align-self: stretch;
+    border-radius: 32px;
+    border: 1px solid var(--Purple-700, #8C5DFF);
+    background: #FFF;
+}
+
+.texto-detalhes-eventos{
+    color: var(--Purple-800, #6A40C3);
+    font-family: Inter;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.linhas{
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    align-self: stretch;
+}
+
+.texto-status-categoria-data-horario-endereco{
+    align-self: stretch;
+    color: var(--Purple-700, #8C5DFF);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.status{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 0 0;
+}
+
+.nome-cor-status{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.texto-proximos-eventos{
+    color: var(--Purple-700, #8C5DFF);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.bolinha{
+    fill: var(--Purple-700, #8C5DFF);
+}
+
+.categoria{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 0 0;
+}
+
+.texto-data{
+    color: #000;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.data{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 0 0;
+}
+
+.horario{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    flex: 1 0 0;
+}
+
+.endereco{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+}
+
+
+.resumo-convites{
+    display: flex;
+    padding: 48px 40px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 42px;
+    align-self: stretch;
+    border-radius: 32px;
+    border: 1px solid var(--Purple-700, #8C5DFF);
+    background: #FFF;
+}
+
+.texto-resumo-convite{
+    color: var(--Purple-800, #6A40C3);
+    font-family: Inter;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.botoes-convites{
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    align-self: stretch;
+}
+
+.convites-confirmados-pendentes-recusados{
+    display: flex;
+    height: 84px;
+    padding: 16px 24px;
+    align-items: center;
+    gap: 16px;
+    flex: 1 0 0;
+    border-radius: 16px;
+    border: 2px solid var(--Purple-900, #55379D);
+    background: #6A40C3;
+}
+
+.texto-confirmar-pendente-recusado{
+    color: #FFF;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.numero{
+    color: #FFF;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+/* 
+modal css */
+
+.modal-editar-evento{
+    display: flex;
+    width: 853px;
+    height: 1260px;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: -70px;
+}
+
+.campos-editar-evento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+}
+
+.nome-categoria-evento{
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    align-self: stretch;
+}
+
+.nome-input-evento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+}
+
+.textos{
+    color: #000;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.categoria-input-evento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+}
+
+.descricao-input-evento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+}
+
+.input-tamanho{
+    width: 393px;
+}
+
+.input-tamanho-descricao{
+    height: 151px;
+    width: 813px;
+}
+
+.imagem-evento{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+}
+
+
+.imagem-evento-texto-botao{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+}
+
+.input-imagem-evento{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.sem-imagem{
+    display: flex;
+    width: 341px;
+    height: 198px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 16px;
+    border: 2px dashed rgba(0, 0, 0, 0.25);
+    background: #C4C4C4;
+}
+
+.botoes-imagem{
+    display: flex;
+    width: 183px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+
+.novos-dados-eventos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+}
+
+.texto-input-data{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+}
+
+.data-evento{
+    width: 813px;
+}
+
+.texto-input-hora-inicio-evento{
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    align-self: stretch;
+}
+
+.horario-inicio-fim-evento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+}
+
+.texto-input-cep-endereco{
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+}
+
+.input-texto-cep-numero{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.input-texto-endereco-complemento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.input-tamanho-endereco-complemento{
+    width: 550px;
+}
+
+.input-texto-numero-complemento{
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+}
+
+.input-tamanho-cep-numero{
+    width: 239px;
+}
+
+.input-texto-bairro{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.input-texto-bairro{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.input-bairro{
+    width: 813px;
+}
+
+.input-texto-cidade-uf{
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+    align-self: stretch;
+}
+
+.input-cidade{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.input-tamanho-cidade{
+    width: 546px;
+}
+
+.input-uf{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+
+
+
+
+

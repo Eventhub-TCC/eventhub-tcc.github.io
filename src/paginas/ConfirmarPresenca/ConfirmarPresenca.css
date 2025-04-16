@@ -1,0 +1,337 @@
+.container-convite{
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    
+}
+
+.imagem-fundo{
+    background-image: url('../../assets/fundo_convite.png');
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top left;
+
+    width: 100%;
+    min-height: 220vh;
+    position: relative;
+}
+
+
+.cabecalho-roxo{
+    display: flex;
+    width: 100%;
+    height: 335px;
+    justify-content: center;
+    align-items: center;
+    background: var(--Purple-700, #8C5DFF);
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.40);
+    /* flex-direction: column; */
+}
+
+.logo-eventhub{
+    display: flex;
+    width: 213px;
+    height: 88px;
+    flex-shrink: 0;
+    aspect-ratio: 213/88;
+    background: url('../../assets/logo_eventhub_fonte_branca.png') #8C5DFF 50% / cover no-repeat;
+    align-items: center;
+    margin-bottom: 160px;
+}
+
+.informacoes-evento-convite{
+    position: absolute;
+    top: 200px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 24px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10; 
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+}
+
+.mensagem-titulo{
+    display: flex;
+    width: 329px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.mensagem{
+    align-self: stretch;
+    color: #3B3B3B;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.titulo{
+    align-self: stretch;
+    color: #000;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.caixa-texto-evento{
+    width: 751px;
+    color: #575555;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.dados-evento{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.data-evento{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.imagem-calendario{
+    width: 21px;
+    height: 21px;
+}
+
+.texto-data-evento{
+    color: var(--Purple-900, #55379D);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.horario-evento{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.imagem-relogio{
+    width: 21px;
+    height: 21px;
+}
+
+.texto-horario-evento{
+    color: var(--Purple-900, #55379D);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.local-evento{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.imagem-local{
+    width: 21px;
+    height: 21px;
+}
+
+.texto-local-evento{
+    color: var(--Purple-900, #55379D);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.campos-dados-convidado{
+    display: flex;
+    width: 815px;
+    padding: 48px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    border-radius: 16px;
+    border-top: 8px solid var(--Purple-700, #8C5DFF);
+    background: #FFF;
+    box-shadow: 0px 2px 4px 0px rgba(140, 93, 255, 0.25);
+}
+
+.campos-dados-convidado{
+    position: absolute;
+    top: 600px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 24px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10; 
+    display: flex;
+    flex-direction: column;
+
+    
+}
+
+.inputs-dados-convidado{
+    display: flex;
+    width: 815px;
+    padding: 48px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+.titulo-dados{
+    color: #000;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.instrucao-dados{
+    align-self: stretch;
+    color: #575555;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.input-texto-dados{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+}
+
+.tamanho-input-convidado{
+    width: 719px;
+}
+
+/* 
+
+
+.fundo-caixa{
+    display: flex;
+    width: 100%;
+    height: 335px;
+    padding: 32px 128px;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-shrink: 0;
+    background: var(--Purple-700, #8C5DFF);
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.40);
+}
+
+.convite-apresentacao{
+    display: flex;
+    height: 429px;
+    padding: 48px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+    background: #FFF;
+    border: red
+}
+
+.voce-foi-convidado{
+    display: flex;
+    width: 329px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    color: #3B3B3B;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.titulo-convite{
+    color: #000;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.descricao-convite{
+    width: 751px;
+    color: #575555;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    
+}
+
+.informacoes-convite{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.icone-texto-convite{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--Purple-900, #55379D);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.inputs-convite{
+    display: flex;
+    width: 815px;
+    padding: 48px 32px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    border-radius: 16px;
+    border-top: 8px solid var(--Purple-700, #8C5DFF);
+    background: #FFF;
+    box-shadow: 0px 2px 4px 0px rgba(140, 93, 255, 0.25);
+}
+
+.titulo-preencha{
+    color: #000;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+} */
