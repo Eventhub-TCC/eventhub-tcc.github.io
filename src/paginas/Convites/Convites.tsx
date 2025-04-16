@@ -17,7 +17,13 @@ interface Evento{
     dataEvento: string;
     horaInicio: string;
     horaFim: string;
-    localEvento: string;
+    cepLocal: string;
+    enderecoLocal: string;
+    numeroLocal: string;
+    complementoLocal: string;
+    bairroLocal: string;
+    cidadeLocal: string;
+    ufLocal: string;
     imagem?: string;
     tipoEvento?: string;
   }
@@ -36,18 +42,25 @@ const Convites = () => {
     const [modoApagarEvento, setModoApagarvento] = useState(false);
     const [convites, setConvites] = useState<Convite[]>([]);
     const [linkConvite, setLinkConvite] = useState<string | null>(null);
+    const [idUsuario, setIdUsuario] = useState<any>(null);
 
     const gerarConvite = async () => {
         try {
           const response = await axios.post(`http://localhost:3000/users/gerar-convite/${idEvento}`);
-          const link = response.data;
-          setLinkConvite(link.linkConvite);
-          console.log("res data", link);
+          setLinkConvite(response.data.linkConvite);
+          console.log("res data", response.data.linkConvite);
+          console.log("linkConvite", linkConvite)
         } catch (error) {
           console.error("Erro ao gerar convite:", error);
           alert("Erro ao gerar o link de convite.");
         }
       };
+
+      useEffect(() => {
+        if (linkConvite) {
+          console.log("linkConvite atualizado:", linkConvite);
+        }
+      }, [linkConvite]);
 
 
       const copiarLink = async () => {
@@ -75,8 +88,8 @@ const Convites = () => {
             
                 const { email }: { email: string } = jwtDecode(token);
             
-                const usuario = await axios.get(`http://localhost:3000/users/get-user/${email}`);
-                const idUsuario = usuario.data.idUsuario;
+                const res = await axios.get(`http://localhost:3000/users/get-user/${email}`);
+                setIdUsuario(res.data.codigoUsu);
             
                 const evento = await axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`);
                 setEvento(evento.data);
@@ -110,6 +123,23 @@ const Convites = () => {
         setState(valor);
       }
 
+      const AbrirModalApagarEvento = () => {
+        setModoApagarvento(!modoApagarEvento)
+    }
+
+
+    const ApagarEvento = () => {
+        axios.delete(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+            .then((res) => {
+                console.log(res.data);
+                window.location.href = '/meus-eventos';
+            })
+            .catch((err) => {
+                console.error("Erro ao apagar evento", err);
+            });
+        setModoApagarvento(!modoApagarEvento)
+    }
+
       if (!evento) return <p>Carregando evento...</p>;
 
       return (
@@ -122,7 +152,7 @@ const Convites = () => {
                 dataEvento={evento.dataEvento}
                 horaInicio={evento.horaInicio}
                 horaFim={evento.horaFim}
-                localEvento={evento.localEvento}
+                localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
             />
             <div className="conteudo-convidados">
                 <div className="convidados">
@@ -167,6 +197,15 @@ const Convites = () => {
                             : 
                             ''
                             }
+                                    { modoApagarEvento ?
+                                    <Modal titulo='Apagar evento' textoBotao="Apagar" funcaoSalvar={ApagarEvento} enviaModal={AbrirModalApagarEvento}>
+                                        <div className='modal-apagar-evento'>
+                                            <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o evento "{evento.nomeEvento}"?</div>
+                                        </div>
+                                    </Modal>
+                                    :
+                                    ''
+                                    }
                     </div>
                 </div>
             </div>

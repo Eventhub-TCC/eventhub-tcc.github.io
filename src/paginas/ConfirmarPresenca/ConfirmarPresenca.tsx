@@ -5,8 +5,34 @@ import './ConfirmarPresenca.css'
 // import { div } from 'framer-motion/client'
 import Input from '../../componentes/Input/Input'
 import Botao from '../../componentes/Botao/Botao'
+import { data, useParams } from 'react-router';
+import { useState } from 'react';
+import axios from 'axios';
+import { PatternFormat } from 'react-number-format';
 
-const Teste = () => {
+const ConfirmarPresenca = () => {
+    const { idConvite } = useParams();
+    const [nome, setNome] = useState("");
+    const [email, setEmail] = useState("");
+    const [rg, setRg] = useState("");
+    const [dataNascimento, setDataNascimento] = useState("");
+  
+    const confirmarPresenca = async () => {
+        try {
+          await axios.post(`http://localhost:3000/users/confirmar-convite/${idConvite}`, {
+            nome,
+            email,
+            rg,
+            dataNascimento,
+          });
+          alert("Presença confirmada! Aguarde aprovação.");
+        } catch (err) {
+          console.error(err);
+          alert("Erro ao confirmar presença.");
+        }
+      };
+
+
   return (
     <div className='container-convite'>
         <div className="imagem-fundo">
@@ -61,29 +87,29 @@ const Teste = () => {
                 <div className='input-texto-dados'>
                     <div>Nome</div>
                     <div className='tamanho-input-convidado'>
-                        <Input text='' dica='Digite seu nome'/>
+                        <Input value={nome} onChange={(e:any) => setNome(e.target.value)} text='' dica='Digite seu nome'/>
                     </div>
                 </div>
                 <div className='input-texto-dados'>
                     <div>Email</div>
                     <div className='tamanho-input-convidado'>
-                        <Input text='' dica='Digite seu email'/>
+                        <Input value={email} onChange={(e:any) => setEmail(e.target.value)} type='email' dica='Digite seu email'/>
                     </div>
                 </div>
                 <div className='input-texto-dados'>
                     <div>Data de nascimento</div>
                     <div className='tamanho-input-convidado'>
-                        <Input text='' dica='Digite sua data de nascimento'/>
+                        <Input value={dataNascimento} onChange={(e:any) => setDataNascimento(e.target.value)} type='date' dica='Digite sua data de nascimento'/>
                     </div>
                 </div>
                 <div className='input-texto-dados'>
                     <div>RG</div>
                     <div className='tamanho-input-convidado'>
-                        <Input text='' dica='Digite seu RG'/>
+                        <Input value={rg} onChange={(e:any) => setRg(e.target.value)} nome='rg' obrigatorio dica='Digite seu RG'/>
                     </div>
                 </div>
                 <div>
-                    <Botao texto='Enviar'></Botao>
+                    <Botao texto='Enviar' funcao={confirmarPresenca}></Botao>
                 </div>
             </div>
         </div>
@@ -91,4 +117,4 @@ const Teste = () => {
   )
 }
 
-export default Teste
+export default ConfirmarPresenca

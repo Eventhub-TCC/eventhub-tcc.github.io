@@ -16,7 +16,13 @@ interface Evento{
     dataEvento: string;
     horaInicio: string;
     horaFim: string;
-    localEvento: string;
+    cepLocal: string;
+    enderecoLocal: string;
+    numeroLocal: string;
+    complementoLocal: string;
+    bairroLocal: string;
+    cidadeLocal: string;
+    ufLocal: string;
     imagem?: string;
     tipoEvento?: string;
   }
@@ -38,6 +44,7 @@ const Convidados = () => {
     const [convidados, setConvidados] = useState<Convidado[]>([]);
     const [modalConfirmarPresencas, setModalConfirmarPresencas] = useState(false);
     const [indiceConvidadoPendente, setIndiceConvidadoPendente] = useState(0);
+    const [idUsuario, setIdUsuario] = useState<any>(null);
 
 
     const convidadosPendentes = convidados.filter(convidado => convidado.status === 'Pendente');
@@ -74,8 +81,9 @@ const Convidados = () => {
             
                 const { email }: { email: string } = jwtDecode(token);
             
-                const usuario = await axios.get(`http://localhost:3000/users/get-user/${email}`);
-                const idUsuario = usuario.data.idUsuario;
+                const res = await axios.get(`http://localhost:3000/users/get-user/${email}`);
+                setIdUsuario(res.data.codigoUsu);
+
             
                 const evento = await axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`);
                 setEvento(evento.data);
@@ -123,17 +131,33 @@ const Convidados = () => {
 
       if (!evento) return <p>Carregando evento...</p>;
 
+      const AbrirModalApagarEvento = () => {
+        setModoApagarvento(!modoApagarEvento)
+    }
+
+    const ApagarEvento = () => {
+        axios.delete(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+            .then((res) => {
+                window.location.href = '/meus-eventos';
+            })
+            .catch((err) => {
+                console.error("Erro ao apagar evento", err);
+            });
+        setModoApagarvento(!modoApagarEvento)
+    }
+
   return (
     <div className="tela-convidados-evento">
             <CabecalhoEvento
-            idEvento={idEvento} 
-            EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
-            EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
-            tituloEvento={evento.nomeEvento}
-            dataEvento={evento.dataEvento}
-            horaInicio={evento.horaInicio}
-            horaFim={evento.horaFim}
-            localEvento={evento.localEvento}
+           idEvento={idEvento} 
+           EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
+           EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
+           tituloEvento={evento.nomeEvento}
+           dataEvento={evento.dataEvento}
+           horaInicio={evento.horaInicio}
+           horaFim={evento.horaFim}
+           localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+
         />
         <div className="conteudo-convidados">
             <div className="convidados">
@@ -237,6 +261,15 @@ const Convidados = () => {
                             </div>
                     </Modal>:
                     ''}
+                            { modoApagarEvento ?
+                            <Modal titulo='Apagar evento' textoBotao="Apagar" funcaoSalvar={ApagarEvento} enviaModal={AbrirModalApagarEvento}>
+                                <div className='modal-apagar-evento'>
+                                    <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o evento "{evento.nomeEvento}"?</div>
+                                </div>
+                            </Modal>
+                            :
+                            ''
+                            }
                 </div>
             </div>
         </div>

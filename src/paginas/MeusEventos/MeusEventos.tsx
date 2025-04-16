@@ -5,6 +5,7 @@ import './MeusEventos.css'
 import { useEffect, useState } from "react";
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 interface Evento{
   idEvento: number;
@@ -31,6 +32,8 @@ const MeusEventos = () => {
     emAndamento: [],
     confirmados: [],
   });
+  
+  const navigate = useNavigate();
 
   const obterEventos = async () => {
     try {
@@ -204,7 +207,7 @@ const MeusEventos = () => {
               : ''
               }
               </div>
-            <div className="botao-criar-eventos">
+            <div onClick={() => navigate('/criar-evento')} className="botao-criar-eventos">
                 <div className='botao-criar-eventos-meus-eventos'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33" fill="none">
                   <path d="M16.5001 6.59961L16.5001 26.3996M26.4001 16.4996L6.6001 16.4996" stroke="white" stroke-width="3" stroke-linecap="round"/>

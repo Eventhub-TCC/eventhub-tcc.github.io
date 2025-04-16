@@ -37,7 +37,7 @@ const App = () => {
             <Route path="meus-eventos/:idEvento/convites" element={<Convites/>} />
           </Route>
         </Route>
-        <Route path='ConfirmarPresenca' element={<ConfirmarPresenca/>}/>
+        <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>
       </Routes>
     </BrowserRouter>
   )
