@@ -1,7 +1,7 @@
 import './Select.css'
 import { useState } from 'react'
 
-const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, children,textoPadrao = 'Selecione uma opção', ...props}:any) => {
+const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, children,textoPadrao = 'Selecione uma opção',esconderValorPadrao = true, ...props}:any) => {
 
   const [focado, setFocado] = useState(false);
 
@@ -17,7 +17,7 @@ const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, chi
             value={valor}
             {...props}
             >
-                <option selected hidden value="">{textoPadrao}</option>
+                <option selected hidden={esconderValorPadrao} value="">{textoPadrao}</option>
                 {children}
             </select>
             <i className={`fa-solid fa-angle-up select__icone ${focado? 'select__icone-rotacionado':''}`}></i>

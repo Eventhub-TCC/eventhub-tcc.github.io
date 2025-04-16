@@ -9,7 +9,7 @@ const CardEvento = ({titulo, status='confirmado', dataEvento = 'Sem data definid
     <Link to={`/eventos/${id}`}><div className="card-evento" style={{'--cor-status': corStatus}as React.CSSProperties}>
       <div className="card-evento__centro">
         <div className="card-evento__frente">
-          <div className="card-evento__imagem" style={imagem?{backgroundImage:`url(${imagem})`}:{}}>
+          <div className="card-evento__imagem" style={imagem?{backgroundImage:`url(http://localhost:3000/files/${imagem})`}:{}}>
             {!imagem ? <i className="fa-solid fa-image card-evento__sem-imagem"></i>:''} 
           </div>
           <div className="card-evento__container-titulo">

@@ -1,41 +1,39 @@
-.select{
+.textarea{
     width: 100%;
     border: solid #CED4DA 1px;
     border-radius: 8px;
-    padding: 9px 42px 9px 16px;
+    padding: 10px 16px;
     font-family: var(--fonte-principal) ;
     background-color: white ;
     box-shadow: 0px 2px 2px 0px rgba(33, 37, 41, 0.06), 0px 0px 1px 0px rgba(33, 37, 41, 0.08);
-    text-overflow: ellipsis;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    min-height: 151px;
 }
 
-.select:focus{
+.textarea:focus{
     outline: solid var(--purple-700) 2px;
     border-color: transparent;
 }
 
-.select__label{
+.textarea::placeholder{
+    font-family: var(--fonte-principal);
+}
+
+.textarea__label{
     margin-bottom: .5rem;
     font-weight: 300;
     color: black;
     font-size: 1rem;
 }
 
-.select__container{
+.textarea__container{
     position: relative;
 }
 
-.select__icone{
+.contador{
     position: absolute;
-    right: 16px;
-    top: 35%;
-    pointer-events: none;
-    transition: transform 0.3s ease-in-out;
-}
-
-.select__icone-rotacionado{
-    transform: rotate(180deg);
+    bottom: 10px;
+    right: 10px;
+    color: gray;
+    background-color: rgba(128, 128, 128, .2);
+    border-radius: 5px;
 }

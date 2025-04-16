@@ -13,8 +13,14 @@ interface Evento{
   dataEvento: string;
   horaInicio: string;
   horaFim: string;
-  localEvento: string;
-  imagem?: string;
+  cepLocal: string;
+  enderecoLocal: string;
+  numeroLocal: string;
+  complementoLocal: string;
+  bairroLocal: string;
+  cidadeLocal: string;
+  ufLocal: string;
+  imagemEvento?: string;
   tipoEvento?: string;
 }
 
@@ -148,8 +154,8 @@ const MeusEventos = () => {
                       dataEvento={formatarData(evento.dataEvento)}
                       horaInicio={evento.horaInicio}
                       horaFim={evento.horaFim}
-                      endereco={evento.localEvento}
-                      imagem={evento.imagem}
+                      endereco={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                      imagem={evento.imagemEvento}
                       tipoEvento={evento.tipoEvento}
                       id={evento.idEvento}
                     />
@@ -170,8 +176,8 @@ const MeusEventos = () => {
                         dataEvento={formatarData(evento.dataEvento)}
                         horaInicio={evento.horaInicio}
                         horaFim={evento.horaFim}
-                        endereco={evento.localEvento}
-                        imagem={evento.imagem}
+                        endereco={evento.enderecoLocal +', ' + evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                        imagem={evento.imagemEvento}
                         tipoEvento={evento.tipoEvento}
                         id={evento.idEvento}
                       />
@@ -192,8 +198,8 @@ const MeusEventos = () => {
                       dataEvento={formatarData(evento.dataEvento)}
                       horaInicio={evento.horaInicio}
                       horaFim={evento.horaFim}
-                      endereco={evento.localEvento}
-                      imagem={evento.imagem}
+                      endereco={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                      imagem={evento.imagemEvento}
                       tipoEvento={evento.tipoEvento}
                       id={evento.idEvento}
                     />
@@ -204,7 +210,7 @@ const MeusEventos = () => {
               : ''
               }
               </div>
-            <div className="botao-criar-eventos">
+            <div className="botao-criar-eventos" onClick={() => window.location.href='/criar-evento'}>
                 <div className='botao-criar-eventos-meus-eventos'>
                 <svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33" fill="none">
                   <path d="M16.5001 6.59961L16.5001 26.3996M26.4001 16.4996L6.6001 16.4996" stroke="white" stroke-width="3" stroke-linecap="round"/>
