@@ -26,7 +26,6 @@
     align-items: center;
     background: var(--Purple-700, #8C5DFF);
     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.40);
-    /* flex-direction: column; */
 }
 
 .logo-eventhub{
@@ -40,14 +39,19 @@
     margin-bottom: 160px;
 }
 
-.informacoes-evento-convite{
+.convite__cards{
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
     position: absolute;
-    top: 200px; 
+    top: 200px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.informacoes-evento-convite{
     background: white;
     padding: 24px;
-    width: 90%;
     max-width: 800px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -87,7 +91,6 @@
 }
 
 .caixa-texto-evento{
-    width: 751px;
     color: #575555;
     font-family: Inter;
     font-size: 18px;
@@ -177,21 +180,14 @@
 }
 
 .campos-dados-convidado{
-    position: absolute;
-    top: 600px; 
-    left: 50%;
-    transform: translateX(-50%);
     background: white;
     padding: 24px;
-    width: 90%;
     max-width: 800px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     z-index: 10; 
     display: flex;
     flex-direction: column;
-
-    
 }
 
 .inputs-dados-convidado{
@@ -220,6 +216,13 @@
     font-style: normal;
     font-weight: 300;
     line-height: normal;
+}
+
+.formulario-dados-convidado{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
 }
 
 .input-texto-dados{

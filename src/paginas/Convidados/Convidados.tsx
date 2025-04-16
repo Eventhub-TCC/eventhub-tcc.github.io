@@ -6,6 +6,8 @@ import { jwtDecode } from "jwt-decode";
 import './Convidados.css';
 import Botao from "../../componentes/Botao/Botao";
 import { Modal } from "../../componentes/Modal/Modal";
+import Input from "../../componentes/Input/Input";
+import { desc } from "framer-motion/client";
 
 
 
@@ -25,6 +27,7 @@ interface Evento{
     ufLocal: string;
     imagem?: string;
     tipoEvento?: string;
+    descricaoEvento?: string;
   }
 
   export interface Convidado {
@@ -40,6 +43,7 @@ const Convidados = () => {
     const { idEvento } = useParams();
     const [evento, setEvento] = useState<Evento | null>(null);
     const [modoEdicaoEvento, setModoEdicaoEvento] = useState(false);
+    const [eventoEditado, setEventoEditado] = useState<Evento | null>(null);
     const [modoApagarEvento, setModoApagarvento] = useState(false);
     const [convidados, setConvidados] = useState<Convidado[]>([]);
     const [modalConfirmarPresencas, setModalConfirmarPresencas] = useState(false);
@@ -49,6 +53,35 @@ const Convidados = () => {
 
     const convidadosPendentes = convidados.filter(convidado => convidado.status === 'Pendente');
     const convidadoPendenteAtual = convidadosPendentes[indiceConvidadoPendente];
+
+    useEffect(() => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token não encontrado no localStorage');
+            }
+            const emailDecodificado: {email:string} = jwtDecode(token);
+            axios.get(`http://localhost:3000/users/get-user/${emailDecodificado.email}`)
+            .then((res) => {
+                setIdUsuario(res.data.idUsuario);
+                axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+                    .then((res) => {
+                        setEvento(res.data);
+                        setEventoEditado(res.data);
+                        const status = definirStatusEvento(res.data);
+                        setEvento({ ...res.data, status });
+                    })
+                    .catch((err) => {
+                        console.error("Erro ao buscar o evento", err);
+                    });
+            }) 
+            .catch((err) => {
+                console.error("Erro obter usuário", err);
+              });
+        } 
+        catch (error) {
+            console.error('Erro ao obter eventos', error);
+        }}, [idEvento]);
 
         const irParaProximoConvidado = () => {
         if (indiceConvidadoPendente < convidadosPendentes.length - 1) {
@@ -135,6 +168,71 @@ const Convidados = () => {
         setModoApagarvento(!modoApagarEvento)
     }
 
+    const AbrirModalEditarEvento = () => {
+        setEventoEditado(evento);
+       setModoEdicaoEvento(!modoEdicaoEvento)
+   }
+
+   const editarEvento = async () => {
+    if (!eventoEditado) return alert("Evento não carregado corretamente!");
+  
+    try {
+      await axios.put(`http://localhost:3000/users/events/${evento.idEvento}`, {
+        nomeEvento: eventoEditado.nomeEvento,
+        tipoEvento: eventoEditado.tipoEvento,
+        descricaoEvento: eventoEditado.descricaoEvento,
+        dataEvento: eventoEditado.dataEvento,
+        horaInicio: eventoEditado.horaInicio,
+        horaFim: eventoEditado.horaFim,
+        cepLocal: eventoEditado.cepLocal,
+        enderecoLocal: eventoEditado.enderecoLocal,
+        numeroLocal: eventoEditado.numeroLocal,
+        complementoLocal: eventoEditado.complementoLocal,
+        bairroLocal: eventoEditado.bairroLocal,
+        cidadeLocal: eventoEditado.cidadeLocal,
+        ufLocal: eventoEditado.ufLocal,
+      });
+  
+      alert("Evento atualizado com sucesso!");
+      AbrirModalEditarEvento();
+      window.location.href = '/meus-eventos';
+  
+    } catch (err) {
+      console.error("Erro ao editar evento:", err);
+      alert("Erro ao atualizar evento.");
+    }
+  };
+
+  function definirStatusEvento(evento: Evento): string {
+    const agora = new Date();
+
+    const dataEvento = new Date(evento.dataEvento);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    dataEvento.setHours(0, 0, 0, 0);
+
+    const dataEhHoje = dataEvento.getTime() === hoje.getTime();
+
+    const [horaIni, minIni] = evento.horaInicio.split(':').map(Number);
+    const [horaFim, minFim] = evento.horaFim.split(':').map(Number);
+
+    const inicio = new Date(evento.dataEvento);
+    inicio.setHours(horaIni, minIni, 0, 0);
+
+    const fim = new Date(evento.dataEvento);
+    fim.setHours(horaFim, minFim, 0, 0);
+
+    if (dataEhHoje) {
+        if (agora >= inicio && agora <= fim) return 'Em Progresso';
+        else if (agora < inicio) return 'Proximos Eventos';
+        else return 'Evento Finalizado';
+    } else if (dataEvento > hoje) {
+        return 'Proximos Eventos';
+    } else {
+        return 'Evento Finalizado';
+    }
+}
+
     const ApagarEvento = () => {
         axios.delete(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
             .then((res) => {
@@ -210,10 +308,19 @@ const Convidados = () => {
                                 <div className="numero-pendentes">{convidadosPendentes.length}</div>
                                 <div className="texto-convidados-pendentes">Convidados pendentes</div>
                                 <div className="botoes-convidados-pendentes">
-                                    <div className="botoes-anterior-proximo">
-                                    <Botao texto="Anterior" funcao={irParaConvidadoAnterior} />
-                                    <Botao texto="Próximo" funcao={irParaProximoConvidado} />
-                                    </div>
+                                    {
+                                        convidadosPendentes.length > 1 &&
+                                        <div className="botoes-anterior-proximo">
+                                            {
+                                                indiceConvidadoPendente > 0 &&
+                                                <Botao texto="Anterior" funcao={irParaConvidadoAnterior} />
+                                            }
+                                            {
+                                                indiceConvidadoPendente < convidadosPendentes.length - 1 &&
+                                                <Botao texto="Próximo" funcao={irParaProximoConvidado} />
+                                            }
+                                        </div>
+                                    }
                                 </div>
                                 </div>
                             </div>
@@ -240,25 +347,28 @@ const Convidados = () => {
                                 </div>
                                 </>
                             )}
-                            <div className="botoes-acoes-convidado">
-                                <Botao
-                                    texto="Recusar"
-                                    funcao={() => {
-                                    if (convidadoPendenteAtual) {
-                                        atualizarStatusConvidado(convidadoPendenteAtual.idConvidado, 'Recusado');
-                                    }
-                                    }}
-                                />
-                                <Botao
-                                    texto="Confirmar"
-                                    funcao={() => {
-                                    if (convidadoPendenteAtual) {
-                                        atualizarStatusConvidado(convidadoPendenteAtual.idConvidado, 'Confirmado');
-                                    }
-                                    }}
-                                />
+                            {
+                                convidadosPendentes.length > 0 &&
+                                <div className="botoes-acoes-convidado">
+                                    <Botao
+                                        texto="Recusar"
+                                        funcao={() => {
+                                        if (convidadoPendenteAtual) {
+                                            atualizarStatusConvidado(convidadoPendenteAtual.idConvidado, 'Recusado');
+                                        }
+                                        }}
+                                    />
+                                    <Botao
+                                        texto="Confirmar"
+                                        funcao={() => {
+                                        if (convidadoPendenteAtual) {
+                                            atualizarStatusConvidado(convidadoPendenteAtual.idConvidado, 'Confirmado');
+                                        }
+                                        }}
+                                    />
                                 </div>
-                            </div>
+                            }
+                        </div>
                     </Modal>:
                     ''}
                             { modoApagarEvento ?
@@ -270,6 +380,163 @@ const Convidados = () => {
                             :
                             ''
                             }
+
+
+{
+                    modoEdicaoEvento ? 
+                    <Modal funcaoSalvar={editarEvento} titulo='Editar evento' enviaModal={AbrirModalEditarEvento}>
+                    <div className='modal-editar-evento'>
+                        <div className='campos-editar-evento'>
+                            <div className='nome-categoria-evento'>
+                                <div className='nome-input-evento'>
+                                    <div className='textos'>Nome do evento</div>
+                                    <div className="input-tamanho">
+                                        <Input value={eventoEditado?.nomeEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, nomeEvento: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite um nome para o evento'/>
+                                    </div>                  
+                                </div>
+                                <div className='categoria-input-evento'>
+                                    <div className='textos'>Categoria</div>
+                                    <div className='input-tamanho'>   
+                                        <Input value={eventoEditado?.tipoEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, tipoEvento: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite uma categoria para o Evento'/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='descricao-input-evento'>
+                                <div>Descrição do evento(opciona)</div>
+                                <div className='input-tamanho-descricao'>
+                                <Input value={eventoEditado?.descricaoEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                            prev ? { ...prev, descricaoEvento: e.target.value } : null
+                                            )
+                                } type='text' dica='Digite uma descrição para o seu evento...'/>
+                                </div>
+                            </div>
+                            <div className='imagem-evento'>
+                                <div className='imagem-evento-texto-botao'>
+                                    <div className='texto-imagem-evento'>Imagem do evento(opcional)</div>
+                                    <div className='input-imagem-evento'>
+                                        <div className='sem-imagem'></div>
+                                        <div className='botoes-imagem'>
+                                            <Botao texto='Selecionar arquivo'></Botao>
+                                            <Botao texto='Remover'></Botao>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='novos-dados-eventos'>
+                            <div className='texto-input-data'>
+                                <div className='textos'>Data do evento</div>
+                                <div className='data-evento'>
+                                    <Input value={eventoEditado?.dataEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, dataEvento: e.target.value } : null
+                                                    )
+                                        } type='date' dica='dd/mm/aaaa'/>
+                                </div>
+                            </div>
+                            <div className='texto-input-hora-inicio-evento'>
+                                <div className='horario-inicio-fim-evento'>
+                                    <div className='textos'>Hora ínicio do evento</div>
+                                    <div className='input-tamanho'>
+                                        <Input value={eventoEditado?.horaInicio || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, horaInicio: e.target.value } : null
+                                                    )
+                                        } type='text' dica='--:--'/>
+                                    </div>
+                                </div>
+                                <div className='horario-inicio-fim-evento'>
+                                    <div className='textos'>Hora fim do evento</div>
+                                    <div className='input-tamanho'>
+                                        <Input value={eventoEditado?.horaFim || ""}
+                                          onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, horaFim: e.target.value } : null
+                                                    )
+                                        } type='text' dica='--:--'/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='texto-input-cep-endereco'>
+                                <div className='input-texto-cep-numero'>
+                                    <div className='textos'>CEP</div>
+                                    <div className='input-tamanho-cep-numero'>
+                                        <Input value={eventoEditado?.cepLocal || ""}
+                                          onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, cepLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite o CEP do local'/>
+                                    </div>
+                                </div>
+                                <div className='input-texto-endereco-complemento'>
+                                    <div className='textos'>Endereço</div>
+                                    <div className='input-tamanho-endereco-complemento'>
+                                        <Input value={eventoEditado?.enderecoLocal || ""}
+                                          onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, enderecoLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite o endereço do local'/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='input-texto-numero-complemento'>
+                                <div className='input-texto-cep-numero'>
+                                    <div className='textos'>Número</div>
+                                    <div className='input-tamanho-cep-numero'>
+                                        <Input value={eventoEditado?.numeroLocal || ""} onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, numeroLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite o número do local'/>
+                                    </div>
+                                </div>
+                                <div className='input-texto-endereco-complemento'>
+                                    <div className='textos'>Complemento</div>
+                                    <div className='input-tamanho-endereco-complemento'>
+                                        <Input value={eventoEditado?.complementoLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, complementoLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite o complemento'/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='input-texto-bairro'>
+                                <div className='textos'>Bairro (opicional)</div>
+                                <div className='input-bairro'>
+                                    <Input value={eventoEditado?.bairroLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, bairroLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite o bairro do local do evento'/>
+                                </div>
+                            </div>
+                            <div className='input-texto-cidade-uf'>
+                                <div className='input-cidade'>
+                                    <div className='textos'>Cidade (opicional)</div>
+                                    <div className='input-tamanho-cidade'>
+                                        <Input value={eventoEditado?.cidadeLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, cidadeLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite a cidade do local'/>
+                                    </div>
+                                </div>
+                                <div className='input-uf'>
+                                    <div className='textos'>UF (opicional)</div>
+                                    <div className='input-tamanho-uf'>
+                                        <Input value={eventoEditado?.ufLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                                    prev ? { ...prev, ufLocal: e.target.value } : null
+                                                    )
+                                        } type='text' dica='Digite a UF'/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </Modal>
+                :
+                ''
+        }
                 </div>
             </div>
         </div>

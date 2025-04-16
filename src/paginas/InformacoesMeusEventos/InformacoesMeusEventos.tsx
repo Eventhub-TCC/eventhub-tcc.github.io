@@ -26,6 +26,7 @@ interface Evento{
     ufLocal: string;
     imagem?: string;
     tipoEvento?: string;
+    descricaoEvento?: string;
   }
 
 
@@ -83,7 +84,7 @@ const InformacoesMeusEventos = () => {
               await axios.put(`http://localhost:3000/users/events/${evento.idEvento}`, {
                 nomeEvento: eventoEditado.nomeEvento,
                 tipoEvento: eventoEditado.tipoEvento,
-                //descrição
+                descricaoEvento: eventoEditado.descricaoEvento,
                 dataEvento: eventoEditado.dataEvento,
                 horaInicio: eventoEditado.horaInicio,
                 horaFim: eventoEditado.horaFim,
@@ -264,7 +265,10 @@ const InformacoesMeusEventos = () => {
                     <div className='descricao-input-evento'>
                         <div>Descrição do evento(opciona)</div>
                         <div className='input-tamanho-descricao'>
-                            <Input type='text' dica='Digite uma descrição para o seu evento... '/>
+                            <Input value={eventoEditado?.descricaoEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                            prev ? { ...prev, descricaoEvento: e.target.value } : null
+                                            )
+                                } type='text' dica='Digite uma descrição para o seu evento...'/>
                         </div>
                     </div>
                     <div className='imagem-evento'>
