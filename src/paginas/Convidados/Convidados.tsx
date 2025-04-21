@@ -309,7 +309,7 @@ const Convidados = () => {
                                 <div className="texto-convidados-pendentes">Convidados pendentes</div>
                                 <div className="botoes-convidados-pendentes">
                                     {
-                                        convidadosPendentes.length > 1 &&
+                                        convidadosPendentes.length >= 1 &&
                                         <div className="botoes-anterior-proximo">
                                             {
                                                 indiceConvidadoPendente > 0 &&

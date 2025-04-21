@@ -5,6 +5,7 @@
 }
 
 .usuario-layout__conteudo{
+    position: relative;
     flex-grow: 1;
     display: flex;
     justify-content: center;

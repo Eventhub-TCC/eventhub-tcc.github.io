@@ -2,7 +2,7 @@ import './CheckBox.css'
 import { useState } from 'react'
 
 
-const CheckBox = ({texto, id, funcao ,ativado=false,cor='var(--purple-700)'}: any) => { 
+const CheckBox = ({texto, name, funcao ,ativado=false,cor='var(--purple-700)'}: any) => { 
 
   const [ativa, setAtiva] = useState(ativado);
 
@@ -11,8 +11,8 @@ const CheckBox = ({texto, id, funcao ,ativado=false,cor='var(--purple-700)'}: an
     setAtiva(!ativa);
   }
   return (
-    <label htmlFor={id} className='label_checkbox'>
-      <input checked={ativa} className='checkbox' type="checkbox" id={id} onChange={alterar}/>
+    <label htmlFor={name} className='label_checkbox'>
+      <input checked={ativa} className='checkbox' type="checkbox" id={name} name={name} onChange={alterar}/>
       <span 
         className='checkbox_span'
         style={{'--cor-principal': cor} as React.CSSProperties}

@@ -1,15 +1,24 @@
 .cabecalho-usuario{
-    padding: 1.6rem 0;
+    padding: .5rem 0;
     background-color: var(--purple-700);
     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.40);
     z-index: 1;
 }
 
-.cabecalho-usuario__logo{
+.cabecalho-usuario__link{
     display: inline-block;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 300;
-    margin: 0;
-    text-decoration: none;
+}
+
+.cabecalho-usuario__logo-container{
+    max-width: 175px;
+}
+
+.cabecalho-usuario__logotipo{
+    width: 100%;
+}
+
+@media screen and (max-width: 700px){
+    .cabecalho-usuario__logo-container{
+        max-width: 145px;
+    }
 }

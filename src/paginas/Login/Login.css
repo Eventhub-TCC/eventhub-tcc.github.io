@@ -1,3 +1,11 @@
+.login__alerta{
+   position: absolute;
+   top: 25px;
+   left: 50%;
+   transform: translateX(-50%);
+   width: 560px;
+}
+
 .botao{
     width: 100%;
 }
@@ -16,7 +24,8 @@
     align-items: center;
     align-self: stretch;
     font-size: 14px;
-    font-weight: 300
+    font-weight: 300;
+    gap: 16px;
  }
 
  .Botoes{
@@ -34,9 +43,34 @@
 
  .links{
     color: var(--purple-700);
+    white-space: nowrap;
+    transition: text-decoration 0.3s ease-in-out;
  }
 
- .texto{
-      font-size: 14px;
-      font-weight: 300
- }
+.links:hover{
+   text-decoration-color: transparent;
+}
+
+.texto{
+   font-size: 14px;
+   font-weight: 300;
+   display: block;
+   text-align: center;
+}
+
+@media screen and (max-width: 310px){
+   .Opcoes{
+      font-size: 12px;
+   }
+}
+
+@media screen and (max-width: 700px){
+   .login__alerta{
+      padding: 0 1.5rem;
+      width: 100%;
+   }
+
+   .Botao{
+      width: 100%;
+   }
+}
