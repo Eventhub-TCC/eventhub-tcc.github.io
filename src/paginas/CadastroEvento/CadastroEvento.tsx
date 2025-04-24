@@ -73,6 +73,8 @@ const CadastroEvento = () => {
   useEffect(() => {
     if(localEvento.cep.length===8) 
       buscarCep(localEvento.cep)
+    if(localEvento.cep.length===0) 
+      setErroCampo(prevState => ({...prevState, cep: false}))
     else
       setTravado(false)
   }, [localEvento.cep])
@@ -180,7 +182,6 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           tipo='date'
           onChange={(e: ChangeEvent<HTMLInputElement>) => setDataEvento(new Date(e.target.value))}
           valor={dataEvento && !isNaN(new Date(dataEvento).getTime()) ? dataEvento.toISOString().split('T')[0] : ''}
-          obrigatorio={false}
           max={dataLimite.toISOString().split('T')[0]}
           min={dataMinima.toISOString().split('T')[0]}
         />,
@@ -239,11 +240,11 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
         />,
         <Input 
           cabecalho 
-          cabecalhoTexto={`Complemento ${localObrigatorio?'':'(opcional)'}`} 
+          cabecalhoTexto={'Complemento (opcional)'} 
           placeholder='Digite o complemento do local' 
           tipo='text' valor={localEvento.complemento} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, complemento: e.target.value })} 
-          obrigatorio={localObrigatorio}
+          obrigatorio={false}
         />,
         <Input 
           cabecalho 
@@ -363,11 +364,12 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
 
   const CadastrarEvento = async(e: FormEvent) => {
     e.preventDefault()
+    if(localEvento.cep.length<8 && localEvento.cep.length>0) {
+      setErroCampo(prevState => ({...prevState, cep: true}))
+      return
+    }
     if(Object.values(erroCampo).some((value) => value === true))
       alert('Corrija os erros antes de continuar')
-    if(localEvento.cep.length<8) {
-      setErroCampo(prevState => ({...prevState, cep: true}))
-    }
     else {
      try{
       const token = localStorage.getItem('token')
