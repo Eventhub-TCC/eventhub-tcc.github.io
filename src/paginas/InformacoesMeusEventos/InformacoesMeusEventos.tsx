@@ -3,12 +3,14 @@ import './InformacoesMeusEventos.css';
 import { Modal } from '../../componentes/Modal/Modal';
 import Input from '../../componentes/Input/Input';
 import Botao from '../../componentes/Botao/Botao';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { useParams } from 'react-router';
-// import Select from '../../componentes/Select/Select';
+import { form } from 'framer-motion/client';
+import Select from '../../componentes/Select/Select';
+
 
 interface Evento{
     idEvento: number;
@@ -24,10 +26,15 @@ interface Evento{
     bairroLocal: string;
     cidadeLocal: string;
     ufLocal: string;
-    imagem?: string;
     tipoEvento?: string;
     descricaoEvento?: string;
   }
+
+  interface TipoEvento {
+    idTipoEvento: string;
+    descricaoTipoEvento: string;
+  }
+  
 
 
 const InformacoesMeusEventos = () => {
@@ -37,8 +44,26 @@ const InformacoesMeusEventos = () => {
     const [modoApagarEvento, setModoApagarvento] = useState(false);
     const [idUsuario, setIdUsuario] = useState<any>(null);
     const [eventoEditado, setEventoEditado] = useState<Evento | null>(null);
+    const [imagemEvento, setImagemEvento] = useState<File|null>(null)
+    const [preView, setPreview] = useState('')
+    const [tipoEvento, setTipoEvento] = useState(0)
+    const inputImagemref = useRef<HTMLInputElement>(null)
+    const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>([])
 
-    
+
+    useEffect(()=>{
+        const buscarTiposDeEventos = async () => {
+          try{
+            const tipoEvento = await axios.get('http://localhost:3000/users/tipo-evento')
+            setTipoEventoDisponiveis(tipoEvento.data)
+          }
+          catch (error) {
+            console.log('ocorreu algum erro: ',error)
+            return
+          }
+        }
+        buscarTiposDeEventos()
+       },[])
     
      
     useEffect(() => {
@@ -54,7 +79,10 @@ const InformacoesMeusEventos = () => {
                 axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
                     .then((res) => {
                         setEvento(res.data);
+                        setImagemEvento(res.data.imagemEvento);
+                        setTipoEvento(res.data.tipoEvento);
                         setEventoEditado(res.data);
+                        setPreview(res.data.imagemEvento ? `http://localhost:3000/files/${res.data.imagemEvento}` : '');
                         const status = definirStatusEvento(res.data);
                         setEvento({ ...res.data, status });
                     })
@@ -79,28 +107,32 @@ const InformacoesMeusEventos = () => {
 
           const editarEvento = async () => {
             if (!eventoEditado) return alert("Evento não carregado corretamente!");
+    
           
             try {
-              await axios.put(`http://localhost:3000/users/events/${evento.idEvento}`, {
-                nomeEvento: eventoEditado.nomeEvento,
-                tipoEvento: eventoEditado.tipoEvento,
-                descricaoEvento: eventoEditado.descricaoEvento,
-                dataEvento: eventoEditado.dataEvento,
-                horaInicio: eventoEditado.horaInicio,
-                horaFim: eventoEditado.horaFim,
-                cepLocal: eventoEditado.cepLocal,
-                enderecoLocal: eventoEditado.enderecoLocal,
-                numeroLocal: eventoEditado.numeroLocal,
-                complementoLocal: eventoEditado.complementoLocal,
-                bairroLocal: eventoEditado.bairroLocal,
-                cidadeLocal: eventoEditado.cidadeLocal,
-                ufLocal: eventoEditado.ufLocal,
-              });
+              
+              await axios.put(
+                `http://localhost:3000/users/events/${evento.idEvento}`, {
+                    nomeEvento: eventoEditado.nomeEvento,
+                    descricaoEvento: eventoEditado.descricaoEvento,
+                    tipoEvento: eventoEditado.tipoEvento,
+                    dataEvento: eventoEditado.dataEvento,
+                    horaInicio: eventoEditado.horaInicio,
+                    horaFim: eventoEditado.horaFim,
+                    cepLocal: eventoEditado.cepLocal,
+                    enderecoLocal: eventoEditado.enderecoLocal,
+                    numeroLocal: eventoEditado.numeroLocal,
+                    complementoLocal: eventoEditado.complementoLocal,
+                    bairroLocal: eventoEditado.bairroLocal,
+                    cidadeLocal: eventoEditado.cidadeLocal,
+                    ufLocal: eventoEditado.ufLocal,
+                    file: imagemEvento
+                },
+              { headers: { 'Content-Type': 'multipart/form-data' } });
           
               alert("Evento atualizado com sucesso!");
               AbrirModalEditarEvento();
-              window.location.href = '/meus-eventos';
-          
+            //   window.location.href = "/meus-eventos";
             } catch (err) {
               console.error("Erro ao editar evento:", err);
               alert("Erro ao atualizar evento.");
@@ -159,6 +191,7 @@ const InformacoesMeusEventos = () => {
             });
         setModoApagarvento(!modoApagarEvento)
     }
+
 
 
     
@@ -253,17 +286,23 @@ const InformacoesMeusEventos = () => {
                             </div>                  
                         </div>
                         <div className='categoria-input-evento'>
-                            <div className='textos'>Categoria</div>
                             <div className='input-tamanho'>   
-                                <Input value={eventoEditado?.tipoEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, tipoEvento: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite uma categoria para o Evento'/>
+                            <Select 
+                                cabecalho 
+                                cabecalhoTexto='Tipo de Evento'  
+                                textoPadrao='Selecione o tipo de evento'
+                                valor={tipoEvento}
+                                funcao={(e: ChangeEvent<HTMLSelectElement>) => setTipoEvento(Number(e.target.value))}
+                                required={true}
+                            >
+                                {tipoEventoDisponiveis.map(tipo => <option value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
+                            </Select>
+
                             </div>
                         </div>
                     </div>
                     <div className='descricao-input-evento'>
-                        <div>Descrição do evento(opciona)</div>
+                        <div>Descrição do evento(opcional)</div>
                         <div className='input-tamanho-descricao'>
                             <Input value={eventoEditado?.descricaoEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, descricaoEvento: e.target.value } : null
@@ -275,10 +314,40 @@ const InformacoesMeusEventos = () => {
                         <div className='imagem-evento-texto-botao'>
                             <div className='texto-imagem-evento'>Imagem do evento(opcional)</div>
                             <div className='input-imagem-evento'>
-                                <div className='sem-imagem'></div>
+                            <div className='cadastro-evento__container-imagem'>
+                                    <input 
+                                        type='file' 
+                                        className='cadastro-evento__input_imagem'
+                                        accept='image/*'
+                                        ref={ inputImagemref }
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                            if (e.target.files && e.target.files.length > 0) {
+                                            setImagemEvento(e.target.files[0])
+                                            setPreview(URL.createObjectURL(e.target.files[0]))
+                                            }
+                                            else {
+                                            setImagemEvento(null)
+                                            setPreview('')
+                                            }
+                                        }}
+                                        />
+                                        {imagemEvento?<img src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
+                                    </div>
                                 <div className='botoes-imagem'>
-                                    <Botao texto='Selecionar arquivo'></Botao>
-                                    <Botao texto='Remover'></Botao>
+                                <Botao 
+                                tamanho='min' 
+                                texto='Selecionar arquivo' 
+                                funcao={()=>inputImagemref.current?.click()}/>
+                                <Botao 
+                                tamanho='min' 
+                                texto='Remover' 
+                                funcao={()=>{
+                                    setImagemEvento(null)
+                                    URL.revokeObjectURL(preView)
+                                    setPreview('')
+                                    if(inputImagemref.current)
+                                    inputImagemref.current.value = ""
+                                }}/>
                                 </div>
                             </div>
                         </div>
