@@ -190,3 +190,11 @@
   align-items: flex-start;
   gap: 40px;
 }
+
+.imagem-perfil{
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
