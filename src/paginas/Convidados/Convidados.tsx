@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import axios from "axios";
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento'
 import { jwtDecode } from "jwt-decode";
 import './Convidados.css';
@@ -8,6 +7,7 @@ import Botao from "../../componentes/Botao/Botao";
 import { Modal } from "../../componentes/Modal/Modal";
 import Input from "../../componentes/Input/Input";
 import { desc } from "framer-motion/client";
+import api from "../../axios";
 
 
 
@@ -56,15 +56,10 @@ const Convidados = () => {
 
     useEffect(() => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('Token não encontrado no localStorage');
-            }
-            const emailDecodificado: {email:string} = jwtDecode(token);
-            axios.get(`http://localhost:3000/users/get-user/${emailDecodificado.email}`)
+            api.get(`/users/get-user`)
             .then((res) => {
                 setIdUsuario(res.data.idUsuario);
-                axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+                api.get(`/users/${idUsuario}/events/${idEvento}`)
                     .then((res) => {
                         setEvento(res.data);
                         setEventoEditado(res.data);
@@ -97,7 +92,7 @@ const Convidados = () => {
 
     const buscarConvidados = async (idEvento: string, setConvidados: Function) => {
         try {
-          const response = await axios.get(`http://localhost:3000/users/obter-convidados/${idEvento}`);
+          const response = await api.get(`/users/obter-convidados/${idEvento}`);
           setConvidados(response.data);
         } catch (error) {
           console.error('Erro ao buscar convidados:', error);
@@ -109,16 +104,11 @@ const Convidados = () => {
     useEffect(() => {
         const ObterEventoeUsuario = async () => {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) throw new Error('Token não encontrado no localStorage');
-            
-                const { email }: { email: string } = jwtDecode(token);
-            
-                const res = await axios.get(`http://localhost:3000/users/get-user/${email}`);
+                const res = await api.get(`/users/get-user`);
                 setIdUsuario(res.data.codigoUsu);
 
             
-                const evento = await axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`);
+                const evento = await api.get(`/users/${idUsuario}/events/${idEvento}`);
                 setEvento(evento.data);
     
                 if (idEvento) {
@@ -135,7 +125,7 @@ const Convidados = () => {
 
         const atualizarStatusConvidado = async (idConvidado: string, novoStatus: 'Confirmado' | 'Recusado') => {
             try {
-              await axios.put(`http://localhost:3000/users/atualizar-status-convidado/${idConvidado}`, {
+              await api.put(`/users/atualizar-status-convidado/${idConvidado}`, {
                 status: novoStatus
               });
 
@@ -177,7 +167,7 @@ const Convidados = () => {
     if (!eventoEditado) return alert("Evento não carregado corretamente!");
   
     try {
-      await axios.put(`http://localhost:3000/users/events/${evento.idEvento}`, {
+      await api.put(`/users/events/${evento.idEvento}`, {
         nomeEvento: eventoEditado.nomeEvento,
         tipoEvento: eventoEditado.tipoEvento,
         descricaoEvento: eventoEditado.descricaoEvento,
@@ -234,7 +224,7 @@ const Convidados = () => {
 }
 
     const ApagarEvento = () => {
-        axios.delete(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+        api.delete(`/users/${idUsuario}/events/${idEvento}`)
             .then((res) => {
                 window.location.href = '/meus-eventos';
             })

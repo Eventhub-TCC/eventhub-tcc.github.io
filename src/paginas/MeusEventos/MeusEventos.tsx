@@ -3,9 +3,8 @@ import CardEvento from '../../componentes/CardEvento/CardEvento'
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario'
 import './MeusEventos.css'
 import { useEffect, useState } from "react";
-import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
 import { useNavigate } from 'react-router';
+import api from '../../axios';
 
 interface Evento{
   idEvento: number;
@@ -44,12 +43,7 @@ const MeusEventos = () => {
 
   const obterEventos = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token não encontrado no localStorage');
-      }
-      const emailDecodificado: {email:string} = jwtDecode(token);
-      const response = await axios.get<Evento[]>(`http://localhost:3000/users/events/${emailDecodificado.email}`);
+      const response = await api.get<Evento[]>(`/users/events`);
       setEventos(response.data);
       console.log(response.data);
     } catch (error) {

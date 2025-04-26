@@ -1,5 +1,4 @@
-import axios from 'axios'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import Input from '../../componentes/Input/Input'
 import Botao from '../../componentes/Botao/Botao'
 import CheckBox from '../../componentes/CheckBox/CheckBox'
@@ -8,6 +7,7 @@ import Formulario from '../../componentes/Formulario/Formulario'
 import { Link, useNavigate } from 'react-router'
 import Alerta from '../../componentes/Alerta/Alerta'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
+import api from '../../axios'
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
@@ -23,7 +23,7 @@ const Login = () => {
       event.preventDefault();
       if(erros.emailSenha || erros.conexao) return;
       setCarregando(true);
-      const { data } = await axios.post('http://localhost:3000/users/signin', {
+      const { data } = await api.post('/users/signin', {
         email,
         senha
       })
@@ -44,6 +44,20 @@ const Login = () => {
       setCarregando(false);
     }
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    (async () => {
+      try{
+        await api.get('/users/authenticate');
+        navigate('/meu-perfil');
+      }
+      catch(erro){
+        localStorage.removeItem('token');
+      }
+    })();
+  }, []);
 
   return (
     <Formulario onSubmit={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)} titulo='Login'>

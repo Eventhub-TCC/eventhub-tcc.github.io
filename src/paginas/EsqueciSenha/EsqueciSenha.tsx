@@ -1,12 +1,12 @@
 import './EsqueciSenha.css'
 import { ChangeEvent, FormEvent, useState } from 'react';
-import axios from 'axios';
 import Formulario from '../../componentes/Formulario/Formulario'
 import Input from '../../componentes/Input/Input';
 import Botao from '../../componentes/Botao/Botao';
 import Instrucao from '../../componentes/Instrucao/Instrucao';
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario';
+import api from '../../axios';
 
 const EsqueciSenha = () => {
     const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ const EsqueciSenha = () => {
         if(erro) return;
         try{
             setCarregando(true);
-            await axios.post('http://localhost:3000/users/forgot-password', {email});
+            await api.post('/users/forgot-password', {email});
             setFormSucesso(true);
         }
         catch(e: any){

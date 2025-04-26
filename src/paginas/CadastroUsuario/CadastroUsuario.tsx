@@ -6,10 +6,10 @@ import Formulario from '../../componentes/Formulario/Formulario'
 import IndicadorDePassos from '../../componentes/IndicadorDePassos/IndicadorDePassos'
 import Input from "../../componentes/Input/Input"
 import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
-import axios from "axios"
 import FeedbackFormulario from "../../componentes/FeedbackFormulario/FeedbackFormulario"
 import { PatternFormat } from "react-number-format"
 import Instrucoes from "../../componentes/Instrucao/Instrucao"
+import api from "../../axios"
 
 interface Usuarios{
     organizador: boolean;
@@ -85,7 +85,7 @@ const CadastroUsuario = () => {
         }
         try{
             setCarregando(true);
-            await axios.post(`http://localhost:3000/users/validate-${nomeCampo}`, {
+            await api.post(`/users/validate-${nomeCampo}`, {
                 [campoBackend]: campo
             });
             return true;
@@ -601,7 +601,7 @@ const CadastroUsuario = () => {
         }
         try{
             setCarregando(true);
-            await axios.post('http://localhost:3000/users/signup', {
+            await api.post('/users/signup', {
                 organizador,
                 prestador,
                 emailUsu: email,

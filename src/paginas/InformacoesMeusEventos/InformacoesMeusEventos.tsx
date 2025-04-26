@@ -5,9 +5,8 @@ import Input from '../../componentes/Input/Input';
 import Botao from '../../componentes/Botao/Botao';
 import React, { useEffect, useState } from 'react';
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
-import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
 import { useParams } from 'react-router';
+import api from '../../axios';
 // import Select from '../../componentes/Select/Select';
 
 interface Evento{
@@ -43,15 +42,10 @@ const InformacoesMeusEventos = () => {
      
     useEffect(() => {
         try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('Token não encontrado no localStorage');
-            }
-            const emailDecodificado: {email:string} = jwtDecode(token);
-            axios.get(`http://localhost:3000/users/get-user/${emailDecodificado.email}`)
+            api.get(`/users/get-user`)
             .then((res) => {
                 setIdUsuario(res.data.idUsuario);
-                axios.get(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+                api.get(`/users/${idUsuario}/events/${idEvento}`)
                     .then((res) => {
                         setEvento(res.data);
                         setEventoEditado(res.data);
@@ -81,7 +75,7 @@ const InformacoesMeusEventos = () => {
             if (!eventoEditado) return alert("Evento não carregado corretamente!");
           
             try {
-              await axios.put(`http://localhost:3000/users/events/${evento.idEvento}`, {
+              await api.put(`/users/events/${evento.idEvento}`, {
                 nomeEvento: eventoEditado.nomeEvento,
                 tipoEvento: eventoEditado.tipoEvento,
                 descricaoEvento: eventoEditado.descricaoEvento,
@@ -149,7 +143,7 @@ const InformacoesMeusEventos = () => {
     }
 
     const ApagarEvento = () => {
-        axios.delete(`http://localhost:3000/users/${idUsuario}/events/${idEvento}`)
+        api.delete(`/users/${idUsuario}/events/${idEvento}`)
             .then((res) => {
                 console.log(res.data);
                 window.location.href = '/meus-eventos';

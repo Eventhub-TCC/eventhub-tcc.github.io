@@ -10,7 +10,8 @@ import TextArea from '../../componentes/TextArea/TextArea'
 import './CadastroEvento.css'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import { PatternFormat } from "react-number-format"
-import { jwtDecode } from 'jwt-decode'
+import api from '../../axios'
+import { useNavigate } from 'react-router'
 
 
 interface Instrucao {
@@ -56,6 +57,8 @@ const CadastroEvento = () => {
 
   const inputImagemref = useRef<HTMLInputElement>(null)
 
+  const navigate = useNavigate();
+
   const buscarCep = async (cep: string) => {
     try { await axios.get(`https://viacep.com.br/ws/${cep}/json/`).then(res => {
       const local = res.data
@@ -99,7 +102,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
  useEffect(()=>{
   const buscarTiposDeEventos = async () => {
     try{
-      const tipoEvento = await axios.get('http://localhost:3000/users/tipo-evento')
+      const tipoEvento = await api.get('/users/tipo-evento')
       setTipoEventoDisponiveis(tipoEvento.data)
     }
     catch (error) {
@@ -370,12 +373,10 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
     }
     else {
      try{
-      const token = localStorage.getItem('token')
-      const tokenDecodificado:{email:string} = jwtDecode(token as string)
       try {
-        const userResponse = await axios.get(`http://localhost:3000/users/get-user/${tokenDecodificado.email}`);
+        const userResponse = await api.get(`/users/get-user`);
         const idUsuario = userResponse.data.codigoUsu;
-        await axios.post(`http://localhost:3000/users/${idUsuario}/events`, {
+        await api.post(`/users/${idUsuario}/events`, {
           idTipoEvento: tipoEvento,
           nomeEvento,
           descricaoEvento,
@@ -392,7 +393,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           ufLocal: localEvento.estado
         },
         { headers: { 'Content-Type': 'multipart/form-data' } });
-        window.location.href = '/meus-eventos'
+        navigate('/meus-eventos');
       } catch (error) {
         console.log('ocorreu algum erro: ',error)
         alert('Ocorreu um erro ao cadastrar o evento. Tente novamente mais tarde.')

@@ -7,8 +7,8 @@ import Input from '../../componentes/Input/Input'
 import Botao from '../../componentes/Botao/Botao'
 import { data, useParams } from 'react-router';
 import { FormEvent, useEffect, useState } from 'react';
-import axios from 'axios';
 import { PatternFormat } from 'react-number-format';
+import api from '../../axios';
 
 const ConfirmarPresenca = () => {
     const { idConvite } = useParams();
@@ -37,7 +37,7 @@ const ConfirmarPresenca = () => {
         const buscarConvite = async () => {
           try {
             console.log ('idConvite', idConvite)
-            const response = await axios.get(`http://localhost:3000/users/convites/${idConvite}`)
+            const response = await api.get(`/users/convites/${idConvite}`)
 
             const evento = response.data
             console.log('evento', evento)
@@ -68,7 +68,7 @@ const ConfirmarPresenca = () => {
     const confirmarPresenca = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-          await axios.post(`http://localhost:3000/users/confirmar-convite/${idConvite}`, {
+          await api.post(`/users/confirmar-convite/${idConvite}`, {
             nome,
             email,
             rg,

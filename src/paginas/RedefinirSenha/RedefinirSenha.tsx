@@ -1,6 +1,5 @@
 import './RedefinirSenha.css'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import axios from 'axios';
 import Formulario from '../../componentes/Formulario/Formulario'
 import Input from '../../componentes/Input/Input';
 import Botao from '../../componentes/Botao/Botao';
@@ -8,6 +7,7 @@ import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario';
 import { useSearchParams } from 'react-router';
 import Erro404 from '../Erro404/Erro404';
+import api from '../../axios';
 
 const RedefinirSenha = () => {
     const [senha, setSenha] = useState('');
@@ -31,7 +31,7 @@ const RedefinirSenha = () => {
         }
         const verificarToken = async () => {
             try{
-                await axios.post('http://localhost:3000/users/reset-password/verify-token', {token});
+                await api.post('/users/reset-password/verify-token', {token});
                 setTokenValido(true);
             }
             catch(e: any){
@@ -49,7 +49,7 @@ const RedefinirSenha = () => {
         }
         try{
             setCarregando(true);
-            await axios.put('http://localhost:3000/users/reset-password', {
+            await api.put('/users/reset-password', {
                 token, 
                 novaSenha: senha
             });

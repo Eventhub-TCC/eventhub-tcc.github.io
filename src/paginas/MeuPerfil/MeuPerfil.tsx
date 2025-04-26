@@ -3,11 +3,12 @@ import Botao from '../../componentes/Botao/Botao'
 import Input from '../../componentes/Input/Input'
 import axios from 'axios'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { jwtDecode } from 'jwt-decode'
 import { PatternFormat } from 'react-number-format'
 import { motion } from 'framer-motion'
 import { Modal } from '../../componentes/Modal/Modal'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
+import api from '../../axios'
+import { useNavigate } from 'react-router'
 
 interface Usuario { 
   nomeUsu: string;
@@ -43,6 +44,8 @@ const MeuPerfil = () => {
 
 ]);
 
+  const navigate = useNavigate();
+
 const transicao = {
   initial: { opacity: 0, y: -10 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
@@ -52,12 +55,7 @@ const transicao = {
 useEffect(() => {
   const obterUsuario = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token não encontrado');
-      }
-      const emailDecodificado: {email:string} = jwtDecode(token);
-      const response = await axios.get<Usuario>(`http://localhost:3000/users/get-user/${emailDecodificado.email}`);
+      const response = await api.get<Usuario>(`/users/get-user`);
       setUsuario(response.data);
       setCpfOriginal(response.data.cpfUsu);
       } catch (error) {
@@ -80,7 +78,7 @@ const validarCampos = async (): Promise<boolean> => {
         }
 
         try {
-          const response = await axios.post(`http://localhost:3000/users/validate-cpf`, {
+          const response = await api.post(`/users/validate-cpf`, {
             cpfUsu: usuario.cpfUsu,
           });
 
@@ -172,14 +170,9 @@ const setarExcluir = () => {
 
 const deletarPerfil = async () => {
   try{
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Token não encontrado');
-    }
-    const emailDecodificado: {email:string} = jwtDecode(token);
-    await axios.delete(`http://localhost:3000/users/delete-user/${emailDecodificado.email}`);
+    await api.delete(`/users/delete-user`);
     localStorage.removeItem('token');
-    window.location.href = '/';
+    navigate('/');
     } catch (error) {
       console.error('Erro ao deletar usuário');
   }
@@ -187,15 +180,10 @@ const deletarPerfil = async () => {
 
 const editarPerfil = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token não encontrado');
-      }
-      const emailDecodificado: {email:string} = jwtDecode(token);
       const valido = await validarCampos();
       console.log('valido', valido);
       if (!valido) return;
-      const res = await axios.put(`http://localhost:3000/users/update-user/${emailDecodificado.email}`, {
+      const res = await api.put(`/users/update-user`, {
         ...usuario, 
         senhaAtual, 
         novaSenha, 
@@ -424,7 +412,7 @@ return (
             <div className='botoes-alterar-perfil'>
               <div className='botao-editar'>
                 <Botao tamanho='max' funcao={() => {setModoEdicao(false);
-                axios.get<Usuario>(`http://localhost:3000/users/get-user/${usuario?.emailUsu}`)
+                api.get<Usuario>(`/users/get-user`)
                 .then(response => {
                   setUsuario(response.data);
                 })
