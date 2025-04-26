@@ -2,7 +2,7 @@ import './MeuPerfil.css'
 import Botao from '../../componentes/Botao/Botao'
 import Input from '../../componentes/Input/Input'
 import axios from 'axios'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { PatternFormat } from 'react-number-format'
 import { motion } from 'framer-motion'
 import { Modal } from '../../componentes/Modal/Modal'
@@ -18,6 +18,7 @@ interface Usuario {
   emailUsu: string;
   telUsu: string;
   senhaUsu: string;
+  fotoUsu: string | null;
 }
 
 interface Erro{
@@ -41,10 +42,12 @@ const MeuPerfil = () => {
   {ativo: false, tipo: 'sobrenome', mensagem: 'Preencha o Sobrenome'},
   {ativo: false, tipo: 'dataNascimento', mensagem: 'Preencha a Data de Nascimento'},
   {ativo: false, tipo: 'telefone', mensagem: 'Telefone Invalido'},
-
 ]);
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
+const [imagemPerfil, setImagemPerfil] = useState<File|null>(null)
+const [preView, setPreview] = useState('')
+const inputImagemref = useRef<HTMLInputElement>(null)
 
 const transicao = {
   initial: { opacity: 0, y: -10 },
@@ -58,8 +61,10 @@ useEffect(() => {
       const response = await api.get<Usuario>(`/users/get-user`);
       setUsuario(response.data);
       setCpfOriginal(response.data.cpfUsu);
+      setPreview(response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '');
       } catch (error) {
         console.error('Erro ao obter usuário');
+        console.error(error);
       }
     }
     obterUsuario();
@@ -163,7 +168,6 @@ const validarCampos = async (): Promise<boolean> => {
   return novosErros.every((erro) => !erro.ativo);
 };
 
-
 const setarExcluir = () => {
   setExcluir(false);
 }
@@ -175,6 +179,20 @@ const deletarPerfil = async () => {
     navigate('/');
     } catch (error) {
       console.error('Erro ao deletar usuário');
+  }
+}
+
+const alterarImagemPerfil = async ( imagem : any ) => {
+  try {
+    await api.put(`/users/update-image`,{
+      file: imagem
+    }, {
+      headers: {
+        'content-type': 'multipart/form-data',
+  }});
+  }
+  catch (error) {
+    console.error('Erro ao alterar imagem de perfil', error);
   }
 }
 
@@ -216,10 +234,30 @@ return (
             <div className='formulario-perfil'>
               <div className='perfil-foto-nome-email-organizador'>
                 <div className='foto-perfil'> 
-                  <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
-                    <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
-                  </svg>
+                  {preView ? 
+                    <img className='imagem-perfil' src={preView} alt="Imagem de perfil" />
+                    :
+                    <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
+                      <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
+                    </svg>}
+                    <input 
+                      type='file' 
+                      className='cadastro-evento__input_imagem'
+                      accept='image/*'
+                      ref={ inputImagemref }
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          setImagemPerfil(e.target.files[0])
+                          setPreview(URL.createObjectURL(e.target.files[0]))
+                          alterarImagemPerfil(e.target.files[0])
+                        }
+                        else {
+                          setImagemPerfil(null)
+                          setPreview('')
+                        }
+                      }}
+                    />
                   <div className='nome-email-organizador'>
                     <h2 className='nome-perfil-organizador'>{usuario?.nomeUsu}</h2>
                       {usuario?.emailUsu}
@@ -227,10 +265,26 @@ return (
                 </div>
                 <div className='botoes-foto-perfil'>
                   <div className='botao-alterar-foto-perfil'>
-                    <Botao texto='Alterar foto' />
+                    <Botao 
+                      tamanho='min' 
+                      texto='Alterar foto' 
+                      funcao={()=>{inputImagemref.current?.click()
+                      }}
+                      />       
                   </div>
                 <div className='botao-remover-foto-perfil'>
-                  <Botao texto='Remover foto' />
+                <Botao 
+                  tamanho='min' 
+                  texto='Remover' 
+                  funcao={()=>{
+                  setImagemPerfil(null)
+                  URL.revokeObjectURL(preView)
+                  setPreview('')
+                  if(inputImagemref.current)
+                  inputImagemref.current.value = ""
+                  alterarImagemPerfil(null)
+                  }}
+                  />
                 </div>
                 </div>
               </div>
