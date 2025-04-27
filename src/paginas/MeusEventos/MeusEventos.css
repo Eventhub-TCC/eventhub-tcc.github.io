@@ -17,7 +17,7 @@
     line-height: normal;
 }
 
-.informacoes-meus-eventos{
+.meus-eventos-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -162,8 +162,6 @@
 
 .botao-criar-eventos-meus-eventos:hover{
     background: var(--Purple-900, #55379D);
-
-    
 }
 
 .formulario-sem-eventos{

@@ -29,3 +29,27 @@
   }
 
 
+@media screen and (max-width: 1024px){
+  .barra-layout{
+    z-index: 1;
+    right: 0;
+    transition: transform .6s ease-out;
+  }
+
+  .barra-layout--fechada-mobile{
+    transform: translateX(100%);
+  }
+
+  .barra-layout--aberta-mobile{
+    transform: translateX(0);
+  }
+
+  .layout-info {
+    margin-left: 0;
+    transition: margin-left .3s ease-out;
+  }
+
+  .layout-info-minimizada {
+    margin-left: 0;
+  }
+}

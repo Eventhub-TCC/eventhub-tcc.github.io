@@ -1,7 +1,18 @@
 import { NavLink } from "react-router"
 import "./ItemBarraLateral.css"
+import { useEffect, useState } from "react";
 
 const ItemBarraLateral = ({minimizado = false, texto, icone, caminho, corSelecionado = "var(--purple-700)", children}: any) => {
+    const [larguraTela, setLarguraTela] = useState(window.innerWidth);
+    
+    useEffect(() => {
+    const redimensionarTela = () => setLarguraTela(window.innerWidth);
+
+    window.addEventListener('resize', redimensionarTela);
+
+    return () => window.removeEventListener('resize', redimensionarTela);
+    }, []);
+    
     return (
       <li className="item-barra">
           <NavLink 
@@ -18,7 +29,7 @@ const ItemBarraLateral = ({minimizado = false, texto, icone, caminho, corSelecio
                   </svg>
               </div>
               {
-                !minimizado ? <span className="item-barra__texto">{texto}</span> : ''
+                !minimizado || larguraTela <= 1024 ? <span className="item-barra__texto">{texto}</span> : ''
               }
           </NavLink>
       </li>
