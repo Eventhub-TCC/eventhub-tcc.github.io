@@ -191,7 +191,8 @@ const InformacoesMeusEventos = () => {
     
   return (
     <div>
-        <CabecalhoEvento
+        <div className='informacoes-evento__cabecalho'>
+            <CabecalhoEvento
                 idEvento={idEvento} 
                 EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
                 EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
@@ -201,6 +202,7 @@ const InformacoesMeusEventos = () => {
                 horaFim={evento.horaFim}
                 localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
             />
+        </div>
     <div className='informacoes-meus-eventos'>
         <div className='detalhes-eventos'>
             <p className='texto-detalhes-eventos'>Detalhes do evento</p>

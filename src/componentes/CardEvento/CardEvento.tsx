@@ -2,11 +2,12 @@ import React from 'react'
 import './CardEvento.css'
 import { Link } from 'react-router'
 
-const CardEvento = ({titulo, status='confirmado', dataEvento = 'Sem data definida', horaInicio, horaFim, endereco = 'Sem endereço definido', imagem, tipoEvento, id}:any) => {
+const CardEvento = ({titulo, status='confirmado', dataEvento = 'Sem data definida', horaInicio, horaFim, endereco = 'Sem endereço definido', imagem, id}:any) => {
   const corStatus = status === 'confirmado' ? 'var(--purple-700)' : status === 'em andamento' ? '#C8B757' : '#52AD58'
 
   return (
-    <Link to={`${id}/informacoes-meus-eventos`}><div className="card-evento" style={{'--cor-status': corStatus}as React.CSSProperties}>
+  <Link to={`${id}/informacoes-meus-eventos`}>
+    <div className="card-evento" style={{'--cor-status': corStatus}as React.CSSProperties}>
       <div className="card-evento__centro">
         <div className="card-evento__frente">
           <div className="card-evento__imagem" style={imagem?{backgroundImage:`url(http://localhost:3000/files/${imagem})`}:{}}>

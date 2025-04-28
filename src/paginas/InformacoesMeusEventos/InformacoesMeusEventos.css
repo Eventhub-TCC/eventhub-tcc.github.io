@@ -1,6 +1,13 @@
+.informacoes-evento__cabecalho{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
 .informacoes-meus-eventos{
     display: flex;
-    padding: 32px;
+    padding: calc(123px + 32px) 0 32px;
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;

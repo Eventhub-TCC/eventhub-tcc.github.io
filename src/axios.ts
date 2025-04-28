@@ -15,7 +15,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (resposta) => resposta,
     (erro) => {
-        if (erro.response.status === 401 && erro.response.data.mensagem.toLowerCase().includes('token')) {
+        if (erro.response && erro.response.status === 401 && erro.response.data.mensagem.toLowerCase().includes('token')) {
             localStorage.removeItem('token');
             window.location.href = '/login';
         }

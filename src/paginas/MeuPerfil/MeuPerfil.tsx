@@ -229,7 +229,7 @@ const editarPerfil = async () => {
 return (
   <div>
       <div className='perfil'>
-        <h1 className='titulo-h1'>Perfil</h1>
+        <h1 className='layout-titulo'>Perfil</h1>
           <div className='caixa-perfil'>
             <div className='formulario-perfil'>
               <div className='perfil-foto-nome-email-organizador'>

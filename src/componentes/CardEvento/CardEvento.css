@@ -1,7 +1,8 @@
 
 .card-evento{
     height: 296px;
-    width: 352px;
+    min-width: 250px;
+    width: 100%;
     background-color: transparent;
     border-radius: 8px;
     perspective: 1000px;

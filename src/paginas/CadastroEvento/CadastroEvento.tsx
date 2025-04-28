@@ -413,7 +413,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
   }
   return (
     <div className='cadastro-evento'>
-      <h1 className='cadastro-evento__titulo'>Criar evento</h1>
+      <h1 className='layout-titulo'>Criar evento</h1>
       <form onSubmit={passoAtual+1===qntPassos?(e:FormEvent)=>CadastrarEvento(e):avancarPasso} className='cadastro-evento__form' encType="multipart/form-data">
         <IndicadorDePassos passoAtual={passoAtual + 1} qtdPassos={qntPassos}/>
         <Instrucao titulo={instrucoes[passoAtual].titulo} texto={instrucoes[passoAtual].texto}/>

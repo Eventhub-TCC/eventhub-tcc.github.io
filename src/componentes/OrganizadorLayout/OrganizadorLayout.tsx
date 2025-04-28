@@ -41,9 +41,11 @@ const OrganizadorLayout = () => {
             </ItemBarraLateral>
           </BarraLateral>
         </div>
-        <div className={`layout-info ${minimizada ? 'layout-info-minimizada' : ''}`}>
-          <Outlet/>
-        </div>
+        <main className={`layout-info ${minimizada ? 'layout-info-minimizada' : ''}`}>
+          <div className="container">
+            <Outlet/>
+          </div>
+        </main>
       </div>
     </div>
   );

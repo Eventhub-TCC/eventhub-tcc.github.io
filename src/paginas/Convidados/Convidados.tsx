@@ -236,17 +236,18 @@ const Convidados = () => {
 
   return (
     <div className="tela-convidados-evento">
+        <div className="informacoes-evento__cabecalho">
             <CabecalhoEvento
-           idEvento={idEvento} 
-           EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
-           EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
-           tituloEvento={evento.nomeEvento}
-           dataEvento={evento.dataEvento}
-           horaInicio={evento.horaInicio}
-           horaFim={evento.horaFim}
-           localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
-
-        />
+            idEvento={idEvento} 
+            EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
+            EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
+            tituloEvento={evento.nomeEvento}
+            dataEvento={evento.dataEvento}
+            horaInicio={evento.horaInicio}
+            horaFim={evento.horaFim}
+            localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+            />
+        </div>
         <div className="conteudo-convidados">
             <div className="convidados">
                 <div className="titulo-convidados">Convidados</div>
