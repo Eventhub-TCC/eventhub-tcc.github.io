@@ -9,7 +9,7 @@ const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, nam
     <div>
         {
           cabecalho &&
-          <label className={`select__label ${cabecalho===true? 'd-block' : 'd-none'}`}>{cabecalhoTexto}</label>
+          <label htmlFor={name} className={`select__label ${cabecalho===true? 'd-block' : 'd-none'}`}>{cabecalhoTexto}</label>
         }
         <div className='select__container'>
             <select 

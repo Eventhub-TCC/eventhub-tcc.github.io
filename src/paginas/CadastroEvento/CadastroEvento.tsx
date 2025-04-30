@@ -132,7 +132,8 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           cabecalho cabecalhoTexto='Nome do Evento' 
           placeholder='Digite o nome do seu evento' 
           tipo='text' 
-          valor={nomeEvento} 
+          valor={nomeEvento}
+          name='nome-evento'
           onChange={(e: ChangeEvent<HTMLInputElement>) => setNomeEvento(e.target.value)} 
         />,
         <Select 
@@ -142,14 +143,16 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           valor={tipoEvento} 
           funcao={(e: ChangeEvent<HTMLSelectElement>) => setTipoEvento(Number(e.target.value))}
           required={true}
+          name='tipo-evento'
         >
-              {tipoEventoDisponiveis.map(tipo => <option value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
+              {tipoEventoDisponiveis.map(tipo => <option key={tipo.idTipoEvento} value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
         </Select>,
         <TextArea 
           titulo='Descrição do evento (opcional)' 
           placeholder='Digite a descrição do seu evento' 
           onChange={(e:ChangeEvent<HTMLInputElement>)=>setDescricaoEvento(e.target.value)} 
           valor={descricaoEvento}
+          name='descricao-evento'
         />
       ]
     },
@@ -187,12 +190,14 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           valor={dataEvento && !isNaN(new Date(dataEvento).getTime()) ? dataEvento.toISOString().split('T')[0] : ''}
           max={dataLimite.toISOString().split('T')[0]}
           min={dataMinima.toISOString().split('T')[0]}
+          name='data-evento'
         />,
         <Input 
           cabecalho cabecalhoTexto='Hora de Início' 
           tipo='time' 
           valor={horaInicio} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setHoraInicio(e.target.value)} 
+          name='hora-inicio'
         />,
         <Input 
           cabecalho 
@@ -200,6 +205,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           tipo='time' 
           valor={horaFim} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setHoraFim(e.target.value)} 
+          name='hora-fim'
         />
       ]
     },
@@ -208,17 +214,18 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
       texto:'Preencha os campos com os detalhes do local onde o seu evento será realizado.',
       campos:[
         <PatternFormat
-        format={'#####-###'}
-        mask={'_'}
-        value={localEvento.cep}
-        onValueChange={(values) => {
-          setLocalEvento({ ...localEvento, cep: values.value })
-        }}
-        customInput={Input}
-        cabecalho
-        cabecalhoTexto={`CEP ${localObrigatorio?'':'(opcional)'}`} 
-        placeholder='Digite o CEP do local' 
-        obrigatorio={localObrigatorio}
+          format={'#####-###'}
+          mask={'_'}
+          value={localEvento.cep}
+          onValueChange={(values) => {
+            setLocalEvento({ ...localEvento, cep: values.value })
+          }}
+          customInput={Input}
+          cabecalho
+          cabecalhoTexto={`CEP ${localObrigatorio?'':'(opcional)'}`} 
+          placeholder='Digite o CEP do local' 
+          obrigatorio={localObrigatorio}
+          name='cep'
         />,
         <Input 
           cabecalho 
@@ -228,6 +235,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, endereco: e.target.value })} 
           disabled={travado} 
           obrigatorio={localObrigatorio}
+          name='endereco'
         />,
         <PatternFormat   
           format={'#####'}                
@@ -239,7 +247,8 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           cabecalho 
           cabecalhoTexto={`Número ${localObrigatorio?'':'(opcional)'}`}
           placeholder='Digite o número do local'   
-          obrigatorio={localObrigatorio}    
+          obrigatorio={localObrigatorio}  
+          name='numero-endereco'  
         />,
         <Input 
           cabecalho 
@@ -248,6 +257,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           tipo='text' valor={localEvento.complemento} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, complemento: e.target.value })} 
           obrigatorio={false}
+          name='complemento'
         />,
         <Input 
           cabecalho 
@@ -257,6 +267,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, bairro: e.target.value })} 
           disabled={travado} 
           obrigatorio={localObrigatorio}
+          name='bairro'
         />,
         <Input 
           cabecalho 
@@ -267,6 +278,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           onChange={(e: ChangeEvent<HTMLInputElement>) => setLocalEvento({ ...localEvento, cidade: e.target.value })} 
           disabled={travado} 
           obrigatorio={localObrigatorio}
+          name='cidade'
         />,
         <Select 
           cabecalho 
@@ -277,8 +289,9 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           disabled={travado}
           required={localObrigatorio}
           esconderValorPadrao={false}
+          name='estado'
         >
-            {estadosBrasil.map(estado => <option value={estado}>{estado}</option>)}
+            {estadosBrasil.map((estado, index) => <option key={index} value={estado}>{estado}</option>)}
         </Select>
       ]
     }
@@ -385,7 +398,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           file: imagemEvento,
           horaInicio,
           horaFim,
-          dataEvento,
+          dataEvento: dataEvento?.toISOString().split('T')[0],
           cepLocal: localEvento.cep,
           enderecoLocal: localEvento.endereco,
           numeroLocal: localEvento.numero,
