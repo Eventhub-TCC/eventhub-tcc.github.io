@@ -8,7 +8,7 @@
 .cadastro-evento__form{
     background-color: white;
     width: 100%;
-    margin: 4rem 0;
+    margin: 2.5rem 0;
     border-radius: 2rem;
     border: 1px solid var(--purple-700);
     padding: 3rem 2.5rem;
@@ -63,5 +63,30 @@
     height: 100%;
     border-radius: 1rem;
     object-fit: cover;
-    /* object-position: left; */
+}
+
+@media screen and (max-width: 767px) {
+    .cadastro-evento__container-imagem-botoes{
+        flex-direction: column;
+    }
+     
+    .cadastro-evento__container-imagem{
+        width: 100%;
+        height: 250px;
+    }
+
+    .cadastro-evento__container-imagem-botoes{
+        width: 183px;
+        margin: auto;
+    }
+    
+    .cadastro-evento__botao-padrao{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .cadastro-evento__form{
+        padding: 3rem 1.5rem;
+    }
 }

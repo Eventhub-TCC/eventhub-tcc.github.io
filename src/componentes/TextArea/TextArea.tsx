@@ -1,6 +1,6 @@
 import './TextArea.css'
 
-export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, placeholder = 'digite aqui...',maximo = 2000, contador = true}:any) => {
+export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, name, placeholder = 'digite aqui...',maximo = 2000, contador = true}:any) => {
 
 
     const atualizaContador = ()=>{
@@ -9,7 +9,7 @@ export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, placehold
 
   return (
     <div>
-        <label className={`textarea__label ${titulo? 'd-block':'d-none'}`}>{titulo}</label>
+        <label htmlFor={name} className={`textarea__label ${titulo? 'd-block':'d-none'}`}>{titulo}</label>
         <div className='textarea__container'>
             <textarea 
                 className='textarea' 
@@ -17,6 +17,8 @@ export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, placehold
                 onChange={onChange}
                 value={valor}
                 maxLength={maximo}
+                name={name}
+                id={name}
             />
             {atualizaContador()}
         </div>

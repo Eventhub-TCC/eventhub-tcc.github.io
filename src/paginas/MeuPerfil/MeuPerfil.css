@@ -1,10 +1,7 @@
 .perfil {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 40px;
-  flex: 1 0 0;
-  align-self: stretch;
 }
 
 .caixa-perfil{
@@ -24,7 +21,7 @@
   align-items: center;
   align-self: stretch;
   border-radius: 32px;
-  border: 1px solid var(--Purple-700, #8C5DFF);
+  border: 1px solid var(--purple-700);
   background: #FFF;
 }
 
@@ -36,6 +33,15 @@
   width: 100%;
 }
 
+.nome-email-organizador{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-grow: 1;
+}
+
 .nome-perfil-organizador{
   color: #000;
   font-family: Inter;
@@ -43,69 +49,42 @@
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  margin: 0;
+  width: 100%;
 }
 
-.botao-alterar-foto-perfil{
-  display: flex;
-  width: 190px;
-  height: 40px;
-  padding: 8px 20px;
-  justify-content: center;
-  align-items: center;
+.email-perfil-organizador{
+  color: black;
+  font-size: 1rem;
+  font-weight: 300;
+  margin: 0;
+  width: 100%;
 }
 
+.botao-alterar-foto-perfil,
 .botao-remover-foto-perfil{
-  display: flex;
-  width: 190px;
-  height: 40px;
-  padding: 8px 20px;
-  justify-content: center;
-  align-items: center;
+  width: 150px;
 }
-
 
 .caixa-input-perfil{
   display: flex;
   padding: 48px 40px;
   flex-direction: column;
-  align-items: flex-start;
   gap: 42px;
   align-self: stretch;
   border-radius: 32px;
-  border: 1px solid var(--Purple-700, #8C5DFF);
+  border: 1px solid var(--purple-700);
   background: #FFF;
 }
 
 .texto-informacoes-pessoal{
-  color: var(--Purple-700, #8C5DFF);
+  color: var(--purple-700);
   font-family: Inter;
   font-size: 22px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-}
-
-.campos-informacoes-pessoais-perfil-organizador{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 32px;
-  align-self: stretch;
-}
-
-.alinhamento-campos{
-  display: flex;
-  align-items: flex-start;
-  gap: 28px;
-  align-self: stretch;
-}
-
-.titulo-input-perfil{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  flex: 1 0 0;
+  margin: 0;
 }
 
 .texto-input-perfil{
@@ -118,47 +97,41 @@
   align-self: stretch;
 }
 
-.inputs-perfil{
-  width: 100%;
-}
-
 .botoes-alterar-perfil{
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   gap: 24px;
-  align-self: stretch;
   justify-content: space-between;
 }
 
-.botao-editar{
+.botoes-alterar-perfil-edicao{
+  width: 100%;
   display: flex;
-  width: 190px;
-  padding: 12px 24px;
-  justify-content: center;
   align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
 }
 
+.botao-editar,
 .botao-deletar{
-  border-radius: 16px;
-  background:#F5F5F5;
-  display: flex;
-  width: 195px;
-  padding: 12px 24px;
-  justify-content: center;
-  align-items: center;
+  max-width: 150px;
+  width: 100%;
 }
 
 .foto-perfil {
-    display: flex;
-    align-items: center;
-    gap: 25px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex-grow: 1;
+  overflow: hidden;
+  width: 100%;
 } 
     
 .botoes-foto-perfil{
-    display: flex;
-    align-items: center;
-    gap: 28px; 
+  display: flex;
+  align-items: center;
+  gap: 28px; 
 }
 
 .perfil-fora-modo-edicao{
@@ -184,3 +157,64 @@
   object-fit: cover;
 }
 
+@media screen and (max-width: 1200px){
+  .botoes-foto-perfil{
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 767px){
+  .perfil-foto-nome-email-organizador{
+    flex-direction: column;
+  }
+
+  .botoes-foto-perfil{
+    flex-direction: row;
+  }
+
+  .nome-perfil-organizador{
+    font-size: 20px;
+  }
+
+  .email-perfil-organizador{
+    font-size: 14px;
+  }
+
+  .foto-perfil {
+    flex-direction: column;
+  }
+
+  .nome-email-organizador{
+    text-align: center;
+  }
+
+  .botoes-alterar-perfil-edicao{
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 500px){
+  .formulario-perfil,
+  .caixa-input-perfil{
+    padding: 48px 24px;
+  }
+
+  .texto-informacoes-pessoal{
+    text-align: center;
+  }
+
+  .botoes-foto-perfil{
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 375px){
+  .botoes-alterar-perfil{
+    flex-direction: column;
+  }
+
+  .botoes-alterar-perfil-edicao{
+    gap: 1rem;
+  }
+}

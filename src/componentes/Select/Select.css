@@ -17,6 +17,13 @@
     border-color: transparent;
 }
 
+.select:disabled{
+    background-color: #F8F9FA;
+    color: rgba(33, 37, 41, 0.56);
+    border-color: #CED4DA;
+    cursor: not-allowed;
+}
+
 .select__label{
     margin-bottom: .5rem;
     font-weight: 300;
