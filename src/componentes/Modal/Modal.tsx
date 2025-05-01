@@ -6,6 +6,23 @@ import Botao from '../Botao/Botao'
 export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao = 'Salvar', children}:any) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
 
+    useEffect(() => {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+    
+        dialog.showModal();
+    
+        const handleClose = () => {
+            enviaModal();
+        };
+    
+        dialog.addEventListener("close", handleClose);
+    
+        return () => {
+            dialog.removeEventListener("close", handleClose);
+        };
+    }, []);
+
     const fecharModal = () => {
         dialogRef.current?.close()
         enviaModal()
