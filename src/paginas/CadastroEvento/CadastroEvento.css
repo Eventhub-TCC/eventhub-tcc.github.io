@@ -1,4 +1,10 @@
-
+.cadastro-evento__alerta{
+    position: fixed;
+    top: 10%;
+    right: 32px;
+    width: 560px;
+    z-index: 1;
+}
 .cadastro-evento__botoes{
     display: flex;
     gap: 16px;
@@ -63,6 +69,15 @@
     height: 100%;
     border-radius: 1rem;
     object-fit: cover;
+}
+
+@media screen and (max-width: 1024px){
+    .cadastro-evento__alerta{
+        transform: translateX(-50%);
+        left: 50%;
+       width: 100%;
+       padding: 0 32px;
+    }
 }
 
 @media screen and (max-width: 767px) {

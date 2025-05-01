@@ -12,6 +12,10 @@ import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import { PatternFormat } from "react-number-format"
 import api from '../../axios'
 import { useNavigate } from 'react-router'
+import Alerta from '../../componentes/Alerta/Alerta'
+
+
+
 
 
 interface Instrucao {
@@ -43,6 +47,11 @@ const CadastroEvento = () => {
     estado: ''
   })
 
+  const [dataMinima, setDataMinima] = useState(new Date())
+  setInterval(()=>{
+    setDataMinima(new Date())
+  }, 60000)
+
   const [preView, setPreview] = useState('')
 
   const [passoAtual, setPassoAtual] = useState(0)
@@ -51,7 +60,18 @@ const CadastroEvento = () => {
   const [erroCampo, setErroCampo] = useState({
     tipoEvento : false,
     cep : false,
+    horaInicio : false,
   })
+
+  const [avisos, setAvisos] = useState(
+    {
+      horaInicioInvalida: false,
+      erros: false,
+      erroConexao: false,
+      cepInvalido:false
+    }
+  )
+  
 
   const [localObrigatorio, setLocalObrigatorio] = useState(false)
 
@@ -86,12 +106,21 @@ const CadastroEvento = () => {
     Object.values(localEvento).some((value) => value.length > 0) ? setLocalObrigatorio(true) : setLocalObrigatorio(false)
   },[localEvento])
 
+  useEffect(() => {
+    console.log(avisos.horaInicioInvalida)
+      setTimeout(() => {
+        Object.entries(avisos).forEach(([key, value]) => {
+          if (value === true) {
+            setAvisos(prevState => ({ ...prevState, [key]: false }));
+          }
+        });
+      }, 10000);
+  },[avisos])
+
+
   const dataLimite = new Date()
   dataLimite.setFullYear(dataLimite.getFullYear() + 50)
   dataLimite.setHours(0, 0, 0, 0)
-
-  const dataMinima = new Date()
-  dataMinima.setHours(0, 0, 0, 0)
 
   const qntPassos = 4
 
@@ -186,7 +215,12 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           cabecalho  
           cabecalhoTexto='Data do Evento'
           tipo='date'
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setDataEvento(new Date(e.target.value))}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            if(e.target.value!=='') 
+            setDataEvento(new Date(e.target.value))
+            else
+            setDataEvento(null)
+          }}
           valor={dataEvento && !isNaN(new Date(dataEvento).getTime()) ? dataEvento.toISOString().split('T')[0] : ''}
           max={dataLimite.toISOString().split('T')[0]}
           min={dataMinima.toISOString().split('T')[0]}
@@ -196,8 +230,12 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           cabecalho cabecalhoTexto='Hora de Início' 
           tipo='time' 
           valor={horaInicio} 
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setHoraInicio(e.target.value)} 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setHoraInicio(e.target.value)
+            setErroCampo(prevState => ({...prevState, horaInicio: false}))
+          }} 
           name='hora-inicio'
+          min={dataEvento?.toISOString().split('T')[0]===dataMinima.toISOString().split('T')[0]?dataMinima.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }):'00:00'}
         />,
         <Input 
           cabecalho 
@@ -206,6 +244,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           valor={horaFim} 
           onChange={(e: ChangeEvent<HTMLInputElement>) => setHoraFim(e.target.value)} 
           name='hora-fim'
+          min={horaInicio}
         />
       ]
     },
@@ -346,6 +385,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
       </div>
       <div className='col-lg-6'>
         {instrucoes[passoAtual].campos && instrucoes[passoAtual].campos[1]}
+        {erroCampo.horaInicio?<ErroCampoForm mensagem='Hora de início inválida'/>:''}
       </div >
       <div className='col-lg-6'>
         {instrucoes[passoAtual].campos && instrucoes[passoAtual].campos[2]}
@@ -380,12 +420,21 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
 
   const CadastrarEvento = async(e: FormEvent) => {
     e.preventDefault()
+    if(dataEvento?.toISOString().split('T')[0] === dataMinima.toISOString().split('T')[0]){
+      if(horaInicio<dataMinima.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })){
+        setAvisos(prevstate =>({...prevstate, horaInicioInvalida: true}))
+        setErroCampo(prevState => ({...prevState, horaInicio: true}))
+        setPassoAtual(2)
+        return
+      }
+    }
     if(localEvento.cep.length<8 && localEvento.cep.length>0) {
       setErroCampo(prevState => ({...prevState, cep: true}))
+      setAvisos(prevState => ({...prevState, cepInvalido: true}))
       return
     }
     if(Object.values(erroCampo).some((value) => value === true))
-      alert('Corrija os erros antes de continuar')
+      setAvisos(prevState => ({...prevState, erros: true}))
     else {
      try{
       try {
@@ -411,7 +460,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
         navigate('/meus-eventos');
       } catch (error) {
         console.log('ocorreu algum erro: ',error)
-        alert('Ocorreu um erro ao cadastrar o evento. Tente novamente mais tarde.')
+        setAvisos(prevState => ({...prevState, erroConexao: true}))
        }
       }
     catch (error) {
@@ -446,6 +495,30 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           </div>
         </div>
       </form>
+      {
+        avisos.horaInicioInvalida &&
+        <div className='cadastro-evento__alerta'>
+          <Alerta texto="A hora de início do evento não pode ser no passado. Por favor, escolha um horário futuro." status="aviso" ativado={true}/>
+        </div>
+      }
+      {  
+        avisos.erros &&
+        <div className='cadastro-evento__alerta'>
+          <Alerta texto="Ocorreu algum erro durante o cadastro. Por favor confira os campos." status="erro" ativado={true}/>
+        </div>
+      }
+      {
+        avisos.erroConexao &&
+        <div className='cadastro-evento__alerta'>
+          <Alerta texto="Ocorreu um erro interno. Tente novamente mais tarde." status="erro" ativado={true}/>
+        </div>
+      }
+      {
+        avisos.cepInvalido &&
+        <div className='cadastro-evento__alerta'>
+          <Alerta texto="O CEP informado não é válido." status="erro" ativado={true}/>
+        </div>
+      }
     </div>
   )
 }
