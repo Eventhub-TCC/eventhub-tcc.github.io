@@ -5,6 +5,8 @@ import './MeusEventos.css'
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router';
 import api from '../../axios';
+import Input from '../../componentes/Input/Input';
+import Botao from '../../componentes/Botao/Botao';
 
 interface Evento{
   idEvento: number;
@@ -119,6 +121,14 @@ const MeusEventos = () => {
     <div className="conteudo-principal-meus-eventos">
         <div className="layout-titulo">
             Meus eventos
+        </div>
+        <div className="conteudo-principal-meus-eventos__pesquisa-filtros">
+          <div className='conteudo-principal-meus-eventos__pesquisa'>
+            <Input />
+          </div>
+          <div>
+            <Botao/>
+          </div>
         </div>
         <div className="meus-eventos-container">
           {eventos.length > 0 ? (

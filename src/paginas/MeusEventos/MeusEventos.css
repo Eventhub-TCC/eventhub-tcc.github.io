@@ -159,6 +159,17 @@
     align-self: stretch;
 }
 
+.conteudo-principal-meus-eventos__pesquisa-filtros{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    align-self: stretch;
+}
+
+.conteudo-principal-meus-eventos__pesquisa{
+    width: 100%;
+}
+
 @media screen and (max-width: 768px){
     .ordenacao-meus-eventos{
         gap: 2rem;

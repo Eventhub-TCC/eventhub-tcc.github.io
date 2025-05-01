@@ -202,7 +202,7 @@ const alterarImagemPerfil = async ( imagem : any ) => {
     }, {
       headers: {
         'content-type': 'multipart/form-data',
-  }});
+  }}), window.location.reload();;
   }
   catch (error) {
     console.error('Erro ao alterar imagem de perfil', error);
