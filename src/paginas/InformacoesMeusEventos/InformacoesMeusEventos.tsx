@@ -1,17 +1,9 @@
 import './InformacoesMeusEventos.css';
-// import React from 'react'
-import { Modal } from '../../componentes/Modal/Modal';
-import Input from '../../componentes/Input/Input';
-import Botao from '../../componentes/Botao/Botao';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
 import { useParams } from 'react-router';
 import api from '../../axios';
-// import Select from '../../componentes/Select/Select';
-import Select from '../../componentes/Select/Select';
-import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
-import axios from 'axios';
-import { PatternFormat } from 'react-number-format';
+
 
 
 interface Evento{
@@ -42,84 +34,11 @@ interface Evento{
 const InformacoesMeusEventos = () => {
     const { idEvento } = useParams();
     const [evento, setEvento] = useState<Evento | null>(null);
-    const [modoEdicaoEvento, setModoEdicaoEvento] = useState(false);
-    const [modoApagarEvento, setModoApagarvento] = useState(false);
     const [idUsuario, setIdUsuario] = useState<any>(null);
-    const [eventoEditado, setEventoEditado] = useState<Evento | null>(null);
-    const [imagemEvento, setImagemEvento] = useState<File|null>(null)
     const [preView, setPreview] = useState('')
     const [tipoEvento, setTipoEvento] = useState(0)
-    const inputImagemref = useRef<HTMLInputElement>(null)
     const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>([])
-    const [erros, setErros] = useState<{ [key: string]: string }>({});
-    const [travado, setTravado] = useState(false)
-    const [erroCep, setErroCep] = useState(false)   
-
-    const validarFormulario = async () => {
-        const novosErros: { [key: string]: string } = {};
-    
-        if (!eventoEditado?.nomeEvento) novosErros.nomeEvento = "O nome do evento é obrigatório.";
-        if (!tipoEvento) novosErros.tipoEvento = "Selecione um tipo de evento.";
-        if (!eventoEditado?.dataEvento) novosErros.dataEvento = "A data do evento é obrigatória.";
-        if (!eventoEditado?.horaInicio) novosErros.horaInicio = "Hora de início é obrigatória.";
-        if (!eventoEditado?.horaFim) novosErros.horaFim = "Hora de término é obrigatória.";
-        if (!eventoEditado?.cepLocal) novosErros.cepLocal = "O CEP é obrigatório.";
-        if (!eventoEditado?.enderecoLocal) novosErros.enderecoLocal = "O endereço é obrigatório.";
-        if (!eventoEditado?.numeroLocal) novosErros.numeroLocal = "O número é obrigatório.";
-        if (erroCep) novosErros.cepLocal = "CEP inválido.";
-    
-        setErros(novosErros);
-    
-        return Object.keys(novosErros).length === 0;
-    };
-
-  
-    const buscarCep = async (cep: string) => {
-        try {
-          const res = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-          const local = res.data;
-          if (local.erro) {
-            setErroCep(true);
-          } else {
-            setEventoEditado((prevState) =>
-              prevState
-                ? {
-                    ...prevState,
-                    enderecoLocal: local.logradouro,
-                    bairroLocal: local.bairro,
-                    cidadeLocal: local.localidade,
-                    ufLocal: local.uf,
-                  }
-                : null
-            );
-            setTravado(true);
-            setErroCep(false);
-          }
-        } catch (error) {
-          console.log('Ocorreu algum erro: ', error);
-        }
-      };
-    
-
-      useEffect(() => {
-        console.log("eventoEditado dentro do useEffect:", eventoEditado); 
-        if(eventoEditado && eventoEditado.cepLocal.length === 8) {
-          buscarCep(eventoEditado.cepLocal);  
-          setErroCep(false);
-        } else if((eventoEditado?.cepLocal ?? "").length < 8) {
-            setErroCep(true);
-            setTravado(false)
-        } else {
-          setTravado(false);
-        }
-      }, [eventoEditado?.cepLocal]); 
-
-      useEffect(() => {
-        validarFormulario();
-      }, [erroCep]);
-      
-
-
+ 
     useEffect(()=>{
         const buscarTiposDeEventos = async () => {
           try{
@@ -144,7 +63,6 @@ const InformacoesMeusEventos = () => {
                     .then((res) => {
                         setEvento(res.data);
                         setTipoEvento(res.data.idTipoEvento);
-                        setEventoEditado(res.data);
                         const urlPreview = res.data.imagemEvento
                         ? `http://localhost:3000/files/${res.data.imagemEvento}`
                         : '';
@@ -166,50 +84,10 @@ const InformacoesMeusEventos = () => {
         }}, [idEvento]);
         
     
-        function guardarModo(setState: React.Dispatch<React.SetStateAction<boolean>>, valor: boolean) {
-            setState(valor);
-          }
     
           if (!evento) return <p>Carregando evento...</p>;
 
-          const editarEvento = async () => {
-            if (!await validarFormulario()) return;
           
-            if (!eventoEditado) return alert("Evento não carregado corretamente!");
-          
-            try {
-              const formData = new FormData();
-          
-              formData.append("nomeEvento", eventoEditado.nomeEvento);
-              formData.append("descricaoEvento", eventoEditado.descricaoEvento || '');
-              formData.append("idTipoEvento", tipoEvento.toString());
-              formData.append("dataEvento", eventoEditado.dataEvento);
-              formData.append("horaInicio", eventoEditado.horaInicio);
-              formData.append("horaFim", eventoEditado.horaFim);
-              formData.append("cepLocal", eventoEditado.cepLocal);
-              formData.append("enderecoLocal", eventoEditado.enderecoLocal);
-              formData.append("numeroLocal", eventoEditado.numeroLocal);
-              formData.append("complementoLocal", eventoEditado.complementoLocal ?? "");
-              formData.append("bairroLocal", eventoEditado.bairroLocal);
-              formData.append("cidadeLocal", eventoEditado.cidadeLocal);
-              formData.append("ufLocal", eventoEditado.ufLocal);
-              if (imagemEvento instanceof File) {
-                formData.append("file", imagemEvento);
-              }
-          
-              await api.put(`/users/events/${evento.idEvento}`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-              });
-          
-              alert("Evento atualizado com sucesso!");
-              AbrirModalEditarEvento();
-              window.location.reload();
-          
-            } catch (err) {
-              console.error("Erro ao editar evento:", err);
-              alert("Erro ao atualizar evento.");
-            }
-          };
 
           function definirStatusEvento(evento: Evento): string {
             const agora = new Date();
@@ -242,42 +120,16 @@ const InformacoesMeusEventos = () => {
         }
 
 
-
-    const AbrirModalEditarEvento = () => {
-         setEventoEditado(evento);
-        setModoEdicaoEvento(!modoEdicaoEvento)
-    }
-
-    const AbrirModalApagarEvento = () => {
-        setModoApagarvento(!modoApagarEvento)
-    }
-
-    const ApagarEvento = () => {
-        api.delete(`/users/${idUsuario}/events/${idEvento}`)
-            .then((res) => {
-                console.log(res.data);
-                window.location.href = '/meus-eventos';
-            })
-            .catch((err) => {
-                console.error("Erro ao apagar evento", err);
-            });
-        setModoApagarvento(!modoApagarEvento)
-    }
-
-
-
-    
   return (
     <div>
         <div className='informacoes-evento__cabecalho'>
             <CabecalhoEvento
+                preViewEv={preView}
+                evento={evento}
+                setEvento={setEvento}
+                tipoDoEvento={tipoEvento}
+                idUsuario={idUsuario}
                 idEvento={idEvento} 
-                EnviaModoEdicao={(valor: boolean) => guardarModo(setModoEdicaoEvento, valor)} 
-                EnviaModoApagar={(valor: boolean) => guardarModo(setModoApagarvento, valor)}
-                tituloEvento={evento.nomeEvento}
-                dataEvento={evento.dataEvento}
-                horaInicio={evento.horaInicio}
-                horaFim={evento.horaFim}
                 localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
             />
         </div>
@@ -297,7 +149,7 @@ const InformacoesMeusEventos = () => {
                 <div className='categoria'>
                     <div className='texto-status-categoria-data-horario-endereco'>Categoria</div>
                     <div>
-                        {tipoEventoDisponiveis.find(tipo => Number(tipo.idTipoEvento) === tipoEvento)?.descricaoTipoEvento}</div>
+                        {tipoEventoDisponiveis.find(tipo => tipo.idTipoEvento === evento.idTipoEvento)?.descricaoTipoEvento}</div>
                 </div>
             </div>
             <div className='linhas'>
@@ -344,219 +196,6 @@ const InformacoesMeusEventos = () => {
                 </div>
             </div>
         </div> */}
-
-        {
-            modoEdicaoEvento ? 
-            <Modal funcaoSalvar={editarEvento} titulo='Editar evento' enviaModal={AbrirModalEditarEvento}>
-            <div className='modal-editar-evento'>
-                <div className='campos-editar-evento'>
-                    <div className='nome-categoria-evento'>
-                        <div className='nome-input-evento'>
-                            <div className='textos'>Nome do evento</div>
-                            <div className="input-tamanho">
-                                <Input value={eventoEditado?.nomeEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, nomeEvento: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite um nome para o evento'/>
-                                {erros.nomeEvento && <ErroCampoForm mensagem={erros.nomeEvento}/>}   
-                            </div>  
-                        </div>
-                        <div className='categoria-input-evento'>
-                            <div className='input-tamanho'>   
-                            <Select 
-                                cabecalho 
-                                cabecalhoTexto='Tipo de Evento'  
-                                textoPadrao='Selecione o tipo de evento'
-                                valor={tipoEvento}
-                                funcao={(e: ChangeEvent<HTMLSelectElement>) => setTipoEvento(Number(e.target.value))}
-                                required={true}
-                            >
-                                {tipoEventoDisponiveis.map(tipo => <option value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
-                            </Select>
-                            {erros.tipoEvento && <ErroCampoForm mensagem={erros.tipoEvento}/>}
-                            </div>
-                        </div>
-                    </div>
-                    <div className='descricao-input-evento'>
-                        <div>Descrição do evento(opcional)</div>
-                        <div className='input-tamanho-descricao'>
-                            <Input value={eventoEditado?.descricaoEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, descricaoEvento: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite uma descrição para o seu evento...'/>
-                        </div>
-                    </div>
-                    <div className='imagem-evento'>
-                        <div className='imagem-evento-texto-botao'>
-                            <div className='texto-imagem-evento'>Imagem do evento(opcional)</div>
-                            <div className='input-imagem-evento'>
-                            <div className='cadastro-evento__container-imagem'>
-                                    <input 
-                                        type='file' 
-                                        className='cadastro-evento__input_imagem'
-                                        accept='image/*'
-                                        ref={ inputImagemref }
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                            if (e.target.files && e.target.files.length > 0) {
-                                            setImagemEvento(e.target.files[0])
-                                            setPreview(URL.createObjectURL(e.target.files[0]))
-                                            }
-                                            else {
-                                            setImagemEvento(null)
-                                            setPreview('')
-                                            }
-                                        }}
-                                        />
-                                        {preView?<img src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
-                                    </div>
-                                <div className='botoes-imagem'>
-                                <Botao 
-                                tamanho='min' 
-                                texto='Selecionar arquivo' 
-                                funcao={()=>inputImagemref.current?.click()}/>
-                                <Botao 
-                                tamanho='min' 
-                                texto='Remover' 
-                                funcao={()=>{
-                                    setImagemEvento(null)
-                                    URL.revokeObjectURL(preView)
-                                    setPreview('')
-                                    if(inputImagemref.current)
-                                    inputImagemref.current.value = ""
-                                }}/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='novos-dados-eventos'>
-                    <div className='texto-input-data'>
-                        <div className='textos'>Data do evento</div>
-                        <div className='input-data-evento'>
-                            <Input value={eventoEditado?.dataEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, dataEvento: e.target.value } : null
-                                            )
-                                } type='date' dica='dd/mm/aaaa'/>
-                                {erros.dataEvento && <ErroCampoForm mensagem={erros.dataEvento}/>}
-                        </div>
-                    </div>
-                    <div className='texto-input-hora-inicio-evento'>
-                        <div className='horario-inicio-fim-evento'>
-                            <div className='textos'>Hora ínicio do evento</div>
-                            <div className='input-tamanho'>
-                                <Input value={eventoEditado?.horaInicio || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, horaInicio: e.target.value } : null
-                                            )
-                                } type='time' dica='--:--'/>
-                                {erros.horaInicio && <ErroCampoForm mensagem={erros.horaInicio}/>}
-                            </div>
-                        </div>
-                        <div className='horario-inicio-fim-evento'>
-                            <div className='textos'>Hora fim do evento</div>
-                            <div className='input-tamanho'>
-                                <Input value={eventoEditado?.horaFim || ""}
-                                  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, horaFim: e.target.value } : null
-                                            )
-                                } type='time' dica='--:--'/>
-                                {erros.horaFim && <ErroCampoForm mensagem={erros.horaFim}/>}
-                            </div>
-                        </div>
-                    </div>
-                    <div className='texto-input-cep-endereco'>
-                        <div className='input-texto-cep-numero'>
-                            <div className='textos'>CEP</div>
-                            <div className='input-tamanho-cep-numero'>
-                            <PatternFormat
-                                format={'#####-###'}
-                                mask={'_'}
-                                value={eventoEditado?.cepLocal || ""}
-                                onValueChange={(values:any) => setEventoEditado((prev) =>
-                                    prev ? { ...prev, cepLocal: values.value } : null
-                                    )}
-                                customInput={Input}
-                                type='text' dica='Digite o CEP do local'/>
-                                {erros.cepLocal && <ErroCampoForm mensagem={erros.cepLocal}/>}
-                            </div>
-                        </div>
-                        <div className='input-texto-endereco-complemento'>
-                            <div className='textos'>Endereço</div>
-                            <div className='input-tamanho-endereco-complemento'>
-                                <Input disabled={travado}  value={eventoEditado?.enderecoLocal || ""}
-                                  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, enderecoLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite o endereço do local'/>
-                                {erros.enderecoLocal && <ErroCampoForm mensagem={erros.enderecoLocal}/>}
-                            </div>
-                        </div>
-                    </div>
-                    <div className='input-texto-numero-complemento'>
-                        <div className='input-texto-cep-numero'>
-                            <div className='textos'>Número</div>
-                            <div className='input-tamanho-cep-numero'>
-                                <Input value={eventoEditado?.numeroLocal || ""} onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, numeroLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite o número do local'/>
-                                {erros.numeroLocal && <ErroCampoForm mensagem={erros.numeroLocal}/>}
-                            </div>
-                        </div>
-                        <div className='input-texto-endereco-complemento'>
-                            <div className='textos'>Complemento(Opcional)</div>
-                            <div className='input-tamanho-endereco-complemento'>
-                                <Input value={eventoEditado?.complementoLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, complementoLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite o complemento'/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='input-texto-bairro'>
-                        <div className='textos'>Bairro (opicional)</div>
-                        <div className='input-bairro'>
-                            <Input disabled={travado}  value={eventoEditado?.bairroLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, bairroLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite o bairro do local do evento'/>
-                        </div>
-                    </div>
-                    <div className='input-texto-cidade-uf'>
-                        <div className='input-cidade'>
-                            <div className='textos'>Cidade (opicional)</div>
-                            <div className='input-tamanho-cidade'>
-                                <Input disabled={travado}  value={eventoEditado?.cidadeLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, cidadeLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite a cidade do local'/>
-                            </div>
-                        </div>
-                        <div className='input-uf'>
-                            <div className='textos'>UF (opicional)</div>
-                            <div className='input-tamanho-uf'>
-                                <Input disabled={travado}  value={eventoEditado?.ufLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, ufLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite a UF'/>
-                            </div>
-                        </div>
-                    </div>
-                </div>  
-            </div>
-        </Modal>
-        :
-        ''
-        }
-
-        { modoApagarEvento ?
-        <Modal titulo='Apagar evento' textoBotao="Apagar" funcaoSalvar={ApagarEvento} enviaModal={AbrirModalApagarEvento}>
-            <div className='modal-apagar-evento'>
-                <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o evento "{evento.nomeEvento}"?</div>
-            </div>
-        </Modal>
-        :
-        ''
-        }
            
     </div>
 </div>
