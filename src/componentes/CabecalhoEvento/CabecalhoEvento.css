@@ -68,6 +68,7 @@
     align-items: flex-start;
     gap: 8px;
     align-self: stretch;
+    margin-top: 32px;
 }
 
 .aba-evento{

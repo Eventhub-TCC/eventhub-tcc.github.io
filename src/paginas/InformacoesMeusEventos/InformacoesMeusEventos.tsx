@@ -9,6 +9,9 @@ import { useParams } from 'react-router';
 import api from '../../axios';
 // import Select from '../../componentes/Select/Select';
 import Select from '../../componentes/Select/Select';
+import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
+import axios from 'axios';
+import { PatternFormat } from 'react-number-format';
 
 
 interface Evento{
@@ -25,7 +28,7 @@ interface Evento{
     bairroLocal: string;
     cidadeLocal: string;
     ufLocal: string;
-    tipoEvento?: string;
+    idTipoEvento?: string;
     descricaoEvento?: string;
   }
 
@@ -48,6 +51,73 @@ const InformacoesMeusEventos = () => {
     const [tipoEvento, setTipoEvento] = useState(0)
     const inputImagemref = useRef<HTMLInputElement>(null)
     const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>([])
+    const [erros, setErros] = useState<{ [key: string]: string }>({});
+    const [travado, setTravado] = useState(false)
+    const [erroCep, setErroCep] = useState(false)   
+
+    const validarFormulario = async () => {
+        const novosErros: { [key: string]: string } = {};
+    
+        if (!eventoEditado?.nomeEvento) novosErros.nomeEvento = "O nome do evento é obrigatório.";
+        if (!tipoEvento) novosErros.tipoEvento = "Selecione um tipo de evento.";
+        if (!eventoEditado?.dataEvento) novosErros.dataEvento = "A data do evento é obrigatória.";
+        if (!eventoEditado?.horaInicio) novosErros.horaInicio = "Hora de início é obrigatória.";
+        if (!eventoEditado?.horaFim) novosErros.horaFim = "Hora de término é obrigatória.";
+        if (!eventoEditado?.cepLocal) novosErros.cepLocal = "O CEP é obrigatório.";
+        if (!eventoEditado?.enderecoLocal) novosErros.enderecoLocal = "O endereço é obrigatório.";
+        if (!eventoEditado?.numeroLocal) novosErros.numeroLocal = "O número é obrigatório.";
+        if (erroCep) novosErros.cepLocal = "CEP inválido.";
+    
+        setErros(novosErros);
+    
+        return Object.keys(novosErros).length === 0;
+    };
+
+  
+    const buscarCep = async (cep: string) => {
+        try {
+          const res = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+          const local = res.data;
+          if (local.erro) {
+            setErroCep(true);
+          } else {
+            setEventoEditado((prevState) =>
+              prevState
+                ? {
+                    ...prevState,
+                    enderecoLocal: local.logradouro,
+                    bairroLocal: local.bairro,
+                    cidadeLocal: local.localidade,
+                    ufLocal: local.uf,
+                  }
+                : null
+            );
+            setTravado(true);
+            setErroCep(false);
+          }
+        } catch (error) {
+          console.log('Ocorreu algum erro: ', error);
+        }
+      };
+    
+
+      useEffect(() => {
+        console.log("eventoEditado dentro do useEffect:", eventoEditado); 
+        if(eventoEditado && eventoEditado.cepLocal.length === 8) {
+          buscarCep(eventoEditado.cepLocal);  
+          setErroCep(false);
+        } else if((eventoEditado?.cepLocal ?? "").length < 8) {
+            setErroCep(true);
+            setTravado(false)
+        } else {
+          setTravado(false);
+        }
+      }, [eventoEditado?.cepLocal]); 
+
+      useEffect(() => {
+        validarFormulario();
+      }, [erroCep]);
+      
 
 
     useEffect(()=>{
@@ -73,10 +143,13 @@ const InformacoesMeusEventos = () => {
                 api.get(`/users/${idUsuario}/events/${idEvento}`)
                     .then((res) => {
                         setEvento(res.data);
-                        setImagemEvento(res.data.imagemEvento);
-                        setTipoEvento(res.data.tipoEvento);
+                        setTipoEvento(res.data.idTipoEvento);
                         setEventoEditado(res.data);
-                        setPreview(res.data.imagemEvento ? `http://localhost:3000/files/${res.data.imagemEvento}` : '');
+                        const urlPreview = res.data.imagemEvento
+                        ? `http://localhost:3000/files/${res.data.imagemEvento}`
+                        : '';
+                        setPreview(urlPreview);
+                        console.log('preview', urlPreview);
                         const status = definirStatusEvento(res.data);
                         setEvento({ ...res.data, status });
                     })
@@ -100,33 +173,38 @@ const InformacoesMeusEventos = () => {
           if (!evento) return <p>Carregando evento...</p>;
 
           const editarEvento = async () => {
+            if (!await validarFormulario()) return;
+          
             if (!eventoEditado) return alert("Evento não carregado corretamente!");
-    
           
             try {
-              
-              await api.put(
-                `/users/events/${evento.idEvento}`, {
-                    nomeEvento: eventoEditado.nomeEvento,
-                    descricaoEvento: eventoEditado.descricaoEvento,
-                    tipoEvento: eventoEditado.tipoEvento,
-                    dataEvento: eventoEditado.dataEvento,
-                    horaInicio: eventoEditado.horaInicio,
-                    horaFim: eventoEditado.horaFim,
-                    cepLocal: eventoEditado.cepLocal,
-                    enderecoLocal: eventoEditado.enderecoLocal,
-                    numeroLocal: eventoEditado.numeroLocal,
-                    complementoLocal: eventoEditado.complementoLocal,
-                    bairroLocal: eventoEditado.bairroLocal,
-                    cidadeLocal: eventoEditado.cidadeLocal,
-                    ufLocal: eventoEditado.ufLocal,
-                    file: imagemEvento
-                },
-              { headers: { 'Content-Type': 'multipart/form-data' } });
+              const formData = new FormData();
+          
+              formData.append("nomeEvento", eventoEditado.nomeEvento);
+              formData.append("descricaoEvento", eventoEditado.descricaoEvento || '');
+              formData.append("idTipoEvento", tipoEvento.toString());
+              formData.append("dataEvento", eventoEditado.dataEvento);
+              formData.append("horaInicio", eventoEditado.horaInicio);
+              formData.append("horaFim", eventoEditado.horaFim);
+              formData.append("cepLocal", eventoEditado.cepLocal);
+              formData.append("enderecoLocal", eventoEditado.enderecoLocal);
+              formData.append("numeroLocal", eventoEditado.numeroLocal);
+              formData.append("complementoLocal", eventoEditado.complementoLocal ?? "");
+              formData.append("bairroLocal", eventoEditado.bairroLocal);
+              formData.append("cidadeLocal", eventoEditado.cidadeLocal);
+              formData.append("ufLocal", eventoEditado.ufLocal);
+              if (imagemEvento instanceof File) {
+                formData.append("file", imagemEvento);
+              }
+          
+              await api.put(`/users/events/${evento.idEvento}`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+              });
           
               alert("Evento atualizado com sucesso!");
               AbrirModalEditarEvento();
-            //   window.location.href = "/meus-eventos";
+              window.location.reload();
+          
             } catch (err) {
               console.error("Erro ao editar evento:", err);
               alert("Erro ao atualizar evento.");
@@ -218,7 +296,8 @@ const InformacoesMeusEventos = () => {
                 </div>
                 <div className='categoria'>
                     <div className='texto-status-categoria-data-horario-endereco'>Categoria</div>
-                    <div>{evento.nomeEvento}</div>
+                    <div>
+                        {tipoEventoDisponiveis.find(tipo => Number(tipo.idTipoEvento) === tipoEvento)?.descricaoTipoEvento}</div>
                 </div>
             </div>
             <div className='linhas'>
@@ -279,7 +358,8 @@ const InformacoesMeusEventos = () => {
                                             prev ? { ...prev, nomeEvento: e.target.value } : null
                                             )
                                 } type='text' dica='Digite um nome para o evento'/>
-                            </div>                  
+                                {erros.nomeEvento && <ErroCampoForm mensagem={erros.nomeEvento}/>}   
+                            </div>  
                         </div>
                         <div className='categoria-input-evento'>
                             <div className='input-tamanho'>   
@@ -293,7 +373,7 @@ const InformacoesMeusEventos = () => {
                             >
                                 {tipoEventoDisponiveis.map(tipo => <option value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
                             </Select>
-
+                            {erros.tipoEvento && <ErroCampoForm mensagem={erros.tipoEvento}/>}
                             </div>
                         </div>
                     </div>
@@ -327,7 +407,7 @@ const InformacoesMeusEventos = () => {
                                             }
                                         }}
                                         />
-                                        {imagemEvento?<img src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
+                                        {preView?<img src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
                                     </div>
                                 <div className='botoes-imagem'>
                                 <Botao 
@@ -352,11 +432,12 @@ const InformacoesMeusEventos = () => {
                 <div className='novos-dados-eventos'>
                     <div className='texto-input-data'>
                         <div className='textos'>Data do evento</div>
-                        <div className='data-evento'>
+                        <div className='input-data-evento'>
                             <Input value={eventoEditado?.dataEvento || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, dataEvento: e.target.value } : null
                                             )
                                 } type='date' dica='dd/mm/aaaa'/>
+                                {erros.dataEvento && <ErroCampoForm mensagem={erros.dataEvento}/>}
                         </div>
                     </div>
                     <div className='texto-input-hora-inicio-evento'>
@@ -366,7 +447,8 @@ const InformacoesMeusEventos = () => {
                                 <Input value={eventoEditado?.horaInicio || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, horaInicio: e.target.value } : null
                                             )
-                                } type='text' dica='--:--'/>
+                                } type='time' dica='--:--'/>
+                                {erros.horaInicio && <ErroCampoForm mensagem={erros.horaInicio}/>}
                             </div>
                         </div>
                         <div className='horario-inicio-fim-evento'>
@@ -376,7 +458,8 @@ const InformacoesMeusEventos = () => {
                                   onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, horaFim: e.target.value } : null
                                             )
-                                } type='text' dica='--:--'/>
+                                } type='time' dica='--:--'/>
+                                {erros.horaFim && <ErroCampoForm mensagem={erros.horaFim}/>}
                             </div>
                         </div>
                     </div>
@@ -384,21 +467,27 @@ const InformacoesMeusEventos = () => {
                         <div className='input-texto-cep-numero'>
                             <div className='textos'>CEP</div>
                             <div className='input-tamanho-cep-numero'>
-                                <Input value={eventoEditado?.cepLocal || ""}
-                                  onChange={(e:any) => setEventoEditado((prev) =>
-                                            prev ? { ...prev, cepLocal: e.target.value } : null
-                                            )
-                                } type='text' dica='Digite o CEP do local'/>
+                            <PatternFormat
+                                format={'#####-###'}
+                                mask={'_'}
+                                value={eventoEditado?.cepLocal || ""}
+                                onValueChange={(values:any) => setEventoEditado((prev) =>
+                                    prev ? { ...prev, cepLocal: values.value } : null
+                                    )}
+                                customInput={Input}
+                                type='text' dica='Digite o CEP do local'/>
+                                {erros.cepLocal && <ErroCampoForm mensagem={erros.cepLocal}/>}
                             </div>
                         </div>
                         <div className='input-texto-endereco-complemento'>
                             <div className='textos'>Endereço</div>
                             <div className='input-tamanho-endereco-complemento'>
-                                <Input value={eventoEditado?.enderecoLocal || ""}
+                                <Input disabled={travado}  value={eventoEditado?.enderecoLocal || ""}
                                   onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, enderecoLocal: e.target.value } : null
                                             )
                                 } type='text' dica='Digite o endereço do local'/>
+                                {erros.enderecoLocal && <ErroCampoForm mensagem={erros.enderecoLocal}/>}
                             </div>
                         </div>
                     </div>
@@ -410,10 +499,11 @@ const InformacoesMeusEventos = () => {
                                             prev ? { ...prev, numeroLocal: e.target.value } : null
                                             )
                                 } type='text' dica='Digite o número do local'/>
+                                {erros.numeroLocal && <ErroCampoForm mensagem={erros.numeroLocal}/>}
                             </div>
                         </div>
                         <div className='input-texto-endereco-complemento'>
-                            <div className='textos'>Complemento</div>
+                            <div className='textos'>Complemento(Opcional)</div>
                             <div className='input-tamanho-endereco-complemento'>
                                 <Input value={eventoEditado?.complementoLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, complementoLocal: e.target.value } : null
@@ -425,7 +515,7 @@ const InformacoesMeusEventos = () => {
                     <div className='input-texto-bairro'>
                         <div className='textos'>Bairro (opicional)</div>
                         <div className='input-bairro'>
-                            <Input value={eventoEditado?.bairroLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                            <Input disabled={travado}  value={eventoEditado?.bairroLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, bairroLocal: e.target.value } : null
                                             )
                                 } type='text' dica='Digite o bairro do local do evento'/>
@@ -435,7 +525,7 @@ const InformacoesMeusEventos = () => {
                         <div className='input-cidade'>
                             <div className='textos'>Cidade (opicional)</div>
                             <div className='input-tamanho-cidade'>
-                                <Input value={eventoEditado?.cidadeLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                <Input disabled={travado}  value={eventoEditado?.cidadeLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, cidadeLocal: e.target.value } : null
                                             )
                                 } type='text' dica='Digite a cidade do local'/>
@@ -444,7 +534,7 @@ const InformacoesMeusEventos = () => {
                         <div className='input-uf'>
                             <div className='textos'>UF (opicional)</div>
                             <div className='input-tamanho-uf'>
-                                <Input value={eventoEditado?.ufLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
+                                <Input disabled={travado}  value={eventoEditado?.ufLocal || ""}  onChange={(e:any) => setEventoEditado((prev) =>
                                             prev ? { ...prev, ufLocal: e.target.value } : null
                                             )
                                 } type='text' dica='Digite a UF'/>
