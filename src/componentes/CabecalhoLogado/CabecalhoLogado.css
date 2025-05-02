@@ -53,6 +53,14 @@
     animation: mostra-perfil 0.3s ease-in-out both alternate;
 }
 
+.imagem-perfil-modal{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
 @keyframes mostra-perfil {
     from {
         opacity: 0;

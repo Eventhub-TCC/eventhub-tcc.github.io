@@ -159,6 +159,88 @@
     align-self: stretch;
 }
 
+.conteudo-principal-meus-eventos__pesquisa-filtros{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+}
+
+.conteudo-principal-meus-eventos__pesquisa{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    align-self: stretch;
+}
+
+.conteudo-principal-meus-eventos__pesquisa__input{
+    width: 100%;
+}
+
+.conteudo-principal-meus-eventos__botao{
+    width: 160px;
+    height: 44px;   
+}
+
+.conteudo-principal-meus-eventos__filtros {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    transform: perspective(800px) rotateX(-90deg) translateY(-48px);
+    transform-origin: top;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    pointer-events: none;
+  }
+  
+  .conteudo-principal-meus-eventos__filtros--mostrar {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) translateY(0);
+    pointer-events: auto;
+  }
+  
+.conteudo-principal-meus-eventos__filtros__selects{
+    width: 160px;
+}
+
+.conteudo-principal-meus-eventos__limpar-filtros{
+    color: var(--purple-700);
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px; /* 171.429% */
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    cursor: pointer;
+}
+
+.eventos-nao-encontrados{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--purple-700);  
+}
+
+.sem-eventos-encontrados{
+    background-image: url(../../assets/sem-eventos-encontrados.svg);
+    background-repeat: no-repeat;
+    width: 500px;
+    height: 500px;
+}
+
 @media screen and (max-width: 768px){
     .ordenacao-meus-eventos{
         gap: 2rem;
