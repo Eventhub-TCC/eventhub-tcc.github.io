@@ -68,7 +68,8 @@ const CadastroEvento = () => {
       horaInicioInvalida: false,
       erros: false,
       erroConexao: false,
-      cepInvalido:false
+      cepInvalido:false,
+      cepNaoEncontrado: false
     }
   )
   
@@ -83,7 +84,7 @@ const CadastroEvento = () => {
     try { await axios.get(`https://viacep.com.br/ws/${cep}/json/`).then(res => {
       const local = res.data
       if(local.erro) 
-        setErroCampo(prevState => ({...prevState, cep: true}))
+        setAvisos(prevState => ({...prevState, cepNaoEncontrado: true}))
       else {
       setLocalEvento( prevState => ({...prevState, endereco: local.logradouro, bairro: local.bairro, cidade: local.localidade, estado: local.uf}))
       setTravado(true)
@@ -121,6 +122,9 @@ const CadastroEvento = () => {
   const dataLimite = new Date()
   dataLimite.setFullYear(dataLimite.getFullYear() + 50)
   dataLimite.setHours(0, 0, 0, 0)
+
+  const dataHoje = new Date()
+  dataHoje.setHours(0, 0, 0, 0)
 
   const qntPassos = 4
 
@@ -223,7 +227,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           }}
           valor={dataEvento && !isNaN(new Date(dataEvento).getTime()) ? dataEvento.toISOString().split('T')[0] : ''}
           max={dataLimite.toISOString().split('T')[0]}
-          min={dataMinima.toISOString().split('T')[0]}
+          min={dataHoje.toISOString().split('T')[0]}
           name='data-evento'
         />,
         <Input 
@@ -517,6 +521,12 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
         avisos.cepInvalido &&
         <div className='cadastro-evento__alerta'>
           <Alerta texto="O CEP informado não é válido." status="erro" ativado={true}/>
+        </div>
+      }
+      {
+        avisos.cepNaoEncontrado &&
+        <div className='cadastro-evento__alerta'>
+          <Alerta texto="O CEP informado não foi encontrado." status="aviso" ativado={true}/>
         </div>
       }
     </div>

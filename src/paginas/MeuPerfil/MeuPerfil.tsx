@@ -265,12 +265,9 @@ return (
                       accept='image/*'
                       ref={ inputImagemref }
                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        if (e.target.files && e.target.files.length > 0) {
+                        if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
                           setPreview(URL.createObjectURL(e.target.files[0]))
                           alterarImagemPerfil(e.target.files[0])
-                        }
-                        else {
-                          setPreview('')
                         }
                       }}
                     />
