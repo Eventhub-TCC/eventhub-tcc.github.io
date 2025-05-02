@@ -1,0 +1,44 @@
+.secao-organizador{
+    background-color: #FFF;
+    padding: 3rem 2.5rem;
+    border-radius: 2rem;
+    border: 1px solid var(--purple-700);
+}
+
+.secao-organizador__container-titulo{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    color: var(--purple-800);
+}
+
+.secao-organizador__titulo{
+    font-size: 1.375rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.secao-organizador__seta{
+    font-size: 1rem;
+    transition: transform 0.5s ease-in-out;
+}
+
+.secao-organizador__seta-baixo{
+    transform: rotate(90deg);
+}
+
+.secao-organizador__conteudo{
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.secao-organizador__conteudo-interno{
+    padding-top: 2.625rem;
+}
+
+@media screen and (max-width: 500px){
+    .secao-organizador{
+      padding: 3rem 1.5rem;
+    }
+}
