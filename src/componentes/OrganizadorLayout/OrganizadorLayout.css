@@ -35,6 +35,10 @@
   color: #2F2F2F;
   font-size: 2.5rem;
   font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
 }
 
 @media screen and (max-width: 1024px){

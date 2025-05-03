@@ -39,6 +39,10 @@
 
 @media screen and (max-width: 500px){
     .secao-organizador{
-      padding: 3rem 1.5rem;
+      padding: 2rem 1.5rem;
+    }
+
+    .secao-organizador__titulo{
+        font-size: 20px;
     }
 }
