@@ -187,17 +187,16 @@ const Convites = () => {
       return (
         <div className="tela-convidados-evento">
             <div className="informacoes-evento__cabecalho">
-                <CabecalhoEvento
-                    preViewEv={preView}
-                    evento={evento}
-                    setEvento={setEvento}
-                    tipoDoEvento={tipoEvento}
-                    idUsuario={idUsuario}
-                    idEvento={idEvento} 
-                    localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
-                />
+              <CabecalhoEvento
+                idEvento={idEvento} 
+                evento={evento}
+                preViewEv={preView}
+                setEvento={setEvento}
+                idUsuario={idUsuario}
+              />
             </div>
-            <div className="conteudo-convidados">
+            <div className="informacoes-evento__container"> 
+              <div className="conteudo-convidados">
                 <div className="convidados">
                     <div className="titulo-convidados">Convites</div>
                         <div className="botoes-convidados">
@@ -248,6 +247,7 @@ const Convites = () => {
                             }
                     </div>
                 </div>
+            </div>
             </div>
     )
     }

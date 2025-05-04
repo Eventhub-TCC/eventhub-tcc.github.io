@@ -1,6 +1,5 @@
 .conteudo-convidados{
     display: flex;
-    padding: calc(123px + 64px) 0 32px;
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;

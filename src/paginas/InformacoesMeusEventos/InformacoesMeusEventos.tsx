@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
 import { useParams } from 'react-router';
 import api from '../../axios';
-
-
-
+import SecaoOrganizador from '../../componentes/SecaoOrganizador/SecaoOrganizador';
 interface Evento{
     idEvento: number;
     nomeEvento: string;
@@ -20,40 +18,31 @@ interface Evento{
     bairroLocal: string;
     cidadeLocal: string;
     ufLocal: string;
-    idTipoEvento?: string;
+    tipoEvento: TipoEvento;
     descricaoEvento?: string;
-  }
+}
 
-  interface TipoEvento {
+interface TipoEvento {
     idTipoEvento: string;
     descricaoTipoEvento: string;
-  }
-  
+}
 
+interface Cronometro{
+    dias: number;
+    horas: number;
+    minutos: number;
+    segundos: number;
+}
 
 const InformacoesMeusEventos = () => {
     const { idEvento } = useParams();
     const [evento, setEvento] = useState<Evento | null>(null);
     const [idUsuario, setIdUsuario] = useState<any>(null);
     const [preView, setPreview] = useState('')
-    const [tipoEvento, setTipoEvento] = useState(0)
-    const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>([])
- 
-    useEffect(()=>{
-        const buscarTiposDeEventos = async () => {
-          try{
-            const tipoEvento = await api.get('/users/tipo-evento')
-            setTipoEventoDisponiveis(tipoEvento.data)
-          }
-          catch (error) {
-            console.log('ocorreu algum erro: ',error)
-            return
-          }
-        }
-        buscarTiposDeEventos()
-       },[])
+    const [tamanhoTela, setTamanhoTela] = useState(window.innerWidth);
+    const [tempoRestante, setTempoRestante] = useState<Cronometro>({dias: 0, horas: 0, minutos: 0, segundos: 0 });
+    const [convidados, setConvidados] = useState({confirmados: 0, pendentes: 0, recusados: 0});
     
-     
     useEffect(() => {
         try {
             api.get(`/users/get-user`)
@@ -62,14 +51,38 @@ const InformacoesMeusEventos = () => {
                 api.get(`/users/${idUsuario}/events/${idEvento}`)
                     .then((res) => {
                         setEvento(res.data);
-                        setTipoEvento(res.data.idTipoEvento);
                         const urlPreview = res.data.imagemEvento
                         ? `http://localhost:3000/files/${res.data.imagemEvento}`
                         : '';
                         setPreview(urlPreview);
-                        console.log('preview', urlPreview);
                         const status = definirStatusEvento(res.data);
                         setEvento({ ...res.data, status });
+                        api.get(`/users/obter-convidados/${idEvento}`)
+                            .then((res) => {
+                                let confirmados = 0;
+                                let pendentes = 0;
+                                let recusados = 0;
+
+                                res.data.map((convidado: any) => {
+                                    switch (convidado.status) {
+                                        case 'Confirmado':
+                                            confirmados++;
+                                            break;
+                                        case 'Pendente':
+                                            pendentes++;
+                                            break;
+                                        case 'Recusado':
+                                            recusados++;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    setConvidados({confirmados, pendentes, recusados});
+                                })
+                            })
+                            .catch((err) => {
+                                console.error("Erro ao buscar os convidados", err);
+                            });
                     })
                     .catch((err) => {
                         console.error("Erro ao buscar o evento", err);
@@ -77,129 +90,243 @@ const InformacoesMeusEventos = () => {
             }) 
             .catch((err) => {
                 console.error("Erro obter usuário", err);
-              });
+            });
         } 
         catch (error) {
             console.error('Erro ao obter eventos', error);
-        }}, [idEvento]);
-        
-    
-    
-          if (!evento) return <p>Carregando evento...</p>;
+    }}, [idEvento]);
 
-          
-
-          function definirStatusEvento(evento: Evento): string {
+    useEffect(() => {
+        if (!evento) return;
+      
+        const obterTempoRestante = () => {
+            const [ano, mes, dia] = evento.dataEvento.split('-').map(Number);
+            const [hora, minuto] = evento.horaInicio.split(':').map(Number);
+            
             const agora = new Date();
-    
-            const dataEvento = new Date(evento.dataEvento);
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-            dataEvento.setHours(0, 0, 0, 0);
-    
-            const dataEhHoje = dataEvento.getTime() === hoje.getTime();
-    
-            const [horaIni, minIni] = evento.horaInicio.split(':').map(Number);
-            const [horaFim, minFim] = evento.horaFim.split(':').map(Number);
-    
-            const inicio = new Date(evento.dataEvento);
-            inicio.setHours(horaIni, minIni, 0, 0);
-    
-            const fim = new Date(evento.dataEvento);
-            fim.setHours(horaFim, minFim, 0, 0);
-    
-            if (dataEhHoje) {
-                if (agora >= inicio && agora <= fim) return 'Em Progresso';
-                else if (agora < inicio) return 'Proximos Eventos';
-                else return 'Evento Finalizado';
-            } else if (dataEvento > hoje) {
-                return 'Proximos Eventos';
-            } else {
-                return 'Evento Finalizado';
+            const diferenca = new Date(ano, mes - 1, dia, hora, minuto, 0).getTime() - agora.getTime();
+        
+            if (diferenca <= 0){
+                const status = definirStatusEvento(evento);
+                setEvento({ ...evento, status });
+                return { dias: 0, horas: 0, minutos: 0, segundos: 0 };
             }
+        
+            const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diferenca / (1000 * 60 * 60)) % 24);
+            const minutos = Math.floor((diferenca / (1000 * 60)) % 60);
+            const segundos = Math.floor((diferenca / 1000) % 60);
+        
+            return { dias, horas, minutos, segundos };
+        };
+      
+        const intervalo = setInterval(() => {
+            setTempoRestante(obterTempoRestante());
+        }, 1000);
+  
+        return () => clearInterval(intervalo);
+    }, [evento]);
+
+    useEffect(() => {
+        const redimensionar = () => {
+            setTamanhoTela(window.innerWidth);
+        };
+
+        window.addEventListener('resize', redimensionar);
+
+        return () => {
+            window.removeEventListener('resize', redimensionar);
+        };
+    }, [tamanhoTela]);
+
+    function definirStatusEvento(evento: Evento): string {
+        const hoje = new Date();
+    
+        const [ano, mes, dia] = evento.dataEvento.split('-').map(Number);
+        const [horaInicio, minutoInicio] = evento.horaInicio.split(':').map(Number);
+        const [horaFim, minutoFim] = evento.horaFim.split(':').map(Number);
+    
+        const inicioEvento = new Date(ano, mes - 1, dia, horaInicio, minutoInicio);
+        const fimEvento = new Date(ano, mes - 1, dia, horaFim, minutoFim);
+    
+        if (hoje >= inicioEvento && hoje <= fimEvento) {
+           return "Em andamento";
+        } 
+        else if (fimEvento < hoje) {
+            return "Finalizado";
+        } 
+        else {
+            return "Próximos eventos";
         }
+    }
 
+    const formatarDados = {
+        data: (data: string) => {
+            let [ano, mes, dia] = data.split('-').map(Number);
+            mes -= 1;
 
-  return (
-    <div>
-        <div className='informacoes-evento__cabecalho'>
-            <CabecalhoEvento
-                preViewEv={preView}
-                evento={evento}
-                setEvento={setEvento}
-                tipoDoEvento={tipoEvento}
-                idUsuario={idUsuario}
-                idEvento={idEvento} 
-                localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
-            />
-        </div>
-    <div className='informacoes-meus-eventos'>
-        <div className='detalhes-eventos'>
-            <p className='texto-detalhes-eventos'>Detalhes do evento</p>
-            <div className='linhas'>
-                <div className='status'>
-                    <div className='texto-status-categoria-data-horario-endereco'>Status</div>
-                    <div className='nome-cor-status'>
-                        <svg className='bolinha' xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <circle cx="7" cy="7" r="7" fill="#8C5DFF"/>
-                        </svg>
-                        <div className='texto-proximos-eventos'>{evento.status}</div>
+            const diasDaSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+            return diasDaSemana[new Date(ano, mes, dia).getDay()] + ', ' + dia + ' de ' + meses[mes] + ' de ' + ano;
+        },
+        hora: (hora: string) => {
+            return hora.slice(0, 5);
+        },
+        cep: (cep: string) => {
+            return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+    }
+
+    if (!evento) return;
+
+    return (
+        <div>
+            <div className='informacoes-evento__cabecalho'>
+                <CabecalhoEvento
+                    idEvento={idEvento} 
+                    evento={evento}
+                    preViewEv={preView}
+                    setEvento={setEvento}
+                    idUsuario={idUsuario}
+                />
+            </div>
+            <div className='informacoes-evento__container'>
+                {
+                    (tempoRestante.dias !== 0 || tempoRestante.horas !== 0 || tempoRestante.minutos !== 0 || tempoRestante.segundos !== 0) &&
+                    <div className='informacoes-evento__cronometro'>
+                        <div className='informacoes-evento__cronometro-texto'>
+                            <p>O evento começa em</p>
+                        </div>
+                        <div className={`informacoes-evento__cronometro-tempo ${tempoRestante.dias === 0 && tempoRestante.horas === 0 && tempoRestante.minutos === 0 ? 'informacoes-evento__cronometro-tempo--segundos' : ''}`}>
+                            {
+                                tempoRestante.dias > 0 && 
+                                <>
+                                    <div className='informacoes-evento__cronometro-tempo-container'>
+                                        <span className='informacoes-evento__cronometro-numero'>{tempoRestante.dias}</span>
+                                        <span className='informacoes-evento__cronometro-unidade'>{tempoRestante.dias !== Number(1) ? 'dias' : 'dia'}</span>
+                                    </div>
+                                    <span className='informacoes-evento__cronometro-divisor'>:</span>
+                                </>
+                            }
+                            {
+                                (tempoRestante.dias > 0 || tempoRestante.horas > 0) && 
+                                <>
+                                    <div className='informacoes-evento__cronometro-tempo-container'>
+                                        <span className='informacoes-evento__cronometro-numero'>{tempoRestante.horas}</span>
+                                        <span className='informacoes-evento__cronometro-unidade'>{tempoRestante.horas !== Number(1) ? 'horas' : 'hora'}</span>
+                                    </div>
+                                    {
+                                        (tamanhoTela > 400 || (tamanhoTela <= 400 && tempoRestante.dias === 0)) &&
+                                        <span className='informacoes-evento__cronometro-divisor'>:</span>
+                                    }
+                                </>
+                            }
+                            {
+                                ((tempoRestante.dias > 0 || tempoRestante.horas > 0 || tempoRestante.minutos > 0) &&
+                                (tamanhoTela > 400 || (tamanhoTela <= 400 && tempoRestante.dias === 0))) && 
+                                <>
+                                    <div className='informacoes-evento__cronometro-tempo-container'>
+                                        <span className='informacoes-evento__cronometro-numero'>{tempoRestante.minutos}</span>
+                                        <span className='informacoes-evento__cronometro-unidade'>{tempoRestante.minutos !== Number(1) ? 'minutos' : 'minuto'}</span>
+                                    </div>
+                                    {
+                                        (tamanhoTela > 1200 || (tempoRestante.dias === 0 && tempoRestante.horas === 0)) &&
+                                        <span className='informacoes-evento__cronometro-divisor'>:</span>
+                                    }
+                                </>
+                            }
+                            {
+                                (tamanhoTela > 1200 || (tempoRestante.dias === 0 && tempoRestante.horas === 0)) &&
+                                <div className='informacoes-evento__cronometro-tempo-container'>
+                                    <span className='informacoes-evento__cronometro-numero'>{tempoRestante.segundos}</span>
+                                    <span className='informacoes-evento__cronometro-unidade'>{tempoRestante.segundos !== Number(1) ? 'segundos' : 'segundo'}</span>
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className='categoria'>
-                    <div className='texto-status-categoria-data-horario-endereco'>Categoria</div>
-                    <div>
-                        {tipoEventoDisponiveis.find(tipo => tipo.idTipoEvento === evento.idTipoEvento)?.descricaoTipoEvento}</div>
-                </div>
-            </div>
-            <div className='linhas'>
-                <div className='data'>
-                    <div className='texto-status-categoria-data-horario-endereco'>Data</div>
-                    <div>{evento.dataEvento}</div>
-                </div>
-                <div className='horario'>
-                    <div className='texto-status-categoria-data-horario-endereco'>Horário</div>
-                    <div>{evento.horaInicio} - {evento.horaFim}</div>
-                </div>
-            </div>
-            <div className='linhas'>
-                <div className='endereco'>
-                    <div className='texto-status-categoria-data-horario-endereco'>Endereço</div>
-                    <div>{evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}</div>
-                </div>        
+                }
+                <SecaoOrganizador titulo='Detalhes do evento'>
+                    <div className='informacoes-evento__detalhes'>
+                        <div className='row g-4'>
+                            <div className='col-12 col-sm-6'>
+                                <p className='informacoes-evento__titulo-detalhes'>Status</p>
+                                <div className={`informacoes-evento__container-status`}>
+                                    <span className={`informacoes-evento__cor-status ${evento.status === 'Em andamento' ? 'informacoes-evento__cor-status--andamento' : evento.status === 'Finalizado' ? 'informacoes-evento__cor-status--finalizado' : 'informacoes-evento__cor-status--proximos'}`}/>
+                                    <p className={`informacoes-evento__texto-status ${evento.status === 'Em andamento' ? 'informacoes-evento__texto-status--andamento' : evento.status === 'Finalizado' ? 'informacoes-evento__texto-status--finalizado' : 'informacoes-evento__texto-status--proximos'}`}>{evento.status}</p>
+                                </div>
+                            </div>
+                            <div className='col-12 col-sm-6'>
+                                <p className='informacoes-evento__titulo-detalhes'>Categoria</p>
+                                <p className='informacoes-evento__texto-detalhes'>{evento.tipoEvento.descricaoTipoEvento}</p>
+                            </div>
+                        </div>
+                        <div className='row g-4'>
+                            <div className='col-12 col-sm-6'>
+                                <p className='informacoes-evento__titulo-detalhes'>Data</p>
+                                <p className='informacoes-evento__texto-detalhes'>{formatarDados['data'](evento.dataEvento)}</p>
+                            </div>
+                            <div className='col-12 col-sm-6'>
+                                <p className='informacoes-evento__titulo-detalhes'>Horário</p>
+                                <p className='informacoes-evento__texto-detalhes'>{formatarDados['hora'](evento.horaInicio)} - {formatarDados['hora'](evento.horaFim)}</p>
+                            </div>
+                        </div>
+                        <div className='row g-4'>
+                            <div className='col-12'>
+                                <p className='informacoes-evento__titulo-detalhes'>Endereço completo</p>
+                                <p className={`informacoes-evento__texto-detalhes ${evento.enderecoLocal || evento.numeroLocal ? '' : 'informacoes-evento__texto-detalhes--sem-endereco'}`}>
+                                    {
+                                        evento.enderecoLocal || evento.numeroLocal ?
+                                            evento.complementoLocal ?
+                                                evento.enderecoLocal +', '+ evento.numeroLocal + ' - ' + evento.complementoLocal + ', ' + evento.bairroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal + ', ' + formatarDados['cep'](evento.cepLocal)
+                                            : 
+                                                evento.enderecoLocal +', '+ evento.numeroLocal + ' - ' + evento.bairroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal + ', ' + formatarDados['cep'](evento.cepLocal)
+                                        : 'Não definido'
+                                    }
+                                </p>
+                            </div>        
+                        </div>
+                    </div>
+                </SecaoOrganizador>
+                <SecaoOrganizador titulo='Resumo dos convidados'>
+                    <div className='row g-4'>
+                        <div className='col-12 col-xxl-4'>
+                            <div className='informacoes-evento__resumo-convites-container'>
+                                <div className='informacoes-evento__resumo-convites-nome-icone'>
+                                    <svg className='informacoes-evento__resumo-convites-icone' xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                        <path d="M16.8 17.6633V17.4372M16.7994 14.16V13.9338M16.7994 10.6715V10.4454M5.84708 4.03613H14.0012C14.0476 5.68704 15.4004 7.01113 17.0625 7.01113C18.7246 7.01113 20.0775 5.68704 20.1238 4.03613H22.153C24.609 4.03613 26.6 6.02715 26.6 8.48319V19.5163C26.6 21.9723 24.609 23.9633 22.153 23.9633H20.1238C20.0775 22.3124 18.7246 20.9883 17.0625 20.9883C15.4004 20.9883 14.0476 22.3124 14.0012 23.9633H5.8471C3.39106 23.9633 1.40004 21.9723 1.40004 19.5163L1.40002 8.48319C1.40002 6.02715 3.39104 4.03613 5.84708 4.03613Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    <p className='informacoes-evento__texto-resumo-convite'>Convidados confirmados</p>
+                                </div>
+                                <span className='informacoes-evento__numero-resumo-convite'>{convidados.confirmados}</span>    
+                            </div>
+                        </div>
+                        <div className='col-12 col-xxl-4'>
+                            <div className='informacoes-evento__resumo-convites-container'>
+                                <div className='informacoes-evento__resumo-convites-nome-icone'>
+                                    <svg className='informacoes-evento__resumo-convites-icone' xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                        <path d="M16.8 17.6633V17.4372M16.7994 14.16V13.9338M16.7994 10.6715V10.4454M5.84708 4.03613H14.0012C14.0476 5.68704 15.4004 7.01113 17.0625 7.01113C18.7246 7.01113 20.0775 5.68704 20.1238 4.03613H22.153C24.609 4.03613 26.6 6.02715 26.6 8.48319V19.5163C26.6 21.9723 24.609 23.9633 22.153 23.9633H20.1238C20.0775 22.3124 18.7246 20.9883 17.0625 20.9883C15.4004 20.9883 14.0476 22.3124 14.0012 23.9633H5.8471C3.39106 23.9633 1.40004 21.9723 1.40004 19.5163L1.40002 8.48319C1.40002 6.02715 3.39104 4.03613 5.84708 4.03613Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    <p className='informacoes-evento__texto-resumo-convite'>Convidados pendentes</p>
+                                </div>
+                                <span className='informacoes-evento__numero-resumo-convite'>{convidados.pendentes}</span>    
+                            </div>
+                        </div>
+                            <div className='col-12 col-xxl-4'><div className='informacoes-evento__resumo-convites-container'>
+                                <div className='informacoes-evento__resumo-convites-nome-icone'>
+                                    <svg className='informacoes-evento__resumo-convites-icone' xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                        <path d="M16.8 17.6633V17.4372M16.7994 14.16V13.9338M16.7994 10.6715V10.4454M5.84708 4.03613H14.0012C14.0476 5.68704 15.4004 7.01113 17.0625 7.01113C18.7246 7.01113 20.0775 5.68704 20.1238 4.03613H22.153C24.609 4.03613 26.6 6.02715 26.6 8.48319V19.5163C26.6 21.9723 24.609 23.9633 22.153 23.9633H20.1238C20.0775 22.3124 18.7246 20.9883 17.0625 20.9883C15.4004 20.9883 14.0476 22.3124 14.0012 23.9633H5.8471C3.39106 23.9633 1.40004 21.9723 1.40004 19.5163L1.40002 8.48319C1.40002 6.02715 3.39104 4.03613 5.84708 4.03613Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    <p className='informacoes-evento__texto-resumo-convite'>Convidados recusados</p>
+                                </div>
+                                <span className='informacoes-evento__numero-resumo-convite'>{convidados.recusados}</span>    
+                            </div>
+                        </div>
+                    </div>
+                </SecaoOrganizador>
             </div>
         </div>
-
-        {/* <div className='resumo-convites'>
-            <div className='texto-resumo-convite'>Resumo Convites</div>
-            <div className='botoes-convites'>
-                <div className='convites-confirmados-pendentes-recusados'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <path d="M16.8 17.6633V17.4372M16.7994 14.16V13.9338M16.7994 10.6715V10.4454M5.84708 4.03613H14.0012C14.0476 5.68704 15.4004 7.01113 17.0625 7.01113C18.7246 7.01113 20.0775 5.68704 20.1238 4.03613H22.153C24.609 4.03613 26.6 6.02715 26.6 8.48319V19.5163C26.6 21.9723 24.609 23.9633 22.153 23.9633H20.1238C20.0775 22.3124 18.7246 20.9883 17.0625 20.9883C15.4004 20.9883 14.0476 22.3124 14.0012 23.9633H5.8471C3.39106 23.9633 1.40004 21.9723 1.40004 19.5163L1.40002 8.48319C1.40002 6.02715 3.39104 4.03613 5.84708 4.03613Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <div className='texto-confirmar-pendente-recusado'>Convites Confirmados</div>
-                    <div className='numero'>5</div>    
-                </div>
-                <div className='convites-confirmados-pendentes-recusados'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <path d="M16.8 17.6633V17.4372M16.7994 14.16V13.9338M16.7994 10.6715V10.4454M5.84708 4.03613H14.0012C14.0476 5.68704 15.4004 7.01113 17.0625 7.01113C18.7246 7.01113 20.0775 5.68704 20.1238 4.03613H22.153C24.609 4.03613 26.6 6.02715 26.6 8.48319V19.5163C26.6 21.9723 24.609 23.9633 22.153 23.9633H20.1238C20.0775 22.3124 18.7246 20.9883 17.0625 20.9883C15.4004 20.9883 14.0476 22.3124 14.0012 23.9633H5.8471C3.39106 23.9633 1.40004 21.9723 1.40004 19.5163L1.40002 8.48319C1.40002 6.02715 3.39104 4.03613 5.84708 4.03613Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <div className='texto-confirmar-pendente-recusado'>Convites Pendentes</div>
-                    <div className='numero'>5</div>    
-                </div>
-                <div className='convites-confirmados-pendentes-recusados'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <path d="M16.8 17.6633V17.4372M16.7994 14.16V13.9338M16.7994 10.6715V10.4454M5.84708 4.03613H14.0012C14.0476 5.68704 15.4004 7.01113 17.0625 7.01113C18.7246 7.01113 20.0775 5.68704 20.1238 4.03613H22.153C24.609 4.03613 26.6 6.02715 26.6 8.48319V19.5163C26.6 21.9723 24.609 23.9633 22.153 23.9633H20.1238C20.0775 22.3124 18.7246 20.9883 17.0625 20.9883C15.4004 20.9883 14.0476 22.3124 14.0012 23.9633H5.8471C3.39106 23.9633 1.40004 21.9723 1.40004 19.5163L1.40002 8.48319C1.40002 6.02715 3.39104 4.03613 5.84708 4.03613Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <div className='texto-confirmar-pendente-recusado'>Convites Recusados</div>
-                    <div className='numero'>5</div>    
-                </div>
-            </div>
-        </div> */}
-           
-    </div>
-</div>
-  )
+    )
 }
 
-export default InformacoesMeusEventos
+export default InformacoesMeusEventos;

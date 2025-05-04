@@ -29,7 +29,6 @@ export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao
     }
 
     useEffect(()=>{
-        console.log('modal')
         dialogRef.current?.showModal()
     },[])
 

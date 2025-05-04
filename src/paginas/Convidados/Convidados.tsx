@@ -190,15 +190,14 @@ const Convidados = () => {
     <div className="tela-convidados-evento">
         <div className="informacoes-evento__cabecalho">
             <CabecalhoEvento
-                preViewEv={preView}
-                evento={evento}
-                setEvento={setEvento}
-                tipoDoEvento={tipoEvento}
-                idUsuario={idUsuario}
                 idEvento={idEvento} 
-                localEvento={evento.enderecoLocal +', '+ evento.numeroLocal + ', ' + evento.cidadeLocal + ' - ' + evento.ufLocal}
+                evento={evento}
+                preViewEv={preView}
+                setEvento={setEvento}
+                idUsuario={idUsuario}
             />
         </div>
+        <div className="informacoes-evento__container">
         <div className="conteudo-convidados">
             <div className="convidados">
                 <div className="titulo-convidados">Convidados</div>
@@ -316,6 +315,7 @@ const Convidados = () => {
                 </div>
             </div>
         </div>
+    </div>
 )
 }
 
