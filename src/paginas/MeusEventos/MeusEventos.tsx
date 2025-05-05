@@ -60,6 +60,24 @@ const MeusEventos = () => {
 
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
+  const formatarDados = {
+    data: (data: string) => {
+        let [ano, mes, dia] = data.split('-').map(Number);
+        mes -= 1;
+
+        const diasDaSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+        const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+
+        return diasDaSemana[new Date(ano, mes, dia).getDay()] + ', ' + dia + ' de ' + meses[mes] + ' de ' + ano;
+    },
+    hora: (hora: string) => {
+        return hora.slice(0, 5);
+    },
+    cep: (cep: string) => {
+        return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+    }
+}
+
   useEffect(() => {
     const obterCategorias = async () => {
       try {
@@ -180,6 +198,14 @@ const MeusEventos = () => {
       criterioOrdenacao,
       ordemCrescente
     );
+
+    const eventosFiltradosOrdenados = ordenarEventos(
+      eventosFiltrados,
+      criterioOrdenacao,
+      ordemCrescente
+    );
+
+    setEventosFiltrados(eventosFiltradosOrdenados);
 
     eventosOrdenados.forEach((evento) => {
       const [ano, mes, dia] = evento.dataEvento.split("-").map(Number);
@@ -405,10 +431,10 @@ const MeusEventos = () => {
                             key={evento.idEvento}
                             titulo={evento.nomeEvento}
                             status={evento.status}
-                            dataEvento={formatarData(evento.dataEvento)}
-                            horaInicio={evento.horaInicio}
-                            horaFim={evento.horaFim}
-                            endereco={`${evento.enderecoLocal}, ${evento.numeroLocal}, ${evento.cidadeLocal} - ${evento.ufLocal}`}
+                            dataEvento={formatarDados.data(evento.dataEvento)}
+                            horaInicio={formatarDados.hora(evento.horaInicio)}
+                            horaFim={formatarDados.hora(evento.horaFim)}
+                            endereco={evento.enderecoLocal ? `${evento.enderecoLocal}, ${evento.numeroLocal}` : 'Sem local definido.'}
                             imagem={evento.imagemEvento}
                             id={evento.idEvento}
                           />
@@ -444,10 +470,10 @@ const MeusEventos = () => {
                               <CardEvento
                                 titulo={evento.nomeEvento}
                                 status={evento.status}
-                                dataEvento={formatarData(evento.dataEvento)}
-                                horaInicio={evento.horaInicio}
-                                horaFim={evento.horaFim}
-                                endereco={`${evento.enderecoLocal}, ${evento.numeroLocal}, ${evento.cidadeLocal} - ${evento.ufLocal}`}
+                                dataEvento={formatarDados.data(evento.dataEvento)}
+                                horaInicio={formatarDados.hora(evento.horaInicio)}
+                                horaFim={formatarDados.hora(evento.horaFim)}
+                                endereco={evento.enderecoLocal ? `${evento.enderecoLocal}, ${evento.numeroLocal}` : 'Sem local definido.'}
                                 imagem={evento.imagemEvento}
                                 id={evento.idEvento}
                               />
@@ -474,10 +500,10 @@ const MeusEventos = () => {
                               <CardEvento
                                 titulo={evento.nomeEvento}
                                 status={evento.status}
-                                dataEvento={formatarData(evento.dataEvento)}
-                                horaInicio={evento.horaInicio}
-                                horaFim={evento.horaFim}
-                                endereco={`${evento.enderecoLocal}, ${evento.numeroLocal}, ${evento.cidadeLocal} - ${evento.ufLocal}`}
+                                dataEvento={formatarDados.data(evento.dataEvento)}
+                                horaInicio={formatarDados.hora(evento.horaInicio)}
+                                horaFim={formatarDados.hora(evento.horaFim)}
+                                endereco={evento.enderecoLocal ? `${evento.enderecoLocal}, ${evento.numeroLocal}` : <i>Sem local definido.</i>}
                                 imagem={evento.imagemEvento}
                                 id={evento.idEvento}
                               />
@@ -504,10 +530,10 @@ const MeusEventos = () => {
                               <CardEvento
                                 titulo={evento.nomeEvento}
                                 status={evento.status}
-                                dataEvento={formatarData(evento.dataEvento)}
-                                horaInicio={evento.horaInicio}
-                                horaFim={evento.horaFim}
-                                endereco={`${evento.enderecoLocal}, ${evento.numeroLocal}, ${evento.cidadeLocal} - ${evento.ufLocal}`}
+                                dataEvento={formatarDados.data(evento.dataEvento)}
+                                horaInicio={formatarDados.hora(evento.horaInicio)}
+                                horaFim={formatarDados.hora(evento.horaFim)}
+                                endereco={evento.enderecoLocal ? `${evento.enderecoLocal}, ${evento.numeroLocal}` : 'Sem local definido.'}
                                 imagem={evento.imagemEvento}
                                 id={evento.idEvento}
                               />

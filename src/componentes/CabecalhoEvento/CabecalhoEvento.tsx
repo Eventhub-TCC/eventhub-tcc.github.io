@@ -10,6 +10,7 @@ import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
 import axios from 'axios';
 import { PatternFormat } from 'react-number-format';
 import sweetAlert from 'sweetalert2'
+import Alerta from '../Alerta/Alerta'
 
 interface TipoEvento {
   idTipoEvento: string;
@@ -27,6 +28,8 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
   const inputImagemref = useRef<HTMLInputElement>(null)
   const [imagemEvento, setImagemEvento] = useState<File|null>(null)
   const [preView, setPreview] = useState(preViewEv)
+  const [imagemEditada, setImagemEditada] = useState(false)
+  const [editadoOk, setEditadoOk] = useState(false)
 
   const navigate = useNavigate();
   
@@ -59,9 +62,6 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
     if (!eventoEditado?.dataEvento) novosErros.dataEvento = "A data do evento é obrigatória.";
     if (!eventoEditado?.horaInicio) novosErros.horaInicio = "Hora de início é obrigatória.";
     if (!eventoEditado?.horaFim) novosErros.horaFim = "Hora de término é obrigatória.";
-    if (!eventoEditado?.cepLocal) novosErros.cepLocal = "O CEP é obrigatório.";
-    if (!eventoEditado?.enderecoLocal) novosErros.enderecoLocal = "O endereço é obrigatório.";
-    if (!eventoEditado?.numeroLocal) novosErros.numeroLocal = "O número é obrigatório.";
     if (erroCep) novosErros.cepLocal = "CEP inválido.";
 
     setErros(novosErros);
@@ -101,7 +101,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
     if(eventoEditado && eventoEditado.cepLocal.length === 8) {
       buscarCep(eventoEditado.cepLocal);  
       setErroCep(false);
-    } else if((eventoEditado?.cepLocal ?? "").length < 8) {
+    } else if((eventoEditado?.cepLocal ?? "").length < 8 && eventoEditado?.cepLocal.length > 0) {
         setErroCep(true);
         setTravado(false)
     } else {
@@ -153,20 +153,26 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
       formData.append("cidadeLocal", eventoEditado.cidadeLocal);
       formData.append("ufLocal", eventoEditado.ufLocal);
 
-      if (imagemEvento instanceof File) {
-        formData.append("file", imagemEvento);
-      }   
+      if (imagemEditada) {
+        if (imagemEvento) {
+          formData.append("file", imagemEvento);
+          formData.append("imagemEditada", "true");
+        } else if (imagemEvento === null) {
+          formData.append("imagemEditada", "true");
+        }
+      } else {
+        formData.append("imagemEditada", "false");
+      }
 
       await api.put(`/users/events/${evento.idEvento}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });    
 
-      sweetAlert.fire({
-        title: "Sucesso!",
-        text: "Evento atualizado com sucesso!",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
+      setEditadoOk(true);
+      setTimeout(() => {
+        setEditadoOk(false);
+      }
+      , 10000)
 
       AbrirModalEditarEvento();
       setEvento({
@@ -308,7 +314,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                   </div>
                 </div>
                 <div className='descricao-input-evento'>
-                  <div>Descrição do evento(opcional)</div>
+                  <div>Descrição do evento(Opcional)</div>
                   <div className='input-tamanho-descricao'>
                     <Input 
                       value={eventoEditado?.descricaoEvento || ""}  
@@ -322,7 +328,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                 </div>
                 <div className='imagem-evento'>
                   <div className='imagem-evento-texto-botao'>
-                    <div className='texto-imagem-evento'>Imagem do evento(opcional)</div>
+                    <div className='texto-imagem-evento'>Imagem do evento(Opcional)</div>
                     <div className='input-imagem-evento'>
                       <div className='cadastro-evento__container-imagem'>
                         <input 
@@ -334,6 +340,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                             if (e.target.files && e.target.files.length > 0) {
                               setImagemEvento(e.target.files[0])
                               setPreview(URL.createObjectURL(e.target.files[0]))
+                              setImagemEditada(true)
                             }
                             else {
                               setImagemEvento(null)
@@ -356,6 +363,8 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                             setImagemEvento(null)
                             URL.revokeObjectURL(preView)
                             setPreview('')
+                            setImagemEditada(true)
+                            console.log('imagemEditada', imagemEditada)
                             if(inputImagemref.current)
                               inputImagemref.current.value = ""
                           }}
@@ -473,7 +482,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                   </div>
                 </div>
                 <div className='input-texto-bairro'>
-                  <div className='textos'>Bairro (opcional)</div>
+                  <div className='textos'>Bairro (Opcional)</div>
                   <div className='input-bairro'>
                     <Input 
                       disabled={travado}  
@@ -488,7 +497,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                 </div>
                 <div className='input-texto-cidade-uf'>
                   <div className='input-cidade'>
-                    <div className='textos'>Cidade (opcional)</div>
+                    <div className='textos'>Cidade (Opcional)</div>
                     <div className='input-tamanho-cidade'>
                       <Input 
                         disabled={travado}  
@@ -502,7 +511,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
                     </div>
                   </div>
                   <div className='input-uf'>
-                    <div className='textos'>UF (opcional)</div>
+                    <div className='textos'>UF (Opcional)</div>
                     <div className='input-tamanho-uf'>
                       <Input 
                         disabled={travado}  
@@ -529,6 +538,12 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
             </div>
           </Modal>
         : ''
+      }
+      {
+        editadoOk &&
+        <div className='editar-evento__alerta'>
+          <Alerta texto="Evento editado com sucesso!" status="sucesso" ativado={true}/>
+        </div>
       }
     </div>
   )

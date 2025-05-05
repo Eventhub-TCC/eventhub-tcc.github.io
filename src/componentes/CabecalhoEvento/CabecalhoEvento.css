@@ -359,6 +359,15 @@
     }
 }
 
+.editar-evento__alerta{
+    position: fixed;
+    margin-top: 16px;
+    top: 10%;
+    right: 32px;
+    width: 560px;
+    z-index: 1;
+}
+
 @media screen and (max-width: 700px){
     .informacoes-evento{
         flex-direction: column;
