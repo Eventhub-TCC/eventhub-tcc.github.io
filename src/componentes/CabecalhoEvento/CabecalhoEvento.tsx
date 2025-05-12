@@ -258,19 +258,19 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
         </div>
         <div className="abas-evento">
           <NavLink 
-            to={`/meus-eventos/${idEvento}/informacoes-meus-eventos`} 
+            to={`/organizador/meus-eventos/${idEvento}/informacoes-meus-eventos`} 
             className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)}
           >
             Informações Gerais
           </NavLink>
           <NavLink 
-            to={`/meus-eventos/${idEvento}/convidados`} 
+            to={`/organizador/meus-eventos/${idEvento}/convidados`} 
             className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)} 
           >
             Convidados
           </NavLink>
           <NavLink 
-            to={`/meus-eventos/${idEvento}/convites`} 
+            to={`/organizador/meus-eventos/${idEvento}/convites`} 
             className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)} 
           >
             Convites

@@ -461,7 +461,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
           ufLocal: localEvento.estado
         },
         { headers: { 'Content-Type': 'multipart/form-data' } });
-        navigate('/meus-eventos');
+        navigate('/organizador/meus-eventos');
       } catch (error) {
         console.log('ocorreu algum erro: ',error)
         setAvisos(prevState => ({...prevState, erroConexao: true}))

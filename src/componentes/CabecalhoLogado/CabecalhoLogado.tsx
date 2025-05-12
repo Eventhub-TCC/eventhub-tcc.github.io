@@ -82,7 +82,7 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada}: any) => {
                 ModalAberto && 
                 <div className='modal1'>
                     <ModalPerfil fecharModal={AbrirModal}> 
-                        <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => navigate('/meu-perfil')} /> 
+                        <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => navigate('/organizador/meu-perfil')} /> 
                         <ItemModal texto='Sair' icone="fa fa-sign-out" funcao={() => {navigate('/login'); localStorage.removeItem("token") }}/> 
                     </ModalPerfil>
                 </div>

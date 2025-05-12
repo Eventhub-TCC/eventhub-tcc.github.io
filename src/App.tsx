@@ -14,6 +14,7 @@ import InformacoesMeusEventos from './paginas/InformacoesMeusEventos/Informacoes
 import ConfirmarPresenca from './paginas/ConfirmarPresenca/ConfirmarPresenca'
 import Convidados from './paginas/Convidados/Convidados'
 import Convites from './paginas/Convites/Convites'
+import Teste from './paginas/Teste/teste'
 
 
 const App = () => {
@@ -28,7 +29,7 @@ const App = () => {
           <Route path='*' element={<Erro404 />}/>
         </Route>
         <Route element={<ProtecaoDeRota />}>
-          <Route element={<OrganizadorLayout />}>
+          <Route path='organizador' element={<OrganizadorLayout />}>
             <Route path='criar-evento' element={<CadastroEvento />}/>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
             <Route path="meus-eventos" element={<MeusEventos />} />
@@ -38,6 +39,7 @@ const App = () => {
           </Route>
         </Route>
         <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>
+        <Route path='teste' element={<Teste/>}/>
       </Routes>
     </BrowserRouter>
   )

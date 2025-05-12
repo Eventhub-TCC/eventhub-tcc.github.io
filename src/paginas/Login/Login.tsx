@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router'
 import Alerta from '../../componentes/Alerta/Alerta'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import api from '../../axios'
+import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
@@ -29,7 +30,15 @@ const Login = () => {
       })
       console.log(`Usuário autenticado! Token: ${data.token}`)
       localStorage.setItem('token', data.token);
-      navigate('/meu-perfil');
+      const token:any = jwtDecode(data.token);
+      if(token.tipo.includes('organizador')){
+        navigate('/organizador/meus-eventos');
+      }
+      else if(token.tipo.includes ('prestador')){
+        navigate('/prestador/meu-perfil');
+      }
+
+
     }
     catch(erro: any){
       if(erro.code === 'ERR_NETWORK'){
@@ -48,10 +57,15 @@ const Login = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
+    const tokenDecodificado:any = jwtDecode(token);
     (async () => {
       try{
         await api.get('/users/authenticate');
-        navigate('/meu-perfil');
+        tokenDecodificado.tipo.includes('organizador') ?
+        navigate('/organizador/meus-eventos') :
+        tokenDecodificado.tipo.includes('prestador') ?
+        navigate('/prestador/meu-perfil') :
+        ''
       }
       catch(erro){
         localStorage.removeItem('token');

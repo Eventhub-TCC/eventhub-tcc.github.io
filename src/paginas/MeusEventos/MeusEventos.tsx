@@ -547,7 +547,7 @@ const MeusEventos = () => {
               )}
             </div>
             <div
-              onClick={() => navigate("/criar-evento")}
+              onClick={() => navigate("/organizador/criar-evento")}
               className="botao-criar-eventos"
             >
               <div
@@ -574,7 +574,7 @@ const MeusEventos = () => {
         ) : (
           <div className="formulario-sem-eventos">
             <FeedbackFormulario
-              caminhoBotao="/criar-evento"
+              caminhoBotao="/organizador/criar-evento"
               titulo="Sem eventos por aqui ainda..."
               texto="Está pronto para organizar algo incrível? Crie um evento e comece a planejar agora mesmo!"
               textoBotao="Criar evento"
