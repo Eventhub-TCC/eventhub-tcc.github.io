@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import { Modal } from '../../componentes/Modal/Modal'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import api from '../../axios'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 interface Usuario { 
   nomeUsu: string;
@@ -19,6 +19,11 @@ interface Usuario {
   telUsu: string;
   senhaUsu: string;
   fotoUsu: string | null;
+  nomeEmpresa: string;
+  cnpjEmpresa: string;
+  fotoEmpresa: string | null;
+  telEmpresa: string;
+  localizacaoEmpresa: string; 
 }
 
 interface Erro{
@@ -36,7 +41,12 @@ const MeuPerfil = () => {
     emailUsu: '',
     telUsu: '',
     senhaUsu: '',
-    fotoUsu: null
+    fotoUsu: null,
+    nomeEmpresa: '',
+    cnpjEmpresa: '',
+    fotoEmpresa: null,
+    telEmpresa: '',
+    localizacaoEmpresa: '',
   });
   const [nomeExibido, setNomeExibido] = useState<string>('');
   const [modoEdicao, setModoEdicao] = useState<boolean>(false);
@@ -55,6 +65,10 @@ const MeuPerfil = () => {
   {ativo: false, tipo: 'sobrenome', mensagem: 'Preencha o sobrenome'},
   {ativo: false, tipo: 'dataNascimento', mensagem: 'Preencha a data de nascimento'},
   {ativo: false, tipo: 'telefone', mensagem: 'Telefone inválido'},
+  {ativo: false, tipo: 'NomeEmpresa', mensagem: 'Preencha o nome da empresa'},
+  {ativo: false, tipo: 'CNPJ', mensagem: 'Preencha o CNPJ'},
+  {ativo: false, tipo: 'telefoneEmpresa', mensagem: 'Preencha o telefone da empresa'},
+  {ativo: false, tipo: 'localizacaoEmpresa', mensagem: 'Preencha a localização da empresa'},
 ]);
 
 const navigate = useNavigate();
@@ -67,6 +81,11 @@ const transicao = {
   exit: { opacity: 0, y: 10, transition: { duration: 0.2 } },
 };
 
+const location = useLocation()
+
+const isOrganizador = location.pathname.includes('organizador')
+const isPrestador = location.pathname.includes('prestador')
+
 useEffect(() => {
   const obterUsuario = async () => {
     try {
@@ -74,7 +93,7 @@ useEffect(() => {
       setUsuario(response.data);
       setNomeExibido(`${response.data.nomeUsu} ${response.data.sobrenomeUsu}`);
       setCpfOriginal(response.data.cpfUsu);
-      setPreview(response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '');
+      setPreview(isOrganizador ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '' : '');
       } catch (error) {
         console.error('Erro ao obter usuário');
         console.error(error);
@@ -84,38 +103,47 @@ useEffect(() => {
 },[]);
 
 const validarCampos = async (): Promise<boolean> => {
-  const novosErros = await Promise.all(erros.map(async (erro) => {
+  const errosFiltrados = erros.filter((erro) => {
+    if (isOrganizador) {
+      return [
+        'cpf', 'nome', 'sobrenome', 'dataNascimento', 'telefone', 'confirmar-senha'
+      ].includes(erro.tipo);
+    }
+
+    if (isPrestador) {
+      return [
+        'confirmar-senha', 'NomeEmpresa', 'CNPJ', 'telefoneEmpresa', 'localizacaoEmpresa'
+      ].includes(erro.tipo);
+    }
+
+    return false;
+  });
+
+  const novosErros = await Promise.all(errosFiltrados.map(async (erro) => {
     switch (erro.tipo) {
       case 'cpf':
         if (!usuario?.cpfUsu?.trim()) {
           return { ...erro, ativo: true };
         }
-
         if (usuario.cpfUsu === cpfOriginal) {
           return { ...erro, ativo: false };
         }
-
         try {
           const response = await api.post(`/users/validate-cpf`, {
             cpfUsu: usuario.cpfUsu,
           });
-
           const cpfValido = response.data;
-          return {
-            ...erro,
-            ativo: !cpfValido,
-          };
+          return { ...erro, ativo: !cpfValido };
         } catch (err: any) {
           if (err.response?.status === 409) {
             return {
               ...erro,
               ativo: true,
-              mensagem: ' CPF já cadastrado', 
+              mensagem: ' CPF já cadastrado',
             };
           }
           return { ...erro, ativo: true, mensagem: 'CPF inválido' };
         }
-
 
       case 'confirmar-senha':
         if (novaSenha?.length < 8 && novaSenha) {
@@ -131,46 +159,50 @@ const validarCampos = async (): Promise<boolean> => {
           mensagem: 'A confirmação da senha não confere',
         };
 
-        case 'telefone':
-          const telefone = usuario?.telUsu?.trim() || '';
-          const telefoneValido = /^\d{10,11}$/.test(telefone); 
-        
-          return {
-            ...erro,
-            ativo: !telefoneValido,
-          };
+      case 'telefone':
+        const telefone = usuario?.telUsu?.trim() || '';
+        const telefoneValido = /^\d{10,11}$/.test(telefone);
+        return { ...erro, ativo: !telefoneValido };
+
       case 'nome':
-        return {
-          ...erro,
-          ativo: !usuario?.nomeUsu?.trim(),
-        };
+        return { ...erro, ativo: !usuario?.nomeUsu?.trim() };
+
       case 'sobrenome':
-        return {
-          ...erro,
-          ativo: !usuario?.sobrenomeUsu?.trim(),
-        };
-        case 'dataNascimento': {
-          const dataNascimento = new Date(usuario?.dtNasUsu || '');
-          const hoje = new Date();
-          const idade =
-            hoje.getFullYear() - dataNascimento.getFullYear() -
-            (hoje.getMonth() < dataNascimento.getMonth() ||
-              (hoje.getMonth() === dataNascimento.getMonth() &&
-               hoje.getDate() < dataNascimento.getDate())
-              ? 1
-              : 0);
-          
-          if (!usuario?.dtNasUsu?.trim()) {
-            return { ...erro, ativo: true };
-          }
-          if (isNaN(dataNascimento.getTime()) || idade > 130) {
-            return { ...erro, ativo: true, mensagem: 'Data de nascimento inválida' };
-          }
-          if (idade < 18) {
-            return { ...erro, ativo: true, mensagem: 'Você deve ter pelo menos 18 anos' };
-          }
-          return { ...erro, ativo: false };
+        return { ...erro, ativo: !usuario?.sobrenomeUsu?.trim() };
+
+      case 'dataNascimento': {
+        const dataNascimento = new Date(usuario?.dtNasUsu || '');
+        const hoje = new Date();
+        const idade =
+          hoje.getFullYear() - dataNascimento.getFullYear() -
+          (hoje.getMonth() < dataNascimento.getMonth() ||
+            (hoje.getMonth() === dataNascimento.getMonth() &&
+              hoje.getDate() < dataNascimento.getDate())
+            ? 1
+            : 0);
+        if (!usuario?.dtNasUsu?.trim()) {
+          return { ...erro, ativo: true };
         }
+        if (isNaN(dataNascimento.getTime()) || idade > 130) {
+          return { ...erro, ativo: true, mensagem: 'Data de nascimento inválida' };
+        }
+        if (idade < 18) {
+          return { ...erro, ativo: true, mensagem: 'Você deve ter pelo menos 18 anos' };
+        }
+        return { ...erro, ativo: false };
+      }
+
+      case 'NomeEmpresa':
+        return { ...erro, ativo: !usuario?.nomeEmpresa?.trim() };
+
+      case 'CNPJ':
+        return { ...erro, ativo: !usuario?.cnpjEmpresa?.trim() };
+
+      case 'telefoneEmpresa':
+        return { ...erro, ativo: !usuario?.telEmpresa?.trim() };
+
+      case 'localizacaoEmpresa':
+        return { ...erro, ativo: !usuario?.localizacaoEmpresa?.trim() };
 
       default:
         return erro;
@@ -197,12 +229,21 @@ const deletarPerfil = async () => {
 
 const alterarImagemPerfil = async ( imagem : any ) => {
   try {
+    isOrganizador ?
     await api.put(`/users/update-image`,{
       file: imagem
     }, {
       headers: {
         'content-type': 'multipart/form-data',
-  }}), window.location.reload();;
+  }}) : 
+  await api.put(`/users/update-image-empresa`,{
+    file: imagem
+  }, {
+    headers: {
+      'content-type': 'multipart/form-data',
+}}) 
+     
+  window.location.reload();;
   }
   catch (error) {
     console.error('Erro ao alterar imagem de perfil', error);
@@ -246,7 +287,7 @@ const editarPerfil = async () => {
 
 return (
   <div>
-      <div className='perfil'>
+      { isOrganizador ? <div className='perfil'>
         <h1 className='layout-titulo'>Perfil</h1>
           <div className='caixa-perfil'>
             <div className='formulario-perfil'>
@@ -558,7 +599,309 @@ return (
                 </div>
               </motion.div>  
             )}
-    </div>
+    </div> : ''}
+
+{/* pagina prestador */}
+    { isPrestador ? <div className='perfil'>
+        <h1 className='layout-titulo'>Perfil</h1>
+          <div className='caixa-perfil'>
+            <div className='formulario-perfil-prestador'>
+              <div className='perfil-foto-nome-email-organizador'>
+                <div className='foto-perfil'> 
+                  {preView ? 
+                    <img className='imagem-perfil' src={preView} alt="Imagem de perfil" />
+                    :
+                    <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
+                      <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
+                      <path fillRule="evenodd" clipRule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
+                    </svg>}
+                    <input 
+                      type='file' 
+                      className='cadastro-evento__input_imagem'
+                      accept='image/*'
+                      ref={ inputImagemref }
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
+                          setPreview(URL.createObjectURL(e.target.files[0]))
+                          alterarImagemPerfil(e.target.files[0])
+                        }
+                      }}
+                    />
+                  <div className='nome-email-organizador'>
+                    <h2 className='nome-perfil-organizador'>{usuario?.nomeEmpresa}</h2>
+                    <h2 className='email-perfil-organizador'>{usuario?.emailUsu}</h2>
+                  </div>
+                </div>
+                <div className='botoes-foto-perfil'>
+                  <div className='botao-alterar-foto-perfil'>
+                    <Botao 
+                      tamanho='med' 
+                      texto='Alterar foto' 
+                      funcao={()=>{inputImagemref.current?.click()}}
+                      cor='var(--yellow-700)'
+                    />       
+                  </div>
+                  <div className='botao-remover-foto-perfil'>
+                    <Botao 
+                      tamanho='med' 
+                      texto='Remover foto' 
+                      funcao={()=>{
+                      URL.revokeObjectURL(preView)
+                      setPreview('')
+                      if(inputImagemref.current)
+                        inputImagemref.current.value = ""
+                      alterarImagemPerfil(null)
+                      }}
+                      cor='var(--yellow-700)'
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='caixa-input-perfil-prestador'>
+            <div className='informacoes-pessoais-perfil-organizador'>
+              <p className='texto-informacoes-empresa'>Informações da Empresa</p>
+            </div>
+            <div className='row g-4'>
+              <div className='col-12 col-md-6'>
+                <div>
+                  <Input 
+                    value={usuario?.nomeEmpresa}              
+                    dica='Digite o nome de sua empresa'
+                    obrigatorio
+                    name='nome empresa'
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeEmpresa: event.target.value})}
+                    cabecalho
+                    cabecalhoTexto='Nome da Empresa'
+                    disabled={!modoEdicao}
+                  />
+                </div>
+                {erros.find((e) => e.tipo === 'nomeEmpresa' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nomeEmpresa')?.mensagem}/>
+                  )}
+              </div>
+              <div className='col-12 col-md-6'>
+              <div>
+                  <PatternFormat 
+                    format="##.###.###/####-##"
+                    mask="_"
+                    value={usuario?.cnpjEmpresa}
+                    customInput={Input}
+                    onValueChange={(values) => {setUsuario({...usuario!, cnpjEmpresa:values.value})}}
+                    dica='Digite seu CNPJ'
+                    obrigatorio
+                    name='cnpj'
+                    cabecalho 
+                    cabecalhoTexto='CNPJ'
+                    disabled={!modoEdicao}
+                  />
+                  {erros.find((e) => e.tipo === 'cnpj' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cnpj')?.mensagem}/>
+                  )}
+                </div>
+
+              </div>
+              <div className='col-12 col-md-12'>
+              <div>
+                  <Input
+                    value={usuario?.localizacaoEmpresa}                      
+                    dica='Digite a Localização da sua empresa'
+                    obrigatorio
+                    name='localizacao'
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, localizacaoEmpresa: event.target.value})}
+                    cabecalho
+                    cabecalhoTexto='Localização'
+                    disabled={!modoEdicao}/>
+                </div>
+                {erros.find((e) => e.tipo === 'localizacaoEmpresa' && e.ativo) && (
+                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'localizacaoEmpresa')?.mensagem}/>
+                )}
+              </div>
+          </div>
+        </div>
+
+        <div className='caixa-input-perfil-prestador'>
+          <div className='informacoes-pessoais-perfil-organizador'>
+            <p className='texto-informacoes-empresa'>Contato</p>
+          </div>
+          <div className='row g-4'>
+            <div className='col-12 col-md-6'>
+              <div>
+                <Input  
+                  value={usuario?.emailUsu}                
+                  dica='Digite seu email'
+                  obrigatorio
+                  name='email'
+                  cabecalho
+                  cabecalhoTexto='Email'
+                  autoComplete='email'
+                  disabled
+                />
+              </div>
+            </div>
+            <div className='col-12 col-md-6'>
+              <div>
+                <PatternFormat 
+                  format="(##) #####-####"
+                  mask="_"
+                  customInput={Input} 
+                  value={usuario?.telEmpresa}           
+                  dica='Digite o telefone da sua empresa'
+                  onValueChange={(values) => {setUsuario({...usuario!, telEmpresa:values.value});}}
+                  obrigatorio
+                  name='telefone empresa'
+                  cabecalho
+                  cabecalhoTexto='Telefone da Empresa'
+                  disabled={!modoEdicao}
+                  type="tel"
+                />
+                {erros.find((e) => e.tipo === 'telefoneEmpresa' && e.ativo) && (
+                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefoneEmpresa')?.mensagem}/>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {modoEdicao ? 
+          (
+            <motion.div key="modoEdicao" {...transicao} className='perfil-modo-edicao'>
+              <div className='caixa-input-perfil-prestador'>
+                <div className='informacoes-pessoais-perfil-organizador'>
+                  <p className='texto-informacoes-empresa'>Segurança</p>
+                </div>
+                <div className='row g-4'>
+                  <div className='col-12'>
+                    <div>
+                      <Input 
+                        tipo={senhaAtualOculta ? 'password' : 'text'}
+                        dica='Digite sua senha atual'
+                        cabecalho 
+                        cabecalhoTexto='Senha atual' 
+                        name='senha-atual'
+                        value={senhaAtual}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => setSenhaAtual(event.target.value)}
+                        icone={
+                          senhaAtual !== '' ? 
+                            `fa-solid ${senhaAtualOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                          : ''
+                        }
+                        funcaoIcone={() => setSenhaAtualOculta(!senhaAtualOculta)}
+                      />
+                    </div>
+                  </div>
+                    <div className='col-12 col-md-6'>
+                      <div>
+                        <Input
+                          tipo={novaSenhaOculta ? 'password' : 'text'}           
+                          dica='Digite sua nova senha'
+                          obrigatorio
+                          name='nova-senha'
+                          value={novaSenha}
+                          onChange={(event: ChangeEvent<HTMLInputElement>) => setNovaSenha(event.target.value)}
+                          cabecalho
+                          cabecalhoTexto='Nova senha'
+                          icone={
+                            novaSenha !== '' ? 
+                              `fa-solid ${novaSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                            : ''
+                          }
+                          funcaoIcone={() => setNovaSenhaOculta(!novaSenhaOculta)}
+                        />
+                      </div>
+                    </div>
+                    <div className='col-12 col-md-6'>
+                      <div>
+                        <Input   
+                          tipo={confirmarSenhaOculta ? 'password' : 'text'}                 
+                          dica='Confirme sua nova senha'
+                          obrigatorio
+                          name='Confirme'
+                          value={confirmarSenha}
+                          onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(event.target.value)}
+                          cabecalho
+                          cabecalhoTexto='Confirme sua nova senha'
+                          icone={
+                            confirmarSenha !== '' ? 
+                              `fa-solid ${confirmarSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                            : ''
+                          }
+                          funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
+                        />
+                      </div>
+                    </div>
+                
+                  {erros.find((e) => e.tipo === 'confirmar-senha' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'confirmar-senha')?.mensagem}/>
+                  )}
+              </div>
+            </div>
+            <div className='botoes-alterar-perfil-edicao'>
+              <div className='botao-editar'>
+                <Botao 
+                  tamanho='max' 
+                  funcao={() => {
+                    setModoEdicao(false);
+                    api.get<Usuario>(`/users/get-user`)
+                    .then(response => {
+                      setUsuario(response.data);
+                    })
+                    .catch(error => {
+                      console.error('Erro ao obter usuário', error);
+                    });   
+                    setErros(erros => erros.map(erro => {
+                      erro.ativo = false;
+                      return erro;
+                    }));
+                    setSenhaAtual('');
+                    setNovaSenha('');
+                    setConfirmarSenha('');
+                    setSenhaAtualOculta(true);
+                    setNovaSenhaOculta(true);
+                    setConfirmarSenhaOculta(true);
+                  }} 
+                  texto='Cancelar' 
+                  cor='var(--yellow-700)'
+                />
+              </div>
+              <div className='botao-editar'>
+                <Botao tamanho='max' funcao={editarPerfil} texto='Salvar' cor='var(--yellow-700)' />
+              </div>
+            </div>
+            </motion.div>
+              ) 
+              : 
+              (
+                <motion.div key="foraModoEdicao" {...transicao} className='perfil-fora-modo-edicao'>
+                  <div className='caixa-input-perfil-prestador'>
+                    <div className='informacoes-pessoais-perfil-organizador'>
+                      <p className='texto-informacoes-empresa'>Segurança</p>
+                    </div>
+                    <div>
+                      <Input 
+                        cabecalho 
+                        cabecalhoTexto='Senha atual' 
+                        disabled={true}
+                        dica="••••••••••"
+                        name='senha-atual-desabilitado'
+                      />
+                    </div>
+                </div>
+                <div className='botoes-alterar-perfil'>
+                  <div className='botao-editar'>
+                    <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' cor='var(--yellow-700)' />
+                  </div>
+                  <div className='botao-deletar'>
+                    <Botao tamanho='max' funcao={() => setExcluir(true)} texto='Excluir conta' cor='var(--yellow-700)' />
+                  </div>
+                  {excluir ? 
+                    <Modal titulo="Excluir conta" enviaModal={setarExcluir} textoBotao="Excluir" funcaoSalvar={deletarPerfil}> Tem certeza que deseja excluir sua conta? </Modal>
+                  : ""}
+                </div>
+              </motion.div>  
+            )}
+    </div> : ''}
   </div>
   )
 }

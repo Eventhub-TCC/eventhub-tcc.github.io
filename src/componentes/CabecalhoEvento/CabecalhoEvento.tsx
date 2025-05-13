@@ -199,7 +199,7 @@ const CabecalhoEvento = ({idEvento, evento, preViewEv, setEvento, idUsuario}: an
   const ApagarEvento = () => {
     api.delete(`/users/${idUsuario}/events/${evento.idEvento}`)
     .then(() => {
-      navigate('/meus-eventos');
+      navigate('/organizador/meus-eventos');
     })
     .catch((err) => {
       console.error("Erro ao apagar evento", err);

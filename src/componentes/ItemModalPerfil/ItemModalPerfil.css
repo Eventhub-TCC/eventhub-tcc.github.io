@@ -10,6 +10,11 @@
     cursor: pointer;
     transition: background 0.3s;
   }
+
+  .item-modal-perfil__texto{
+    display: flex;
+    flex-direction: column;
+  }
   
   .item-modal-perfil:hover {
     background: #dfdfdf;

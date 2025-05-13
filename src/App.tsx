@@ -14,7 +14,7 @@ import InformacoesMeusEventos from './paginas/InformacoesMeusEventos/Informacoes
 import ConfirmarPresenca from './paginas/ConfirmarPresenca/ConfirmarPresenca'
 import Convidados from './paginas/Convidados/Convidados'
 import Convites from './paginas/Convites/Convites'
-import Teste from './paginas/Teste/teste'
+import PrestadorLayout from './componentes/PrestadorLayout/PrestadorLayout'
 
 
 const App = () => {
@@ -37,9 +37,11 @@ const App = () => {
             <Route path="meus-eventos/:idEvento/convidados" element={<Convidados/>} />
             <Route path="meus-eventos/:idEvento/convites" element={<Convites/>} />
           </Route>
+          <Route path='prestador' element={<PrestadorLayout />}>
+            <Route path='meu-perfil' element={<MeuPerfil />}/>
+          </Route>
         </Route>
         <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>
-        <Route path='teste' element={<Teste/>}/>
       </Routes>
     </BrowserRouter>
   )

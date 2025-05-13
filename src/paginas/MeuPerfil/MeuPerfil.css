@@ -157,6 +157,41 @@
   object-fit: cover;
 }
 
+/* css prestador  */
+.formulario-perfil-prestador{ 
+  display: flex;
+  padding: 48px 40px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  border-radius: 32px;
+  border: 1px solid #F3C623;
+  background: #FFF;
+}
+
+.texto-informacoes-empresa{
+  color: var(--yellow-700);
+  font-family: Inter;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+}
+
+.caixa-input-perfil-prestador{
+  display: flex;
+  padding: 48px 40px;
+  flex-direction: column;
+  gap: 42px;
+  align-self: stretch;
+  border-radius: 32px;
+  border: 1px solid var(--yellow-700);
+  background: #FFF;
+}
+
+
+
 @media screen and (max-width: 1200px){
   .botoes-foto-perfil{
     flex-direction: column;
