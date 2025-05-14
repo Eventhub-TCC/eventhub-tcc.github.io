@@ -75,7 +75,7 @@ const PrestadorLayout = () => {
           </div>
         </main>
       </div>
-    </div> : <Navigate to="/prestador/meu-perfil" />
+    </div> : <Navigate to="/organizador/meu-perfil" />
   );
 };
 

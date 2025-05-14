@@ -4,6 +4,38 @@
   gap: 40px;
 }
 
+.perfil--titulo-botao{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  justify-content: space-between;
+}
+
+.perfil--botao-notificacao{
+  display: flex;
+  padding: 12px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 92px;
+  border: 1px solid var(--yellow-800);
+  background: var(--yellow-700);
+  color: white;
+  cursor: pointer;
+}
+
+.perfil--botao-notificacao-prestador{
+    display: flex;
+  padding: 12px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 92px;
+  border: 1px solid var(--purple-700);
+  background: var(--purple-800);
+  color: white;
+  cursor: pointer;
+}
+
 .caixa-perfil{
   display: flex;
   flex-direction: column;
@@ -190,7 +222,106 @@
   background: #FFF;
 }
 
+.completar-cadastro--imagem{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+}
 
+.completar-cadastro--imagem--tamanho{
+  width: 238px;
+  height: 83px;
+  aspect-ratio: 238/83;
+}
+
+.completar-cadastro--titulo{
+  display: flex;
+  padding-top: 16px;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-items: center;
+}
+
+.completar-cadastro--titulo-texto{
+  color: var(--yellow-800);
+  text-align: center;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.completar-cadastro-prestador--titulo-texto{
+    color: var(--purple-700);
+  text-align: center;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.completar-cadastro--descricao{
+  color: #414141;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.completar-cadastro--texto{
+  display: flex;
+  padding: 41px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  flex: 1 0 0;
+  color: #414141;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  white-space: pre-line;
+}
+
+.modal-completar-cadastro--texto{
+  display: flex;
+  padding: 16px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  color: #000;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.modal-completar-cadastro--campos{
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.modal-completar-cadastro--nome-cnpj{
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  align-self: stretch;
+  justify-content: space-between;
+}
 
 @media screen and (max-width: 1200px){
   .botoes-foto-perfil{

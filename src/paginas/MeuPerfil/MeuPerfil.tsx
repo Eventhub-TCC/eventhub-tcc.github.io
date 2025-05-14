@@ -9,6 +9,9 @@ import { Modal } from '../../componentes/Modal/Modal'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import api from '../../axios'
 import { useLocation, useNavigate } from 'react-router'
+import logoOrganizador from '../../assets/logo_eventhub-sem-fundo.png';
+import logoPrestador from '../../assets/eventhub_logo_prestador.png';
+import { jwtDecode } from 'jwt-decode'
 
 interface Usuario { 
   nomeUsu: string;
@@ -74,6 +77,13 @@ const MeuPerfil = () => {
 const navigate = useNavigate();
 const [preView, setPreview] = useState('')
 const inputImagemref = useRef<HTMLInputElement>(null)
+const [modalCompletarCadastro, setModalCompletarCadastro] = useState(false)
+const [modalCompletarCadastroDados, setModalCompletarCadastroDados] = useState(false)
+  const [tipoUsuario, setTipoUsuario] = useState({
+    prestador: false,
+    organizador: false
+  });
+const [carregando, setCarregando] = useState(true);
 
 const transicao = {
   initial: { opacity: 0, y: -10 },
@@ -89,14 +99,25 @@ const isPrestador = location.pathname.includes('prestador')
 useEffect(() => {
   const obterUsuario = async () => {
     try {
+      const token = localStorage.getItem('token');
+      const decodedToken: any = jwtDecode(token!);
+      const tipo: string[] = decodedToken.tipo;
       const response = await api.get<Usuario>(`/users/get-user`);
       setUsuario(response.data);
       setNomeExibido(`${response.data.nomeUsu} ${response.data.sobrenomeUsu}`);
       setCpfOriginal(response.data.cpfUsu);
       setPreview(isOrganizador ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '' : '');
-      } catch (error) {
+      if (tipo.find((value) => value === 'prestador')) {
+        setTipoUsuario(prestador => ({ ...prestador, prestador: true }));
+      } 
+      if (tipo.find((value) => value === 'organizador')) {
+        setTipoUsuario(organizador => ({ ...organizador, organizador: true }));
+      }  
+    } catch (error) {
         console.error('Erro ao obter usuário');
         console.error(error);
+      } finally {
+        setCarregando(false);
       }
     }
     obterUsuario();
@@ -104,6 +125,11 @@ useEffect(() => {
 
 const validarCampos = async (): Promise<boolean> => {
   const errosFiltrados = erros.filter((erro) => {
+    if(modalCompletarCadastroDados){
+      return [
+        'cpf', 'nome', 'sobrenome', 'dataNascimento', 'telefone', 'confirmar-senha', 'NomeEmpresa', 'CNPJ', 'telefoneEmpresa', 'localizacaoEmpresa'
+      ].includes(erro.tipo);
+    }
     if (isOrganizador) {
       return [
         'cpf', 'nome', 'sobrenome', 'dataNascimento', 'telefone', 'confirmar-senha'
@@ -196,7 +222,25 @@ const validarCampos = async (): Promise<boolean> => {
         return { ...erro, ativo: !usuario?.nomeEmpresa?.trim() };
 
       case 'CNPJ':
-        return { ...erro, ativo: !usuario?.cnpjEmpresa?.trim() };
+        if (!usuario?.cnpjEmpresa?.trim()) {
+          return { ...erro, ativo: true };
+        }
+        try {
+          const response = await api.post(`/users/validate-cnpj`, {
+            cnpjEmpresa: usuario.cnpjEmpresa,
+          });
+          const cnpjValido = response.data;
+          return { ...erro, ativo: !cnpjValido };
+        } catch (err: any) {
+          if (err.response?.status === 409) {
+            return {
+              ...erro,
+              ativo: true,
+              mensagem: ' CNPJ já cadastrado',
+            };
+          }
+          return { ...erro, ativo: true, mensagem: 'CNPJ inválido' };
+        }
 
       case 'telefoneEmpresa':
         return { ...erro, ativo: !usuario?.telEmpresa?.trim() };
@@ -285,10 +329,57 @@ const editarPerfil = async () => {
     }
   }
 
+  const continuarCompletaCadastro = () => {
+    setModalCompletarCadastro(false);
+    setModalCompletarCadastroDados(true);
+  }
+
+
+  const completarCadastro = async () => {
+    try {
+      const valido = await validarCampos();
+      if (!valido) return;
+      const novoTipo = tipoUsuario.prestador ? { organizador: true } :
+                      tipoUsuario.organizador ? { prestador: true } : null;
+      if (novoTipo) {
+        setTipoUsuario(anterior => ({ ...anterior, ...novoTipo }));
+
+        const response = await api.put(`/users/update-user`, {
+          ...usuario,
+          ...novoTipo,
+        });
+
+        const token = response.data.token;
+        if (token) {
+          localStorage.setItem('token', token);
+        }
+      }
+      setModalCompletarCadastroDados(false);
+      novoTipo!.organizador ? navigate('/organizador/meus-eventos') : navigate('/prestador/meus-servicos');
+    } catch (error) {
+      console.error('Erro ao editar usuário');
+      console.error(error); 
+    }
+  }
+
+  if (carregando) return null; 
+
 return (
   <div>
       { isOrganizador ? <div className='perfil'>
-        <h1 className='layout-titulo'>Perfil</h1>
+        <div className="perfil--titulo-botao">
+          <h1 className='layout-titulo'>Perfil</h1>
+          {
+            tipoUsuario.prestador && tipoUsuario.organizador ?
+            ''
+            :
+            <div className="perfil--botao-notificacao" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
+              <i className="fa-regular fa-bell"></i>
+            </div>
+
+          }
+
+        </div>
           <div className='caixa-perfil'>
             <div className='formulario-perfil'>
               <div className='perfil-foto-nome-email-organizador'>
@@ -599,11 +690,137 @@ return (
                 </div>
               </motion.div>  
             )}
+            {
+              modalCompletarCadastro ?
+              <Modal titulo='Completar Cadastro' enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
+                <div className="completar-cadastro--imagem">
+                  <img className='completar-cadastro--imagem--tamanho'src={logoPrestador} alt="Imagem de completar cadastro" />
+                </div>
+                <div className="completar-cadastro--titulo">
+                  <div className="completar-cadastro--titulo-texto">
+                    Descubra novas oportunidades na plataforma!
+                  </div>
+                  <div className="completar-cadastro--descricao">
+                    Você pode também oferecer seus serviços como prestador e ampliar sua atuação.
+                  </div>
+                </div>
+                <div className="completar-cadastro--texto">
+                {
+                  `Ao ativar o perfil de prestador de serviços, você poderá:
+
+                    - Gerenciar seus próprios serviços;
+                    - Oferecer seus serviços para milhares de organizadores;
+                    - Gerenciar pedidos recebidos diretamente pelo app;
+                    - Controlar tudo em um só lugar, de forma simples e rápida.
+
+                  Tudo isso com o mesmo login e sem custos extras. Falta só completar seu cadastro para começar!`
+                }
+                </div>
+              </Modal>
+              :
+              ''
+            }
+            {
+              modalCompletarCadastroDados ?
+              <Modal titulo='Completar Cadastro' funcaoSalvar={completarCadastro} enviaModal={() => {setModalCompletarCadastroDados(false)}} textoBotao="Salvar">
+                <div className='modal-completar-cadastro--texto'>
+                  <div>Para alterar seu tipo de usuário é necessário completar seu cadastro!</div>
+                </div>
+                <div className="modal-completar-cadastro--campos">
+                  <div className="modal-completar-cadastro--nome-cnpj">
+                      <div className='col-12 col-md-5'>
+                          <Input 
+                                  value={usuario?.nomeEmpresa}              
+                                  dica='Digite o nome de sua empresa'
+                                  obrigatorio
+                                  name='nome_empresa'
+                                  onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeEmpresa: event.target.value})}
+                                  cabecalho
+                                  cabecalhoTexto='Nome da Empresa'
+                          />
+                          {erros.find((e) => e.tipo === 'NomeEmpresa' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'NomeEmpresa')?.mensagem}/>
+                          )}
+                      </div>
+                      <div className='col-12 col-md-5'>
+                        <PatternFormat 
+                              format="##.###.###/####-##"
+                              mask="_"
+                              value={usuario?.cnpjEmpresa}
+                              customInput={Input}
+                              onValueChange={(values) => {setUsuario({...usuario!, cnpjEmpresa:values.value})}}
+                              dica='Digite seu CNPJ'
+                              obrigatorio
+                              name='cnpj'
+                              cabecalho 
+                              cabecalhoTexto='CNPJ'
+                            />
+                          {erros.find((e) => e.tipo === 'CNPJ' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'CNPJ')?.mensagem}/>
+                          )}
+                      </div>
+                  </div>
+                    <div className='col-12 col-md-12'>
+                      <div>
+                      <Input 
+                            value={usuario?.localizacaoEmpresa}
+                            dica='Digite a localização de sua empresa'
+                            obrigatorio
+                            name='localizacaoEmpresa'
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, localizacaoEmpresa: event.target.value})}
+                            cabecalho
+                            cabecalhoTexto='Localização da Empresa'
+                            type="local"/>
+                            {erros.find((e) => e.tipo === 'localizacaoEmpresa' && e.ativo) && (
+                              <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'localizacaoEmpresa')?.mensagem}/>
+                            )}
+                      </div>
+                    </div>
+                    <div className='col-12 col-md-12'>
+                      <div>
+                      <PatternFormat 
+                          format="(##) #####-####"
+                          mask="_"
+                          customInput={Input} 
+                          value={usuario?.telEmpresa}           
+                          dica='Digite o telefone de sua empresa'
+                          onValueChange={(values) => {setUsuario({...usuario!, telEmpresa:values.value});}}
+                          obrigatorio
+                          name='telefoneEmpresa'
+                          cabecalho
+                          cabecalhoTexto='Telefone da Empresa'
+                          type="tel"
+                        />
+                        {erros.find((e) => e.tipo === 'telefoneEmpresa' && e.ativo) && (
+                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefoneEmpresa')?.mensagem}/>
+                        )}
+                      </div>
+                  </div>
+                </div>
+
+                  
+
+              </Modal>
+              :
+              ''
+            }
     </div> : ''}
 
 {/* pagina prestador */}
     { isPrestador ? <div className='perfil'>
-        <h1 className='layout-titulo'>Perfil</h1>
+        <div className="perfil--titulo-botao">
+          <h1 className='layout-titulo'>Perfil</h1>
+          {
+            tipoUsuario.prestador && tipoUsuario.organizador ?
+            ''
+            :
+            <div className="perfil--botao-notificacao-prestador" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
+              <i className="fa-regular fa-bell"></i>
+            </div>
+
+          }
+      </div>
+      
           <div className='caixa-perfil'>
             <div className='formulario-perfil-prestador'>
               <div className='perfil-foto-nome-email-organizador'>
@@ -677,8 +894,8 @@ return (
                     disabled={!modoEdicao}
                   />
                 </div>
-                {erros.find((e) => e.tipo === 'nomeEmpresa' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nomeEmpresa')?.mensagem}/>
+                {erros.find((e) => e.tipo === 'NomeEmpresa' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'NomeEmpresa')?.mensagem}/>
                   )}
               </div>
               <div className='col-12 col-md-6'>
@@ -696,8 +913,8 @@ return (
                     cabecalhoTexto='CNPJ'
                     disabled={!modoEdicao}
                   />
-                  {erros.find((e) => e.tipo === 'cnpj' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cnpj')?.mensagem}/>
+                  {erros.find((e) => e.tipo === 'CNPJ' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'CNPJ')?.mensagem}/>
                   )}
                 </div>
 
@@ -901,7 +1118,143 @@ return (
                 </div>
               </motion.div>  
             )}
-    </div> : ''}
+                {
+              modalCompletarCadastro ?
+              <Modal titulo='Completar Cadastro' enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
+                <div className="completar-cadastro--imagem">
+                  <img className='completar-cadastro--imagem--tamanho'src={logoOrganizador} alt="Imagem de completar cadastro" />
+                </div>
+                <div className="completar-cadastro--titulo">
+                  <div className="completar-cadastro-prestador--titulo-texto">
+                    Pronto para organizar seu próprio evento?
+                  </div>
+                  <div className="completar-cadastro--descricao">
+                    Que tal realizar seus próprios eventos? Como um organizador torne essa experiência algo possível.
+                  </div>
+                </div>
+                <div className="completar-cadastro--texto">
+                {
+                  `Ao ativar o perfil de organizador de eventos, você poderá:
+
+                  Gerenciar seus próprios eventos;
+                  Enviar convites e gerenciar sua lista de convidados;
+                  Contratar prestadores de forma rápida e segura diretamente pelo app;
+                  Acompanhar os pedidos feitos;
+                  Centralizar toda a organização em um só lugar.
+
+                  Tudo isso com o mesmo login e sem custos extras. Falta só completar seu cadastro para começar!`
+                }
+                </div>
+              </Modal>
+              :
+              ''
+            }
+            {
+              modalCompletarCadastroDados ?
+              <Modal titulo='Completar Cadastro' funcaoSalvar={completarCadastro} enviaModal={() => {setModalCompletarCadastroDados(false)}} textoBotao="Salvar">
+                <div className='modal-completar-cadastro--texto'>
+                  <div>Para alterar seu tipo de usuário é necessário completar seu cadastro!</div>
+                </div>
+                <div className="modal-completar-cadastro--campos">
+                  <div className="modal-completar-cadastro--nome-cnpj">
+                      <div className='col-12 col-md-6'>
+                        <Input 
+                                value={usuario?.nomeUsu}              
+                                dica='Digite seu nome'
+                                obrigatorio
+                                name='nome'
+                                onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeUsu: event.target.value})}
+                                cabecalho
+                                cabecalhoTexto='Nome'
+                        />
+                        {erros.find((e) => e.tipo === 'nome' && e.ativo) && (
+                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nome')?.mensagem}/>
+                        )}
+                      </div>
+                      <div className='col-12 col-md-5'>
+                        <Input
+                              value={usuario?.sobrenomeUsu}                      
+                              dica='Digite seu sobrenome'
+                              obrigatorio
+                              name='sobrenome'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, sobrenomeUsu: event.target.value})}
+                              cabecalho
+                              cabecalhoTexto='Sobrenome'/>
+                        {erros.find((e) => e.tipo === 'sobrenome' && e.ativo) && (
+                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'sobrenome')?.mensagem}/>
+                        )}
+                      </div>
+                  </div>
+                  <div className="modal-completar-cadastro--nome-cnpj">
+
+                      <div className='col-12 col-md-6'>
+                        <div>
+                          <PatternFormat 
+                                format="###.###.###-##"
+                                mask="_"
+                                value={usuario?.cpfUsu}
+                                customInput={Input}
+                                onValueChange={(values) => {setUsuario({...usuario!, cpfUsu:values.value})}}
+                                dica='Digite seu CPF'
+                                obrigatorio
+                                name='cpf'
+                                cabecalho 
+                                cabecalhoTexto='CPF'
+                              />  
+                          {erros.find((e) => e.tipo === 'cpf' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cpf')?.mensagem}/>
+                          )}
+                        </div>
+                      </div>
+                      <div className='col-12 col-md-5'>
+                        <div>
+                          <Input 
+                                value={usuario?.dtNasUsu}
+                                dica='Digite sua data de nascimento'
+                                obrigatorio
+                                name='dataNascimento'
+                                onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, dtNasUsu: event.target.value})}
+                                cabecalho
+                                cabecalhoTexto='Data de Nascimento'
+                                type="date"/>
+                          {erros.find((e) => e.tipo === 'dataNascimento' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'dataNascimento')?.mensagem}/>
+                          )}
+                        </div>
+                    </div>
+                  </div>
+                  <div className='col-12 col-md-12'>
+                    <div>
+                      <PatternFormat 
+                        format="(##) #####-####"
+                        mask="_"
+                        customInput={Input} 
+                        value={usuario?.telUsu}           
+                        dica='Digite seu telefone'
+                        onValueChange={(values) => {setUsuario({...usuario!, telUsu:values.value});}}
+                        obrigatorio
+                        name='telefone'
+                        cabecalho
+                        cabecalhoTexto='Telefone'
+                        type="tel"
+                        />
+                        {erros.find((e) => e.tipo === 'telefone' && e.ativo) && (
+                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefone')?.mensagem}/>
+                        )}
+                      </div>
+                    </div>
+                </div>
+
+                  
+
+              </Modal>
+              :
+              ''
+            }
+    </div> 
+    : ''
+    }
+
   </div>
   )
 }
