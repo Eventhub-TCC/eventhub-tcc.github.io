@@ -1,6 +1,6 @@
 import './TextArea.css'
 
-export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, name, placeholder = 'digite aqui...',maximo = 2000, contador = true}:any) => {
+export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, name, placeholder = 'digite aqui...',maximo = 2000, contador = true, obrigatorio = false}:any) => {
 
 
     const atualizaContador = ()=>{
@@ -19,6 +19,7 @@ export const TextArea = ({titulo = 'Digite seu Texto', onChange,valor, name, pla
                 maxLength={maximo}
                 name={name}
                 id={name}
+                required={obrigatorio}
             />
             {atualizaContador()}
         </div>

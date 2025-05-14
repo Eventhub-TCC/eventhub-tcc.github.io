@@ -16,6 +16,8 @@ import Convidados from './paginas/Convidados/Convidados'
 import Convites from './paginas/Convites/Convites'
 import PrestadorLayout from './componentes/PrestadorLayout/PrestadorLayout'
 import MeusServicos from './paginas/MeusServicos/MeusServicos'
+import CadastroServico from './paginas/CadastroServico/CadastroServico'
+
 
 
 const App = () => {
@@ -41,6 +43,7 @@ const App = () => {
           <Route path='prestador' element={<PrestadorLayout />}>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
             <Route path='meus-servicos' element={<MeusServicos />}/>
+            <Route path='criar-servico' element={<CadastroServico />}/>
           </Route>
         </Route>
         <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>

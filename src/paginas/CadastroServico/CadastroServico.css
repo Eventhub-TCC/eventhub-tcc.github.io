@@ -1,0 +1,118 @@
+.cadastro-servico{
+    position: relative;
+}
+
+.cadastro-servico__formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+    border: 1px solid #F3C623;
+    border-radius: 32px;
+    background-color: white;
+    padding: 48px 40px;
+}
+
+.cadastro-servico__imagem-info{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.cadastro-servico__imagem-icone{
+    font-size: 75px;
+    color: rgba(0, 0, 0, 0.250);
+}
+.cadastro-servico__imagem-preview{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+.cadastro-servico__container-imagem{
+    position: relative;
+    width: 341px;
+    height: 198px;
+    display: flex;
+    padding: 10px;
+    border-radius: 16px;
+    border: 2px dashed #F3C623;
+}
+
+.cadastro-servico__remover-image{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    right: 0;
+    border-radius: 100%;
+    background-color: #D9D9D9;
+    border: none;
+    width: 32px;
+    height: 32px;
+}
+.cadastro-servico__remover-image-icone{
+    font-size: 10px;
+    color: #000000;
+}
+
+.cadastro-servico__etapa-imagem{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+}
+    
+.cadastro-servico__imagem-botao{
+    display: inline-block;
+    width: auto;
+}
+
+.cadastro-servico__etapa-imagem-sem-imagem{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.cadastro-servico__etapa-imagem-com-imagem{
+    width: 100%;
+}
+
+.cadastro-servico__adicionar-imagem{
+    width: 341px;
+    height: 198px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:rgba(0, 0, 0, 0.250) 2px dashed;
+    border-radius: 16px;
+}
+
+.cadastro-servico__adicionar-imagem-info{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;    
+}
+
+.cadastro-servico__adicionar-imagem-icone{
+    font-size: 75px;
+    color:#F3C623
+}
+
+.cadastro-servico__adicionar-imagem-texto{
+    font-size: 20px;
+    color: #F3C623;
+}
+
+@media screen and (max-width: 1024px){
+    .cadastro-servico__alerta{
+        transform: translateX(-50%);
+        left: 50%;
+       width: 100%;
+       padding: 0 32px;
+    }
+}
