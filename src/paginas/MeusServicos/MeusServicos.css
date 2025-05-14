@@ -1,4 +1,86 @@
-.meus-servicos--imagem-sem-servico{
-    width: 100px;
-    height: 106px;
+.conteudo-principal-meus-servicos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.botao-criar-servicos{
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+}
+
+.botao-criar-servicos-meus-servicos{
+    display: flex;
+    width: 75px;
+    height: 75px;
+    padding: 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 46.5px;
+    background: var(--yellow-800);
+    cursor: pointer;
+    transition: background-color .3s ease-in-out;
+}
+
+.botao-criar-servicos-meus-servicos:hover{
+    background-color: var(--yellow-700);
+}
+
+.botao-criar-servicos-meus-servicos:active{
+    background-color: var(--yellow-900);
+}
+
+.botao-ordernar-servicos{
+    display: flex;
+    width: 44px;
+    height: 44px;
+    padding: 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--yellow-800);
+    cursor: pointer;
+    transition: background-color .3s ease-in-out, transform .3s ease-in-out;
+}
+
+.botao-ordernar-servicos.crescente{
+    transform: rotate(0deg);
+}
+
+.botao-ordernar-servicos.decrescente{
+    transform: rotate(180deg);
+}
+
+.botao-ordernar-servicos:hover{
+    background-color: var(--yellow-700);
+}
+
+.botao-ordernar-servicos:active{
+    background-color: var(--yellow-900);
+}
+
+.servicos-nao-encontrados{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--yellow-700);  
+}
+
+.sem-servicos-encontrados{
+    background-image: url(../../assets/sem-servicos-encontrados.svg);
+    background-repeat: no-repeat;
+    width: 500px;
+    height: 500px;
 }
