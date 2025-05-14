@@ -47,10 +47,12 @@ const Convidados = () => {
     const [idUsuario, setIdUsuario] = useState<any>(null);
     const [preView, setPreview] = useState('')
     const [tipoEvento, setTipoEvento] = useState(0)
-
+    const [carregandoImprimir, setCarregandoImprimir] = useState(false);
 
     const convidadosPendentes = convidados.filter(convidado => convidado.status === 'Pendente');
     const convidadoPendenteAtual = convidadosPendentes[indiceConvidadoPendente];
+
+    const [botaoImprimirDesabilitado, setBotaoImprimirDesabilitado] = useState(true);
 
     useEffect(() => {
         try {
@@ -97,6 +99,7 @@ const Convidados = () => {
           const response = await api.get(`/users/obter-convidados/${idEvento}`);
           setConvidados(response.data);
         } catch (error) {
+            setBotaoImprimirDesabilitado(true);
           console.error('Erro ao buscar convidados:', error);
         }
       };
@@ -148,6 +151,11 @@ const Convidados = () => {
               console.error('Erro ao atualizar status do convidado:', error);
             }
           };
+
+    useEffect(() => {
+    const confirmados = convidados.filter((convidado: Convidado) => convidado.status === 'Confirmado');
+    setBotaoImprimirDesabilitado(!(confirmados.length > 0));
+    }, [convidados]);
     
 
 
@@ -185,6 +193,26 @@ const Convidados = () => {
     }
 }
 
+    const gerarListaConvidados = async () => {
+        try{
+            if(carregandoImprimir) return;
+            setCarregandoImprimir(true);
+            const {data: pdf} = await api.get(`/users/gerar-lista-convidados/${idEvento}`, {responseType: 'blob'});
+            const url = URL.createObjectURL(new Blob([pdf]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'lista_de_convidados.pdf';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            setCarregandoImprimir(false);
+        }
+        catch(e: any){
+            console.error('Erro ao gerar lista de convidados:', e);
+            setCarregandoImprimir(false);
+        }
+    }
 
   return (
     <div className="tela-convidados-evento">
@@ -212,6 +240,19 @@ const Convidados = () => {
                         </div>
                         <div className="confirmar-presencas">
                             <Botao funcao={() => setModalConfirmarPresencas(true)} texto='Confirmar Presenças'/>
+                        </div>
+                        <div className="imprimir-lista">
+                            <Botao 
+                                funcao={gerarListaConvidados} 
+                                texto={
+                                    carregandoImprimir ? 
+                                        <div className="spinner-border spinner-border-sm" role="status">
+                                            <span className="visually-hidden">Carregando...</span>
+                                        </div>
+                                    : 'Imprimir lista'
+                                }
+                                desabilitado={botaoImprimirDesabilitado}
+                            />
                         </div>
                     </div>
                     <table className="tabela-convidados">

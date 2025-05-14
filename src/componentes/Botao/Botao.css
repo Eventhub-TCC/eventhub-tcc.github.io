@@ -8,6 +8,12 @@
     font-weight: 500;
 }
 
+.botao:disabled{
+    background-color: var(--purple-700);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .botao--solido{
     background-color: var(--cor-principal);
     border: none;

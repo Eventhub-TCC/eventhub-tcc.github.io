@@ -62,6 +62,10 @@
     width: 200px;
   }
 
+  .imprimir-lista{
+    width: 139px;
+  }
+
   .tabela-convidados {
     width: 100%;
     border-collapse: collapse;
