@@ -15,6 +15,7 @@ import ConfirmarPresenca from './paginas/ConfirmarPresenca/ConfirmarPresenca'
 import Convidados from './paginas/Convidados/Convidados'
 import Convites from './paginas/Convites/Convites'
 import PrestadorLayout from './componentes/PrestadorLayout/PrestadorLayout'
+import MeusServicos from './paginas/MeusServicos/MeusServicos'
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
           </Route>
           <Route path='prestador' element={<PrestadorLayout />}>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
+            <Route path='meus-servicos' element={<MeusServicos />}/>
           </Route>
         </Route>
         <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>

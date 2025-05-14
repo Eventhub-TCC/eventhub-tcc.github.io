@@ -125,9 +125,14 @@ useEffect(() => {
 
 const validarCampos = async (): Promise<boolean> => {
   const errosFiltrados = erros.filter((erro) => {
-    if(modalCompletarCadastroDados){
+    if(modalCompletarCadastroDados && isPrestador){
       return [
-        'cpf', 'nome', 'sobrenome', 'dataNascimento', 'telefone', 'confirmar-senha', 'NomeEmpresa', 'CNPJ', 'telefoneEmpresa', 'localizacaoEmpresa'
+        'cpf', 'nome', 'sobrenome', 'dataNascimento', 'telefone'
+      ].includes(erro.tipo);
+    }
+    if(modalCompletarCadastroDados && isOrganizador){
+      return [
+        'NomeEmpresa', 'CNPJ', 'telefoneEmpresa', 'localizacaoEmpresa'
       ].includes(erro.tipo);
     }
     if (isOrganizador) {

@@ -22,6 +22,21 @@
     fill: var(--purple-700);
 }
 
+.feedback-form-prestador{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2.625rem;
+    animation: feedback-form-entrada 1.2s forwards ease-in;
+}
+
+.feedback-form-prestador svg path{
+    fill-rule: evenodd;
+    clip-rule: evenodd;
+    fill: var(--yellow-700);
+}
+
 .feedback-form__icone{
     font-size: 6.25rem;
 }
@@ -52,6 +67,10 @@
     color: var(--purple-700);
 }
 
+.feedback-form__titulo--prestador{
+    color: var(--yellow-700);
+}
+
 .feedback-form__titulo--erro{
     color: black;
 }
@@ -59,6 +78,7 @@
 .feedback-form__container-botao{
     width: 14.0625rem;
 }
+
 
 @media screen and (max-width: 700px){
     .feedback-form__container-botao{
