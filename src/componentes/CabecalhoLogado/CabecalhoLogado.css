@@ -48,7 +48,7 @@
 .modal1{
     position: absolute; 
     top: 50px; 
-    right: 60px; 
+    right: 30px; 
     padding: 20px;
     animation: mostra-perfil 0.3s ease-in-out both alternate;
 }

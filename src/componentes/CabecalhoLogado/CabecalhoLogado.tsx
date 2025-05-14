@@ -2,17 +2,23 @@ import './CabecalhoLogado.css'
 import { useEffect, useState } from 'react';
 import ModalPerfil from '../ModalPerfil/ModalPerfil';
 import ItemModal from '../ItemModalPerfil/ItemModalPerfil';
-import logo from '../../assets/logo_eventhub-sem-fundo.png';
+import logoOrganizador from '../../assets/logo_eventhub-sem-fundo.png';
+import logoPrestador from '../../assets/eventhub_logo_prestador.png';
 import { Link, useNavigate } from 'react-router';
 import api from '../../axios';
+import {jwtDecode} from 'jwt-decode';
 
 
-const CabecalhoLogado = ({minimizada, enviaMinimizada}: any) => {
+const CabecalhoLogado = ({minimizada, enviaMinimizada, organizador}: any) => {
     const [ModalAberto, setModalAberto] = useState(false);
     const [barraLateralMobileAberta, setBarraLateralMobileAberta] = useState(minimizada);
     const [larguraTela, setLarguraTela] = useState(window.innerWidth);
     const navigate = useNavigate();
     const [preView, setPreview] = useState('');
+    const [tipoUsuario, setTipoUsuario] = useState({
+        organizador: false,
+        prestador: false,
+      });
 
     const AbrirModal = () => {
         setModalAberto(!ModalAberto);  
@@ -39,7 +45,7 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada}: any) => {
       const obterFoto = async () => {
         try {
           const response = await api.get(`/users/get-user`);
-          setPreview(response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '');
+          setPreview(organizador ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '');
           } catch (error) {
             console.error('Erro ao obter foto do usuário:', error);
             console.error(error);
@@ -48,14 +54,28 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada}: any) => {
         obterFoto();
     },[]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const tokenDecodificado:any = jwtDecode(token!);
+        if (tokenDecodificado?.tipo?.includes("organizador")) {
+            setTipoUsuario(prev => ({ ...prev, organizador: true }));
+          }
+          
+          if (tokenDecodificado?.tipo?.includes("prestador")) {
+            setTipoUsuario(prev => ({ ...prev, prestador: true }));
+          }
+        console.log(tipoUsuario);
+    }, []);
+
+
     return(
         <header>
             <div className='CabecalhoLogado'>
                 <div className='cabecalho-logado__container'>
                     
-                    <Link to="/meus-eventos">
+                    <Link to={organizador ? '/organizador/meu-perfil' : '/prestador/meu-perfil'}>
                         <div className='cabecalho-logado__logo-container'>
-                            <img className='cabecalho-logado__logo' src={logo} alt="Logo" />
+                            {organizador ? <img className='cabecalho-logado__logo' src={logoOrganizador} alt="Logo" /> : <img className='cabecalho-logado__logo' src={logoPrestador} alt="Logo" />}
                         </div>
                     </Link>
                 </div>
@@ -82,7 +102,9 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada}: any) => {
                 ModalAberto && 
                 <div className='modal1'>
                     <ModalPerfil fecharModal={AbrirModal}> 
-                        <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => navigate('/organizador/meu-perfil')} /> 
+                        <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => navigate( organizador ? '/organizador/meu-perfil' : '/prestador/meu-perfil')} /> 
+                        { tipoUsuario.organizador && tipoUsuario.prestador ? <ItemModal icone="fa fa-refresh" texto='Alterar Função' funcao={() => navigate( organizador ? '/prestador/meu-perfil' : '/organizador/meu-perfil')} organizador={organizador} prestador={!organizador}/> : '' }
+
                         <ItemModal texto='Sair' icone="fa fa-sign-out" funcao={() => {navigate('/login'); localStorage.removeItem("token") }}/> 
                     </ModalPerfil>
                 </div>
