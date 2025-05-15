@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
-import './SecaoOrganizador.css'
+import { CSSProperties, useEffect, useRef, useState } from 'react'
+import './Secao.css'
 
-const SecaoOrganizador = ({titulo, children}: any) => {
+const Secao = ({titulo, children, corBorda = 'var(--purple-700)', corTitulo = 'var(--purple-800)'}: any) => {
   const [aberto, setAberto] = useState(true);
   const conteudoRef = useRef<HTMLDivElement>(null);
   const [altura, setAltura] = useState('auto');
@@ -16,8 +16,8 @@ const SecaoOrganizador = ({titulo, children}: any) => {
   }, [aberto]);
 
   return (
-    <section className="secao-organizador">
-      <div className="secao-organizador__container-titulo" onClick={() => setAberto(!aberto)}>
+    <section style={{'--cor-borda-secao': corBorda} as CSSProperties} className="secao-organizador">
+      <div style={{'--cor-titulo-secao': corTitulo} as CSSProperties} className="secao-organizador__container-titulo" onClick={() => setAberto(!aberto)}>
         <i className={`fa-solid fa-chevron-right secao-organizador__seta ${aberto ? 'secao-organizador__seta-baixo' : ''}`}/>
         <span className="secao-organizador__titulo">{titulo}</span>
       </div>
@@ -34,4 +34,4 @@ const SecaoOrganizador = ({titulo, children}: any) => {
   )
 }
 
-export default SecaoOrganizador
+export default Secao

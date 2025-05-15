@@ -2,7 +2,7 @@
     background-color: #FFF;
     padding: 3rem 2.5rem;
     border-radius: 2rem;
-    border: 1px solid var(--purple-700);
+    border: 1px solid var(--cor-borda-secao);
 }
 
 .secao-organizador__container-titulo{
@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     gap: .75rem;
-    color: var(--purple-800);
+    color: var(--cor-titulo-secao);
 }
 
 .secao-organizador__titulo{

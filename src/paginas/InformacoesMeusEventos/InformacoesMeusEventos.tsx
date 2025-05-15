@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
 import { useParams } from 'react-router';
 import api from '../../axios';
-import SecaoOrganizador from '../../componentes/SecaoOrganizador/SecaoOrganizador';
+import Secao from '../../componentes/Secao/Secao';
 interface Evento{
     idEvento: number;
     nomeEvento: string;
@@ -246,7 +246,7 @@ const InformacoesMeusEventos = () => {
                         </div>
                     </div>
                 }
-                <SecaoOrganizador titulo='Detalhes do evento'>
+                <Secao titulo='Detalhes do evento'>
                     <div className='informacoes-evento__detalhes'>
                         <div className='row g-4'>
                             <div className='col-12 col-sm-6'>
@@ -287,8 +287,8 @@ const InformacoesMeusEventos = () => {
                             </div>        
                         </div>
                     </div>
-                </SecaoOrganizador>
-                <SecaoOrganizador titulo='Resumo dos convidados'>
+                </Secao>
+                <Secao titulo='Resumo dos convidados'>
                     <div className='row g-4'>
                         <div className='col-12 col-xxl-4'>
                             <div className='informacoes-evento__resumo-convites-container'>
@@ -323,7 +323,7 @@ const InformacoesMeusEventos = () => {
                             </div>
                         </div>
                     </div>
-                </SecaoOrganizador>
+                </Secao>
             </div>
         </div>
     )
