@@ -15,6 +15,11 @@ interface TipoServico {
   descricaoTipoServico: string;
 }
 
+interface Unidade{
+  id: number;
+  nome: string;
+}
+
 const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}: any) => {
   const [abrirEdicaoServico, setAbrirEdicaoServico] = useState(false)
   const [abrirApagarServico, setAbrirApagarServico] = useState(false)
@@ -25,7 +30,8 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
   const [imagemServico, setImagemServico] = useState<[File|null]>([null])
   const [preView, setPreview] = useState(preViewSv)
   const [imagemEditada, setImagemEditada] = useState(false)
-  const [editadoOk, setEditadoOk] = useState(false)
+  const [editadoOk, setEditadoOk] = useState(false);
+  const [unidade, setUnidade] = useState('')
 
   const navigate = useNavigate();
   
@@ -42,8 +48,13 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
   const validarFormulario = async () => {
     const novosErros: { [key: string]: string } = {};
 
-    if (!servicoEditado?.nomeServico) novosErros.nomeServico = "O nome do Servico é obrigatório.";
-
+    if (!servicoEditado?.nomeServico) novosErros.nomeServico = "O nome do Serviço é obrigatório.";
+    if (!servicoEditado?.descricaoServico) novosErros.descricaoServico = "A descricao do Serviço é obrigatório.";
+    if (!servicoEditado?.idTipoServico) novosErros.idTipoServico = "O Tipo do Serviço é obrigatório.";
+    if (!servicoEditado?.unidadeCobranca) novosErros.unidadeCobranca = "A unidade de cobrança é obrigatória.";
+    if (!servicoEditado?.valorServico) novosErros.valorServico = "O valor do serviço é obrigatório.";
+    if (!servicoEditado?.qntMinima) novosErros.qntMinima = "A quantidade minima é obrigatória.";
+    if (!servicoEditado?.qntMaxima) novosErros.qntMaxima = "A quantidade máxima é obrigatória.";
 
     setErros(novosErros);
 
@@ -63,7 +74,11 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
         return
       }
     }
-    buscarTiposDeServicos()
+    buscarTiposDeServicos();
+    const unidade = unidadeValor.find(
+      (item) => item.id === Number(servico?.unidadeCobranca)
+    );
+    setUnidade(unidade!.nome);
   },[])
 
   useEffect(() => {
@@ -97,7 +112,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
     //     formData.append("imagemEditada", "false");
     //   }
 
-      await api.put(`/users/services/${servico.idEvento}`, formData, {
+      await api.put(`/users/services/${servico.idServico}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });    
       setEditadoOk(true);
@@ -111,24 +126,24 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
         ...servico,
         ...servicoEditado,
         tipoServico: {
-          idTipoServico: servicoEditado.tipoEvento,
+        idTipoServico: servicoEditado.tipoServico,
           descricaoTipoServico: tipoServicoDisponiveis.find((tipo) => tipo.idTipoServico.toString() === servicoEditado.tipoServico)?.descricaoTipoServico 
         },
         imagemServico: imagemServico instanceof File ? URL.createObjectURL(imagemServico) : servico.imagemServico,
       })
     } 
     catch (err) {
-      console.error("Erro ao editar evento:", err);
+      console.error("Erro ao editar Servico:", err);
       sweetAlert.fire({
         title: "Erro!",
-        text: "Erro ao editar evento.",
+        text: "Erro ao editar Servico.",
         icon: "error",
         confirmButtonText: "OK",
       });
     }
   }
 
-  const ApagarServico = () => { //FAZER NO BACK FUNÇÃO APAGAR SERVIÇO
+  const ApagarServico = () => {
     api.delete(`/users/${idUsuario}/services/${servico.idServico}`)
     .then(() => {
       navigate('/prestador/meus-servicos');
@@ -138,6 +153,18 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
     });
     setAbrirApagarServico(!abrirApagarServico)
   }
+
+const unidadeValor: Unidade[] = [
+  { id: 1, nome: "Unidade" },
+  { id: 2, nome: "Hora" },
+  { id: 3, nome: "Turno" },
+  { id: 4, nome: "Diaria" },
+  { id: 5, nome: "Alugel" },
+  { id: 6, nome: "sessão" },
+  { id: 7, nome: "pessoa" },
+];
+
+
 
   return (
     <div className="cabecalho-servicos">
@@ -160,7 +187,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
               <div className='alinhamento-info-icone-servico'>
                 <span className='icone-preco-servico'>R$</span>
                 <div>
-                  {Number(servico.valorServico).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim()}<span className='cor-unidade-servico'>{`/${servico.unidadeCobranca}`}</span>
+                  {Number(servico.valorServico).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim()}<span className='cor-unidade-servico'>{`/${unidade}`}</span>
                 </div>
               </div>
             </div>
@@ -207,7 +234,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
                       <Input 
                         value={servicoEditado?.nomeServico|| ""}  
                         onChange={(e:any) => setServicoEditado((prev:any) =>
-                          prev ? { ...prev, nomeEvento: e.target.value } : null
+                           prev ? { ...prev, nomeServico: e.target.value } : null
                         )} 
                         type='text' 
                         dica='Digite um nome para o servico'
@@ -227,7 +254,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
                       >
                         {tipoServicoDisponiveis.map(tipo => <option value={tipo.idTipoServico}>{tipo.descricaoTipoServico}</option>)}
                       </Select>
-                      {/* {erros.tipoEvento && <ErroCampoForm mensagem={erros.tipoEvento}/>} */}
+                      {erros.idTipoServico && <ErroCampoForm mensagem={erros.idTipoServico}/>}
                     </div>
                   </div>
                 </div>
@@ -237,11 +264,12 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
                     <Input 
                       value={servicoEditado?.descricaoServico || ""}  
                       onChange={(e:any) => setServicoEditado((prev:any) =>
-                        prev ? { ...prev, descricaoEvento: e.target.value } : null
+                      prev ? { ...prev, descricaoServico: e.target.value } : null
                       )} 
                       type='text' 
                       dica='Digite uma descrição para o seu servico...'
                     />
+                    {erros.descricaoServico && <ErroCampoForm mensagem={erros.descricaoServico}/>} 
                   </div>
                 </div>
                 {/* <div className='imagem-evento'>
@@ -293,20 +321,24 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
                 </div> */}
               </div>
               <div className='novos-dados-eventos'>
-                <div className='texto-input-data'>
-                  <div className='textos'>Unidade de cobrança</div>
-                  <div className='input-data-evento'>
-                    <Input 
-                      value={servicoEditado?.dataEvento || ""}  
-                      onChange={(e:any) => setServicoEditado((prev:any) =>
-                        prev ? { ...prev, unidadeCobranca: e.target.value } : null
-                      )} 
-                      dica=''
-                    />
-                    {/* {erros.dataEvento && <ErroCampoForm mensagem={erros.dataEvento}/>} */}
-                  </div>
-                </div>
                 <div className='texto-input-hora-inicio-evento'>
+                  <div className='texto-input-data'>
+                    <div className='textos'>Unidade de cobrança</div>
+                    <div className='input-tamanho'>
+                      <Select 
+                        textoPadrao = 'Selecione a Unidade'
+                        esconderValorPadrao
+                        value={servicoEditado?.unidadeCobranca || ""}
+                        onChange={(e:any) => setServicoEditado((prev:any) =>
+                          prev ? { ...prev, unidadeCobranca: e.target.value } : null
+                        )}>
+                        {unidadeValor.map((unidade)=>{
+                        return <option id={unidade.id.toString()} value={unidade.id}>{unidade.nome}</option>
+                        })}
+                      </Select>
+                      {erros.unidadeCobranca && <ErroCampoForm mensagem={erros.unidadeCobranca}/>}
+                    </div>
+                  </div>
                   <div className='horario-inicio-fim-evento'>
                     <div className='textos'>Valor do serviço por unidade</div>
                     <div className='input-tamanho'>
@@ -317,9 +349,11 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
                         )} 
                         dica='R$'
                       />
-                      {/* {erros.horaInicio && <ErroCampoForm mensagem={erros.horaInicio}/>} */}
+                      {erros.valorServico && <ErroCampoForm mensagem={erros.valorServico}/>}
                     </div>
                   </div>
+                </div>
+                <div className='texto-input-hora-inicio-evento'>
                   <div className='horario-inicio-fim-evento'>
                     <div className='textos'>Quantidade mínima</div>
                     <div className='input-tamanho'>
@@ -328,24 +362,24 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
                         onChange={(e:any) => setServicoEditado((prev:any) =>
                           prev ? { ...prev, qntMinima: e.target.value } : null
                         )} 
-                        dica='--:--'
+                        dica='1'
                       />
-                      {/* {erros.horaFim && <ErroCampoForm mensagem={erros.horaFim}/>} */}
+                      {erros.qntMinima && <ErroCampoForm mensagem={erros.qntMinima}/>}
                     </div>
                   </div>
-                </div>
-                <div className='texto-input-cep-endereco'>
-                  <div className='input-texto-cep-numero'>
-                    <div className='textos'>Quantidade máxima</div>
-                    <div className='input-tamanho-cep-numero'>
-                        <Input 
-                            value={servicoEditado?.qntMaxima || ""}
-                            onChange={(e:any) => setServicoEditado((prev:any) =>
-                            prev ? { ...prev, qntMaxima: e.target.value } : null
-                        )} 
-                        dica='--:--'
-                      />
-                      {/* {erros.cepLocal && <ErroCampoForm mensagem={erros.cepLocal}/>} */}
+                  <div className='texto-input-cep-endereco'>
+                    <div className='input-texto-cep-numero'>
+                      <div className='textos'>Quantidade máxima</div>
+                      <div className='input-tamanho'>
+                          <Input 
+                              value={servicoEditado?.qntMaxima || ""}
+                              onChange={(e:any) => setServicoEditado((prev:any) =>
+                              prev ? { ...prev, qntMaxima: e.target.value } : null
+                          )} 
+                          dica='10'
+                        />
+                        {erros.qntMaxima && <ErroCampoForm mensagem={erros.qntMaxima}/>}
+                      </div>
                     </div>
                   </div>
                 </div>
