@@ -1,7 +1,7 @@
-.cabecalho-eventos{
+.cabecalho-servicos{
     padding: 56px 32px 0;
     background: #FFF;
-    box-shadow: 0px 4px 9px 0px rgba(140, 93, 255, 0.16);
+    box-shadow: 0px 4px 9px 0px rgba(255, 217, 93, 0.16);
 }
 
 .titulo-infos-eventos{
@@ -39,7 +39,7 @@
 
 .botao-evento{
     width: 100%;
-    width: 152px;
+    width: 160px;
 }
 
 .informacoes-evento-data-hora,
@@ -48,17 +48,22 @@
     gap: 24px;
 }
 
-.alinhamento-info-icone{
+.alinhamento-info-icone-servico{
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--purple-900);
+    color: var(--yellow-900);
     font-size: 14px;
     font-weight: 500;
 }
 
-.alinhamento-info-icone:nth-child(2){
-    white-space: nowrap;
+.icone-preco-servico{
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.cor-unidade-servico{
+    color: var(--yellow-800);
 }
 
 .cabecalho-evento--sem-endereco{
@@ -71,7 +76,7 @@
     gap: 8px;
 }
 
-.aba-evento{
+.aba-servico{
     display: flex;
     height: 30px;
     flex-direction: column;
@@ -86,13 +91,13 @@
     white-space: nowrap;
 }
 
-.aba-evento:hover,
-.aba-evento--ativo{
-    color: var(--purple-700);
+.aba-servico:hover,
+.aba-servico--ativo{
+    color: var(--yellow-700);
 }
 
-.aba-evento--ativo{
-    border-bottom: var(--purple-700) 3px solid;
+.aba-servico--ativo{
+    border-bottom: var(--yellow-700) 3px solid;
 }
 
 /* Modal */

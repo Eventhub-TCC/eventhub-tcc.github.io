@@ -71,13 +71,13 @@ const InformacoesServico = () => {
     return (
         <div>
             <div className='informacoes-servico__cabecalho'>
-                {/* <CabecalhoServico
+                <CabecalhoServico
                     idServico={idServico} 
                     servico={servico}
                     preViewSv={preView}
                     setServico={setServico}
                     idUsuario={idUsuario}
-                /> */}
+                />
             </div>
             <div className='informacoes-servico__container'>
                 <Secao titulo='Detalhes do serviço' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
