@@ -5,17 +5,18 @@
     --purple-800: #6A40C3;
     --purple-700: #8C5DFF;
     --purple-400: #8135E6;
+    --yellow-900: #FA812F; 
     --yellow-800: #FFB22C; 
     --yellow-700: #F3C623;
     --yellow-400: #FFF4CF;
     --fonte-principal: "Inter", sans-serif;
-
 }
 
 #root{
     font-family: var(--fonte-principal);
 min-height: 100vh;
 }
+
 body{
     min-height: 100vh;
 }

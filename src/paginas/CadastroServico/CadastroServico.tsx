@@ -11,6 +11,7 @@ import { PatternFormat, NumericFormat } from "react-number-format"
 import api from "../../axios"
 import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
 import Alerta from "../../componentes/Alerta/Alerta"
+import { useNavigate } from "react-router"
 
 
 interface tipoServico{
@@ -57,6 +58,8 @@ const CadastroServico = () => {
   const qntPassos = 3
 
   const maxImagensServico = 6
+
+  const navigate = useNavigate()
 
   useEffect(()=>{
     const preview = imagensServico.map((imagem)=>{
@@ -355,6 +358,7 @@ const CadastroServico = () => {
     console.log('dados do serviço:')
     await api.post('/users/services', formData)
     console.log('Serviço cadastrado com sucesso!')
+    navigate('/prestador/meus-servicos')
     }
     catch(erro){
       console.log('erro ao cadastrar Serviço: ',erro)

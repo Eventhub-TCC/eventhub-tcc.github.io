@@ -15,7 +15,12 @@ interface TipoServico {
   descricaoTipoServico: string;
 }
 
-const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}: any) => {
+interface Unidade{
+  id: number;
+  nome: string;
+}
+
+const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}: any) => {
   const [abrirEdicaoServico, setAbrirEdicaoServico] = useState(false)
   const [abrirApagarServico, setAbrirApagarServico] = useState(false)
   const [servicoEditado, setServicoEditado] = useState({...servico, tipoServico: servico.idTipoServico})
@@ -23,9 +28,10 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
   const [tipoServicoDisponiveis, setTipoServicoDisponiveis] = useState<TipoServico[]>([])
   const inputImagemref = useRef<HTMLInputElement>(null)
   const [imagemServico, setImagemServico] = useState<[File|null]>([null])
-  const [preView, setPreview] = useState(preViewEv)
+  const [preView, setPreview] = useState(preViewSv)
   const [imagemEditada, setImagemEditada] = useState(false)
-  const [editadoOk, setEditadoOk] = useState(false)
+  const [editadoOk, setEditadoOk] = useState(false);
+  const [unidade, setUnidade] = useState('')
 
   const navigate = useNavigate();
   
@@ -42,8 +48,13 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
   const validarFormulario = async () => {
     const novosErros: { [key: string]: string } = {};
 
-    if (!servicoEditado?.nomeServico) novosErros.nomeServico = "O nome do Servico é obrigatório.";
-
+    if (!servicoEditado?.nomeServico) novosErros.nomeServico = "O nome do Serviço é obrigatório.";
+    if (!servicoEditado?.descricaoServico) novosErros.descricaoServico = "A descricao do Serviço é obrigatório.";
+    if (!servicoEditado?.idTipoServico) novosErros.idTipoServico = "O Tipo do Serviço é obrigatório.";
+    if (!servicoEditado?.unidadeCobranca) novosErros.unidadeCobranca = "A unidade de cobrança é obrigatória.";
+    if (!servicoEditado?.valorServico) novosErros.valorServico = "O valor do serviço é obrigatório.";
+    if (!servicoEditado?.qntMinima) novosErros.qntMinima = "A quantidade minima é obrigatória.";
+    if (!servicoEditado?.qntMaxima) novosErros.qntMaxima = "A quantidade máxima é obrigatória.";
 
     setErros(novosErros);
 
@@ -63,12 +74,16 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
         return
       }
     }
-    buscarTiposDeServicos()
+    buscarTiposDeServicos();
+    const unidade = unidadeValor.find(
+      (item) => item.id === Number(servico?.unidadeCobranca)
+    );
+    setUnidade(unidade!.nome);
   },[])
 
   useEffect(() => {
     if (servico) {
-      setServicoEditado({...servico, tipoEvento: servico.tipoEvento.idTipoEvento});
+      setServicoEditado({...servico, tipoServico: servico.tipoServico.idTipoServico});
     }
   }, [servico]);
 
@@ -97,7 +112,7 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
     //     formData.append("imagemEditada", "false");
     //   }
 
-      await api.put(`/users/services/${servico.idEvento}`, formData, {
+      await api.put(`/users/services/${servico.idServico}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });    
       setEditadoOk(true);
@@ -111,24 +126,24 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
         ...servico,
         ...servicoEditado,
         tipoServico: {
-          idTipoServico: servicoEditado.tipoEvento,
+        idTipoServico: servicoEditado.tipoServico,
           descricaoTipoServico: tipoServicoDisponiveis.find((tipo) => tipo.idTipoServico.toString() === servicoEditado.tipoServico)?.descricaoTipoServico 
         },
         imagemServico: imagemServico instanceof File ? URL.createObjectURL(imagemServico) : servico.imagemServico,
       })
     } 
     catch (err) {
-      console.error("Erro ao editar evento:", err);
+      console.error("Erro ao editar Servico:", err);
       sweetAlert.fire({
         title: "Erro!",
-        text: "Erro ao editar evento.",
+        text: "Erro ao editar Servico.",
         icon: "error",
         confirmButtonText: "OK",
       });
     }
   }
 
-  const ApagarServico = () => { //FAZER NO BACK FUNÇÃO APAGAR SERVIÇO
+  const ApagarServico = () => {
     api.delete(`/users/${idUsuario}/services/${servico.idServico}`)
     .then(() => {
       navigate('/prestador/meus-servicos');
@@ -139,8 +154,20 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
     setAbrirApagarServico(!abrirApagarServico)
   }
 
+const unidadeValor: Unidade[] = [
+  { id: 1, nome: "Unidade" },
+  { id: 2, nome: "Hora" },
+  { id: 3, nome: "Turno" },
+  { id: 4, nome: "Diaria" },
+  { id: 5, nome: "Alugel" },
+  { id: 6, nome: "sessão" },
+  { id: 7, nome: "pessoa" },
+];
+
+
+
   return (
-    <div className="cabecalho-eventos">
+    <div className="cabecalho-servicos">
       <div className='container'>
         <div className="titulo-infos-eventos">
           <div className="titulo-informacoes">
@@ -148,33 +175,39 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
               <h1 className='cabecalho-evento__titulo' title={servico.nomeServico}>{servico.nomeServico}</h1>
             </div>
             <div className="informacoes-evento">
-              <div className='alinhamento-info-icone'>
-                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
-                    <path d="M6.78125 15.0677V15M10.7188 15.0677V15M10.7188 11.4V11.3323M14.2188 11.4V11.3323M4.15625 7.79997H16.4063M5.73958 2.625V3.97516M14.6563 2.625V3.97499M14.6563 3.97499H5.90625C4.4565 3.97499 3.28125 5.18382 3.28125 6.67498V15.675C3.28125 17.1662 4.4565 18.375 5.90625 18.375H14.6562C16.106 18.375 17.2812 17.1662 17.2812 15.675L17.2813 6.67498C17.2813 5.18382 16.106 3.97499 14.6563 3.97499Z" stroke="#55379D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <div className='alinhamento-info-icone-servico'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 21 22" fill="none">
+                  <path d="M16.625 3.125C17.5915 3.125 18.375 3.89777 18.375 4.85102L18.375 7.79743C18.375 8.75069 17.5915 9.52346 16.625 9.52346H14C13.0335 9.52346 12.25 8.75069 12.25 7.79743L12.25 4.85102C12.25 3.89777 13.0335 3.125 14 3.125L16.625 3.125Z" stroke="#FA812F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4.375 3.125C3.4085 3.125 2.625 3.89777 2.625 4.85102L2.62501 7.79743C2.62501 8.75069 3.40851 9.52346 4.37501 9.52346H7.00001C7.9665 9.52346 8.75001 8.75069 8.75001 7.79743L8.75 4.85102C8.75 3.89777 7.9665 3.125 7 3.125L4.375 3.125Z" stroke="#FA812F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M16.625 12.4766C17.5915 12.4766 18.375 13.2493 18.375 14.2026V17.149C18.375 18.1022 17.5915 18.875 16.625 18.875H14C13.0335 18.875 12.25 18.1022 12.25 17.149L12.25 14.2026C12.25 13.2493 13.0335 12.4766 14 12.4766H16.625Z" stroke="#FA812F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4.37501 12.4766C3.40851 12.4766 2.62501 13.2493 2.62501 14.2026L2.62501 17.149C2.62501 18.1022 3.40851 18.875 4.37501 18.875H7.00001C7.96651 18.875 8.75001 18.1022 8.75001 17.149L8.75001 14.2026C8.75001 13.2493 7.9665 12.4766 7.00001 12.4766H4.37501Z" stroke="#FA812F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                    {servico.tipoServico.descricaoServico}
+                    {servico.tipoServico.descricaoTipoServico}
               </div>
-              <div className='alinhamento-info-icone'>
-                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
-                  <path d="M13.5744 13.4174C14.0983 13.5921 14.6647 13.3089 14.8393 12.785C15.014 12.261 14.7308 11.6947 14.2069 11.5201L13.5744 13.4174ZM10.9375 11.4844H9.9375C9.9375 11.9148 10.2129 12.2969 10.6213 12.4331L10.9375 11.4844ZM11.9375 7.36826C11.9375 6.81598 11.4898 6.36826 10.9375 6.36826C10.3852 6.36826 9.9375 6.81598 9.9375 7.36826H11.9375ZM14.2069 11.5201L11.2537 10.5357L10.6213 12.4331L13.5744 13.4174L14.2069 11.5201ZM11.9375 11.4844V7.36826H9.9375V11.4844H11.9375ZM17.8125 10.5C17.8125 14.297 14.7345 17.375 10.9375 17.375V19.375C15.839 19.375 19.8125 15.4015 19.8125 10.5H17.8125ZM10.9375 17.375C7.14054 17.375 4.0625 14.297 4.0625 10.5H2.0625C2.0625 15.4015 6.03597 19.375 10.9375 19.375V17.375ZM4.0625 10.5C4.0625 6.70304 7.14054 3.625 10.9375 3.625V1.625C6.03597 1.625 2.0625 5.59847 2.0625 10.5H4.0625ZM10.9375 3.625C14.7345 3.625 17.8125 6.70304 17.8125 10.5H19.8125C19.8125 5.59847 15.839 1.625 10.9375 1.625V3.625Z" fill="#55379D"/>
-                </svg>
+              <div className='alinhamento-info-icone-servico'>
+                <span className='icone-preco-servico'>R$</span>
+                <div>
+                  {Number(servico.valorServico).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim()}<span className='cor-unidade-servico'>{`/${unidade}`}</span>
+                </div>
               </div>
             </div>
           </div>
           <div className="botoes-evento">
               <div className='botao-evento'>
                 <Botao
-                  texto="Editar evento"
+                  texto="Editar serviço"
                   tamanho="med"
                   tipo="botao"
+                  cor='var(--yellow-700)'
                   funcao={() => setAbrirEdicaoServico(true)}
                 />
               </div>
               <div className='botao-evento'>
                 <Botao
-                  texto="Apagar evento"
+                  texto="Apagar serviço"
                   tamanho="med"
                   tipo="botao"
+                  cor='var(--yellow-700)'
                   funcao={() => setAbrirApagarServico(true)}
                 />
               </div>
@@ -182,28 +215,16 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
         </div>
         <div className="abas-evento">
           <NavLink 
-            to={`/organizador/meus-eventos/${idServico}/informacoes-meus-eventos`} 
-            className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)}
+            to={`/prestador/meus-servicos/${idServico}/informacoes-meus-servicos`} 
+            className={({isActive}: any) => (`aba-servico ${isActive ? "aba-servico--ativo" : ''}`)}
           >
             Informações Gerais
-          </NavLink>
-          <NavLink 
-            to={`/organizador/meus-eventos/${idServico}/convidados`} 
-            className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)} 
-          >
-            Convidados
-          </NavLink>
-          <NavLink 
-            to={`/organizador/meus-eventos/${idServico}/convites`} 
-            className={({isActive}: any) => (`aba-evento ${isActive ? "aba-evento--ativo" : ''}`)} 
-          >
-            Convites
           </NavLink>
         </div>
       </div>
       {
         abrirEdicaoServico ? 
-          <Modal funcaoSalvar={editarServico} titulo='Editar evento' enviaModal={AbrirModalEditarServico}>
+          <Modal funcaoSalvar={editarServico} titulo='Editar serviço' enviaModal={AbrirModalEditarServico}>
             <div className='modal-editar-evento'>
               <div className='campos-editar-evento'>
                 <div className='nome-categoria-evento'>
@@ -213,7 +234,7 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
                       <Input 
                         value={servicoEditado?.nomeServico|| ""}  
                         onChange={(e:any) => setServicoEditado((prev:any) =>
-                          prev ? { ...prev, nomeEvento: e.target.value } : null
+                           prev ? { ...prev, nomeServico: e.target.value } : null
                         )} 
                         type='text' 
                         dica='Digite um nome para o servico'
@@ -233,7 +254,7 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
                       >
                         {tipoServicoDisponiveis.map(tipo => <option value={tipo.idTipoServico}>{tipo.descricaoTipoServico}</option>)}
                       </Select>
-                      {/* {erros.tipoEvento && <ErroCampoForm mensagem={erros.tipoEvento}/>} */}
+                      {erros.idTipoServico && <ErroCampoForm mensagem={erros.idTipoServico}/>}
                     </div>
                   </div>
                 </div>
@@ -243,11 +264,12 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
                     <Input 
                       value={servicoEditado?.descricaoServico || ""}  
                       onChange={(e:any) => setServicoEditado((prev:any) =>
-                        prev ? { ...prev, descricaoEvento: e.target.value } : null
+                      prev ? { ...prev, descricaoServico: e.target.value } : null
                       )} 
                       type='text' 
                       dica='Digite uma descrição para o seu servico...'
                     />
+                    {erros.descricaoServico && <ErroCampoForm mensagem={erros.descricaoServico}/>} 
                   </div>
                 </div>
                 {/* <div className='imagem-evento'>
@@ -299,20 +321,24 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
                 </div> */}
               </div>
               <div className='novos-dados-eventos'>
-                <div className='texto-input-data'>
-                  <div className='textos'>Unidade de cobrança</div>
-                  <div className='input-data-evento'>
-                    <Input 
-                      value={servicoEditado?.dataEvento || ""}  
-                      onChange={(e:any) => setServicoEditado((prev:any) =>
-                        prev ? { ...prev, unidadeCobranca: e.target.value } : null
-                      )} 
-                      dica=''
-                    />
-                    {/* {erros.dataEvento && <ErroCampoForm mensagem={erros.dataEvento}/>} */}
-                  </div>
-                </div>
                 <div className='texto-input-hora-inicio-evento'>
+                  <div className='texto-input-data'>
+                    <div className='textos'>Unidade de cobrança</div>
+                    <div className='input-tamanho'>
+                      <Select 
+                        textoPadrao = 'Selecione a Unidade'
+                        esconderValorPadrao
+                        value={servicoEditado?.unidadeCobranca || ""}
+                        onChange={(e:any) => setServicoEditado((prev:any) =>
+                          prev ? { ...prev, unidadeCobranca: e.target.value } : null
+                        )}>
+                        {unidadeValor.map((unidade)=>{
+                        return <option id={unidade.id.toString()} value={unidade.id}>{unidade.nome}</option>
+                        })}
+                      </Select>
+                      {erros.unidadeCobranca && <ErroCampoForm mensagem={erros.unidadeCobranca}/>}
+                    </div>
+                  </div>
                   <div className='horario-inicio-fim-evento'>
                     <div className='textos'>Valor do serviço por unidade</div>
                     <div className='input-tamanho'>
@@ -323,9 +349,11 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
                         )} 
                         dica='R$'
                       />
-                      {/* {erros.horaInicio && <ErroCampoForm mensagem={erros.horaInicio}/>} */}
+                      {erros.valorServico && <ErroCampoForm mensagem={erros.valorServico}/>}
                     </div>
                   </div>
+                </div>
+                <div className='texto-input-hora-inicio-evento'>
                   <div className='horario-inicio-fim-evento'>
                     <div className='textos'>Quantidade mínima</div>
                     <div className='input-tamanho'>
@@ -334,24 +362,24 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
                         onChange={(e:any) => setServicoEditado((prev:any) =>
                           prev ? { ...prev, qntMinima: e.target.value } : null
                         )} 
-                        dica='--:--'
+                        dica='1'
                       />
-                      {/* {erros.horaFim && <ErroCampoForm mensagem={erros.horaFim}/>} */}
+                      {erros.qntMinima && <ErroCampoForm mensagem={erros.qntMinima}/>}
                     </div>
                   </div>
-                </div>
-                <div className='texto-input-cep-endereco'>
-                  <div className='input-texto-cep-numero'>
-                    <div className='textos'>Quantidade máxima</div>
-                    <div className='input-tamanho-cep-numero'>
-                        <Input 
-                            value={servicoEditado?.qntMaxima || ""}
-                            onChange={(e:any) => setServicoEditado((prev:any) =>
-                            prev ? { ...prev, qntMaxima: e.target.value } : null
-                        )} 
-                        dica='--:--'
-                      />
-                      {/* {erros.cepLocal && <ErroCampoForm mensagem={erros.cepLocal}/>} */}
+                  <div className='texto-input-cep-endereco'>
+                    <div className='input-texto-cep-numero'>
+                      <div className='textos'>Quantidade máxima</div>
+                      <div className='input-tamanho'>
+                          <Input 
+                              value={servicoEditado?.qntMaxima || ""}
+                              onChange={(e:any) => setServicoEditado((prev:any) =>
+                              prev ? { ...prev, qntMaxima: e.target.value } : null
+                          )} 
+                          dica='10'
+                        />
+                        {erros.qntMaxima && <ErroCampoForm mensagem={erros.qntMaxima}/>}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -364,7 +392,7 @@ const CabecalhoServico = ({idServico, servico, preViewEv, setServico, idUsuario}
         abrirApagarServico ?
           <Modal titulo='Apagar Serviço' textoBotao="Apagar" funcaoSalvar={ApagarServico} enviaModal={AbrirModalApagarServico}>
             <div className='modal-apagar-evento'>
-              <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o servico "{servico.nomeServico}"?</div>
+              <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o serviço "{servico.nomeServico}"?</div>
             </div>
           </Modal>
         : ''
