@@ -1,7 +1,7 @@
 import './Select.css'
 import { useState } from 'react'
 
-const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, name, children,textoPadrao = 'Selecione uma opção',esconderValorPadrao = true, ...props}:any) => {
+const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, name, children,textoPadrao = 'Selecione uma opção',esconderValorPadrao = true, cor='var(--purple-700)', ...props}:any) => {
 
   const [focado, setFocado] = useState(false);
 
@@ -13,6 +13,7 @@ const Select = ({cabecalho=false,cabecalhoTexto='cabeçalho:', funcao,valor, nam
         }
         <div className='select__container'>
             <select 
+            style={{'--cor-principal': cor} as React.CSSProperties}
             onFocus={() => setFocado(true)}
             onBlur={() => setFocado(false)}
             onChange={funcao} 

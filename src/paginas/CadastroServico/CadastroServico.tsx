@@ -112,12 +112,14 @@ const CadastroServico = () => {
         tipo='text'
         dica='digite um nome para o serviço'
         valor={nomeServico}
+        cor='#F3C623'
         onChange={(e: ChangeEvent<HTMLInputElement>)=>{setNomeServico(e.target.value)}}
         />,
         <Select
         cabecalho
         cabecalhoTexto='Categoria do serviço'
         textoPadrao='Selecione uma categoria'
+        cor='#F3C623'
         esconderValorPadrao
         valor={tipoServico}
         required
@@ -131,6 +133,7 @@ const CadastroServico = () => {
         titulo='Descrição do Serviço'
         placeholder='Descreva o serviço que você deseja criar'
         name='descricao-servico'
+        cor='#F3C623'
         valor={descricaoServico}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>)=>{setDescricaoServico(e.target.value)}}
         maximo={4000}
@@ -173,6 +176,7 @@ const CadastroServico = () => {
         cabecalho
         cabecalhoTexto = 'Unidade de cobrança'
         textoPadrao = 'Selecione a Unidade'
+        cor='#F3C623'
         esconderValorPadrao
         required
         value={unidadeCobranca}
@@ -199,6 +203,7 @@ const CadastroServico = () => {
         cabecalho
         cabecalhoTexto='Valor do Serviço'
         dica='Digite o valor do Serviço'
+        cor='#F3C623'
         />,
         <PatternFormat
         format='#########'
@@ -208,6 +213,7 @@ const CadastroServico = () => {
         cabecalho
         cabecalhoTexto='Quantidade mínima'
         dica='Digite a quantidade mínima do Serviço'
+        cor='#F3C623'
         />,
           <PatternFormat
         format='#########'
@@ -217,6 +223,7 @@ const CadastroServico = () => {
         cabecalho
         cabecalhoTexto='Quantidade Máxima'
         dica='Digite a quantidade máxima do Serviço'
+        cor='#F3C623'
         />,
          <PatternFormat
         format='#########'
@@ -226,10 +233,12 @@ const CadastroServico = () => {
         cabecalho
         cabecalhoTexto='Quantidade'
         dica='Digite a quantidade do Serviço'
+        cor='#F3C623'
         />,
           <CheckBox
           ativado={qntFixa}
           texto='Este serviço tem quantidade fixa'
+          cor='#F3C623'
           funcao={()=>{
             setQntFixa(!qntFixa)
             if(!qntFixa){
@@ -266,6 +275,7 @@ const CadastroServico = () => {
           <Botao
             texto='Selecionar Imagens'
             funcao={()=>{inputImagemRef.current?.click()}}
+            cor='#F3C623'
           />
         </div>
         {erro.imagemObrigatoria.status ? <ErroCampoForm mensagem={erro.imagemObrigatoria.mensagem} /> : ''}
@@ -371,7 +381,7 @@ const CadastroServico = () => {
       <h1>Criar serviço</h1>
       <form onSubmit={onSubimit} className="cadastro-servico__formulario" encType="multipart/form-data">
         <IndicadorDePassos qntPassos = {qntPassos} passoAtual={passoAtual+1} cor = '#F3C623'/>
-        <Instrucao texto={instrucao[passoAtual].texto} titulo={instrucao[passoAtual].titulo}/>
+        <Instrucao texto={instrucao[passoAtual].texto} titulo={instrucao[passoAtual].titulo} cor='#FFB22C'/>
         <div>
           {etapa[passoAtual]}
         </div>
@@ -381,12 +391,14 @@ const CadastroServico = () => {
             <Botao 
             texto='Anterior'
             funcao={()=>{setPassoAtual(passoAtual-1)}}
+            cor='#F3C623'
             />
           </div> : ''}
           <div>
             <Botao 
             texto={passoAtual+1 < qntPassos ?'Próximo':'Cadastrar'}
             submit
+            cor='#F3C623'
             />
           </div>
         </div>

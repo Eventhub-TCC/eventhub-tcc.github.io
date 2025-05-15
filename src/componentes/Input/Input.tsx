@@ -1,13 +1,15 @@
 import './Input.css'
 
-const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor, ...props}: any) => {
+const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor,cor = 'var(--purple-700)', ...props}: any) => {
   return (
     <div>
       <div className={cabecalho === true? 'd-block' : 'd-none'}>
         <label className='label-input' htmlFor={name}>{cabecalhoTexto}</label>
       </div>
       <div className="container-input">
-      <input type={tipo}
+      <input 
+        style={{'--cor-principal': cor} as React.CSSProperties}
+        type={tipo}
         className={
           `input ${!icone && posicaoIcone === 'sem-icone' ? 
             'input-padding-sem-icone' 

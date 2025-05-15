@@ -10,7 +10,7 @@
 }
 
 .textarea:focus{
-    outline: solid var(--purple-700) 2px;
+    outline: solid var(--cor-principal) 2px;
     border-color: transparent;
 }
 
