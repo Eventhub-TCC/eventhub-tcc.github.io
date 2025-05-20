@@ -224,7 +224,7 @@ const unidadeValor: Unidade[] = [
       </div>
       {
         abrirEdicaoServico ? 
-          <Modal funcaoSalvar={editarServico} titulo='Editar serviço' enviaModal={AbrirModalEditarServico}>
+          <Modal funcaoSalvar={editarServico} titulo='Editar serviço' enviaModal={AbrirModalEditarServico} prestador>
             <div className='modal-editar-evento'>
               <div className='campos-editar-evento'>
                 <div className='nome-categoria-evento'>
@@ -232,6 +232,7 @@ const unidadeValor: Unidade[] = [
                     <div className='textos'>Nome do serviço</div>
                     <div className="input-tamanho">
                       <Input 
+                        cor='var(--yellow-700)'
                         value={servicoEditado?.nomeServico|| ""}  
                         onChange={(e:any) => setServicoEditado((prev:any) =>
                            prev ? { ...prev, nomeServico: e.target.value } : null
@@ -248,6 +249,7 @@ const unidadeValor: Unidade[] = [
                         cabecalho 
                         cabecalhoTexto='Tipo de Servico'  
                         textoPadrao='Selecione o tipo de servico'
+                        cor='var(--yellow-700)'
                         valor={servicoEditado?.tipoServico}
                         funcao={(e: ChangeEvent<HTMLSelectElement>) => setServicoEditado((prev:any) => prev ? { ...prev, tipoServico: e.target.value } : null)}
                         required={true}
@@ -262,6 +264,7 @@ const unidadeValor: Unidade[] = [
                   <div>Descrição do servico(Opcional)</div>
                   <div className='input-tamanho-descricao'>
                     <Input 
+                      cor='var(--yellow-700)'
                       value={servicoEditado?.descricaoServico || ""}  
                       onChange={(e:any) => setServicoEditado((prev:any) =>
                       prev ? { ...prev, descricaoServico: e.target.value } : null
@@ -328,6 +331,7 @@ const unidadeValor: Unidade[] = [
                       <Select 
                         textoPadrao = 'Selecione a Unidade'
                         esconderValorPadrao
+                        cor='var(--yellow-700)'
                         value={servicoEditado?.unidadeCobranca || ""}
                         onChange={(e:any) => setServicoEditado((prev:any) =>
                           prev ? { ...prev, unidadeCobranca: e.target.value } : null
@@ -343,6 +347,7 @@ const unidadeValor: Unidade[] = [
                     <div className='textos'>Valor do serviço por unidade</div>
                     <div className='input-tamanho'>
                       <Input 
+                        cor='var(--yellow-700)'
                         value={servicoEditado?.valorServico || ""}  
                         onChange={(e:any) => setServicoEditado((prev:any) =>
                           prev ? { ...prev, valorServico: e.target.value } : null
@@ -358,6 +363,7 @@ const unidadeValor: Unidade[] = [
                     <div className='textos'>Quantidade mínima</div>
                     <div className='input-tamanho'>
                       <Input 
+                        cor='var(--yellow-700)'
                         value={servicoEditado?.qntMinima || ""}
                         onChange={(e:any) => setServicoEditado((prev:any) =>
                           prev ? { ...prev, qntMinima: e.target.value } : null
@@ -372,6 +378,7 @@ const unidadeValor: Unidade[] = [
                       <div className='textos'>Quantidade máxima</div>
                       <div className='input-tamanho'>
                           <Input 
+                              cor='var(--yellow-700)'
                               value={servicoEditado?.qntMaxima || ""}
                               onChange={(e:any) => setServicoEditado((prev:any) =>
                               prev ? { ...prev, qntMaxima: e.target.value } : null
@@ -390,7 +397,7 @@ const unidadeValor: Unidade[] = [
       }
       { 
         abrirApagarServico ?
-          <Modal titulo='Apagar Serviço' textoBotao="Apagar" funcaoSalvar={ApagarServico} enviaModal={AbrirModalApagarServico}>
+          <Modal titulo='Apagar Serviço' textoBotao="Apagar" funcaoSalvar={ApagarServico} enviaModal={AbrirModalApagarServico} prestador>
             <div className='modal-apagar-evento'>
               <div className='texto-apagar-evento'>Você tem certeza que deseja apagar o serviço "{servico.nomeServico}"?</div>
             </div>

@@ -1,5 +1,7 @@
 .cadastro-servico{
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 .cadastro-servico__formulario {
@@ -78,6 +80,8 @@
 }
 
 .cadastro-servico__etapa-imagem-com-imagem{
+    display: flex;
+    gap: 23px;
     width: 100%;
 }
 
@@ -106,6 +110,13 @@
 .cadastro-servico__adicionar-imagem-texto{
     font-size: 20px;
     color: #F3C623;
+}
+.cadastro-servico__alerta{
+    position: fixed;
+    top: 10%;
+    right: 32px;
+    width: 560px;
+    z-index: 1;
 }
 
 @media screen and (max-width: 1024px){

@@ -38,7 +38,7 @@
     width: 100%;
     font-size: 18px;
     font-weight: 600;
-    color: var(--purple-800);
+    color: var(--cor-secundaria);
 }
 
 .modal__container-botoes{

@@ -284,10 +284,10 @@ const CadastroServico = () => {
         {erro.imagemObrigatoria.status ? <ErroCampoForm mensagem={erro.imagemObrigatoria.mensagem} /> : ''}
     </div>
     :
-    <div className='d-flex row g-3 justify-content-center cadastro-servico__etapa-imagem-com-imagem'>
+    <div className='d-flex row g-4 justify-content-center cadastro-servico__etapa-imagem-com-imagem'>
        {
        imagemPreview.map((preView,index)=>{
-        return <div className="col-6 col-lg-4 cadastro-servico__container-imagem">
+        return <div className="col-12 col-sm-6 cadastro-servico__container-imagem">
           <img key={preView} src={preView} alt="imagem do serviço" className="cadastro-servico__imagem-preview"/>
           <button className='cadastro-servico__remover-image' type="button" onClick={()=>{
             inputImagemRef.current!.value = ''
@@ -303,7 +303,7 @@ const CadastroServico = () => {
       <button 
       type="button"
       onClick={()=>{inputImagemRef.current?.click()}}
-      className="col-6 col-lg-4 cadastro-servico__adicionar-imagem">
+      className="col-12 col-sm-6 cadastro-servico__adicionar-imagem">
         <div className="cadastro-servico__adicionar-imagem-info">
           <div><i className="fa-solid fa-plus cadastro-servico__adicionar-imagem-icone"></i></div>
           <div>Adicionar mais imagens</div>
@@ -382,7 +382,7 @@ const CadastroServico = () => {
 
   return (
     <div className="cadastro-servico">
-      <h1>Criar serviço</h1>
+      <h1 className="layout-titulo">Criar serviço</h1>
       <form onSubmit={onSubimit} className="cadastro-servico__formulario" encType="multipart/form-data">
         <IndicadorDePassos qntPassos = {qntPassos} passoAtual={passoAtual+1} cor = '#F3C623'/>
         <Instrucao texto={instrucao[passoAtual].texto} titulo={instrucao[passoAtual].titulo} cor='#FFB22C'/>

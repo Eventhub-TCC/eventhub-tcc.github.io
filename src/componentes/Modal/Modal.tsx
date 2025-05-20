@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import './Modal.css'
 
 import Botao from '../Botao/Botao'
 
-export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao = 'Salvar', children}:any) => {
+export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao = 'Salvar', prestador = false,children}:any) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
+
+    const corSecundaria = prestador ? 'var(--yellow-800)' : 'var(--purple-800)'
 
     useEffect(() => {
         const dialog = dialogRef.current;
@@ -33,7 +35,7 @@ export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao
     },[])
 
   return (
-    <dialog ref={dialogRef}  className='modall'>
+    <dialog ref={dialogRef}  className='modall' style={{'--cor-secundaria':corSecundaria} as React.CSSProperties} >
         <div className='modal__cabecalho'>
            {titulo? <h1 className='modal__titulo'>{titulo}</h1>:''}
             <button onClick={fecharModal} className='modal__botao-fechar'>
@@ -47,10 +49,10 @@ export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao
             botoes && 
             <div className='modal__container-botoes'>
                 <div className='modal__container-botao'>
-                    <Botao funcao={fecharModal} texto='Cancelar' tamanho = 'min' className='modal__botao-cancelar' vazado/>
+                    <Botao funcao={fecharModal} texto='Cancelar' tamanho = 'min' className='modal__botao-cancelar' vazado cor={prestador?'var(--yellow-700':'var(--purple-700'}/>
                 </div>
                 <div className='modal__container-botao'>
-                    <Botao funcao={funcaoSalvar} texto={textoBotao} tamanho = 'min' className='modal__botao-comfirmar'/>
+                    <Botao funcao={funcaoSalvar} texto={textoBotao} tamanho = 'min' className='modal__botao-comfirmar' cor={prestador?'var(--yellow-700':'var(--purple-700)'}/>
                 </div>
             </div>
         }
