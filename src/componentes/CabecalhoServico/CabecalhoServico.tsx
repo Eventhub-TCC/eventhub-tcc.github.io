@@ -400,7 +400,7 @@ const unidadeValor: Unidade[] = [
       {
         editadoOk &&
         <div className='editar-evento__alerta'>
-          <Alerta texto="Evento editado com sucesso!" status="sucesso" ativado={true}/>
+          <Alerta texto="Serviço editado com sucesso!" status="sucesso" ativado={true}/>
         </div>
       }
     </div>

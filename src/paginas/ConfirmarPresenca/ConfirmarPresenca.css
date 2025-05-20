@@ -11,9 +11,18 @@
     background-repeat: repeat;
     background-size: auto;
     background-position: top left;
-
     width: 100%;
     min-height: 220vh;
+    position: relative;
+}
+
+.imagem-fundo-utilizado{
+    background-image: url('../../assets/fundo_convite.png');
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top left;
+    width: 100%;
+    min-height: 110vh;
     position: relative;
 }
 
@@ -55,6 +64,17 @@
     top: 200px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.convite-utilizado{
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    position: absolute;
+    top: 250px;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
 }
 
 .informacoes-evento-convite{

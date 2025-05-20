@@ -113,12 +113,28 @@ const MeusEventos = () => {
     }
   }, [categoriaSelecionada]);
 
+  function BuscaNomeEvento(padrao: string, texto: string): boolean {
+  padrao = padrao.toLowerCase();
+  texto = texto.toLowerCase();
+
+  let i = 0;
+  for (let char of texto) {
+    if (char === padrao[i]) {
+      i++;
+    }
+    if (i === padrao.length) {
+      return true;
+    }
+  }
+  return false;
+}
+
   useEffect(() => {
     const buscaValida = buscaEvento.length > 1;
 
     const resultado = eventos.filter((evento) => {
       const correspondeBusca = buscaValida
-        ? evento.nomeEvento.toLowerCase().includes(buscaEvento.toLowerCase())
+        ? BuscaNomeEvento(buscaEvento, evento.nomeEvento)
         : true;
 
       const correspondeFiltros =

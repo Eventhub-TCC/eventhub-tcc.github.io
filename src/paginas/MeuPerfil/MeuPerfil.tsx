@@ -84,6 +84,7 @@ const [modalCompletarCadastroDados, setModalCompletarCadastroDados] = useState(f
     organizador: false
   });
 const [carregando, setCarregando] = useState(true);
+const [modalExcluirFoto, setModalExcluirFoto] = useState(false);
 
 const transicao = {
   initial: { opacity: 0, y: -10 },
@@ -425,13 +426,7 @@ return (
                     <Botao 
                       tamanho='med' 
                       texto='Remover foto' 
-                      funcao={()=>{
-                      URL.revokeObjectURL(preView)
-                      setPreview('')
-                      if(inputImagemref.current)
-                        inputImagemref.current.value = ""
-                      alterarImagemPerfil(null)
-                      }}
+                      funcao={()=>{setModalExcluirFoto(true)}}
                     />
                   </div>
                 </div>
@@ -558,6 +553,17 @@ return (
             </div>
           </div>
         </div>
+        {
+          modalExcluirFoto ?
+          <Modal titulo="Excluir foto" enviaModal={setModalExcluirFoto} textoBotao="Excluir" funcaoSalvar={()=>{
+                      URL.revokeObjectURL(preView)
+                      setPreview('')
+                      if(inputImagemref.current)
+                        inputImagemref.current.value = ""
+                      alterarImagemPerfil(null)
+                      }}> Tem certeza que deseja excluir sua foto? </Modal>
+          : ''
+        }
 
         {modoEdicao ? 
           (
@@ -867,13 +873,7 @@ return (
                     <Botao 
                       tamanho='med' 
                       texto='Remover foto' 
-                      funcao={()=>{
-                      URL.revokeObjectURL(preView)
-                      setPreview('')
-                      if(inputImagemref.current)
-                        inputImagemref.current.value = ""
-                      alterarImagemPerfil(null)
-                      }}
+                      funcao={()=>{setModalExcluirFoto(true)}}
                       cor='var(--yellow-700)'
                     />
                   </div>
@@ -1123,6 +1123,17 @@ return (
                 </div>
               </motion.div>  
             )}
+            {
+              modalExcluirFoto ?
+              <Modal titulo="Excluir foto" enviaModal={setModalExcluirFoto} textoBotao="Excluir" funcaoSalvar={()=>{
+                          URL.revokeObjectURL(preView)
+                          setPreview('')
+                          if(inputImagemref.current)
+                            inputImagemref.current.value = ""
+                          alterarImagemPerfil(null)
+                          }}> Tem certeza que deseja excluir sua foto? </Modal>
+              : ''
+            }
                 {
               modalCompletarCadastro ?
               <Modal titulo='Completar Cadastro' enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
