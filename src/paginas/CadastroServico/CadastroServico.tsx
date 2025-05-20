@@ -46,7 +46,9 @@ const CadastroServico = () => {
   })
 
   const [aviso, setAviso] = useState<Avisos>({
-    limiteImagem:{status:false, mensagem:'Limite de 6 imagens atingido'}
+    limiteImagem:{status:false, mensagem:'Limite de 6 imagens atingido'},
+    valorServico:{status:false, mensagem:'Valor do serviço deve ser maior que 0'},
+    qntMinima:{status:false, mensagem:'Quantidade mínima deve ser maior que 0'}
   })
 
   const [qntFixa, setQntFixa] = useState(false)
@@ -376,6 +378,14 @@ const CadastroServico = () => {
       setPassoAtual(passoAtual+1)
     }
     else{
+      if(valorServico <= 0){
+        setAviso(prevState=>({...prevState, valorServico:{...prevState.valorServico,status:true}}))
+        return
+      }
+      if(qntMinima <= 0){
+        setAviso(prevState=>({...prevState, qntMinima:{...prevState.qntMinima,status:true}}))
+        return
+      }
       CadastroServico()
     }
   }
@@ -408,7 +418,8 @@ const CadastroServico = () => {
         </div>
       </form>
       { aviso.limiteImagem.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.limiteImagem.status} status='aviso' texto={aviso.limiteImagem.mensagem}/> </div>: ''}
-      
+      { aviso.valorServico.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.valorServico.status} status='aviso' texto={aviso.valorServico.mensagem}/> </div>: ''}
+      { aviso.qntMinima.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.qntMinima.status} status='aviso' texto={aviso.qntMinima.mensagem}/> </div>: ''}
     </div>
   )
 }
