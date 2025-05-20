@@ -265,6 +265,15 @@
     width: 719px;
 }
 
+.convite-usado__alerta{
+    position: fixed;
+    margin-top: 16px;
+    top: 5%;
+    right: 32px;
+    width: 560px;
+    z-index: 1;
+}
+
 /* 
 
 

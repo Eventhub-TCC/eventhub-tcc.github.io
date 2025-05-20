@@ -8,6 +8,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { PatternFormat } from 'react-number-format';
 import api from '../../axios';
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario';
+import Alerta from '../../componentes/Alerta/Alerta';
 
 const ConfirmarPresenca = () => {
     const { idConvite } = useParams();
@@ -31,6 +32,7 @@ const ConfirmarPresenca = () => {
     const [cidadeLocal, setCidadeLocal] = useState("")
     const [ufLocal, setUfLocal] = useState("")
     const [conviteUtilizado, setConviteUtilizado] = useState(false)
+    const [usadoAgora, setUsadoAgora] = useState(false)
 
 
     useEffect(() => {
@@ -93,7 +95,11 @@ const ConfirmarPresenca = () => {
             rg,
             dataNascimento,
           });
-          alert("Presença confirmada! Aguarde aprovação.");
+          setUsadoAgora(true);
+            setTimeout(() => {
+                setUsadoAgora(false);
+            }
+            , 10000)
         } catch (err) {
           console.error(err);
           alert("Erro ao confirmar presença.");
@@ -217,6 +223,12 @@ const ConfirmarPresenca = () => {
                 </div>
             </div>
         </div>
+        }
+        {
+            usadoAgora &&
+                <div className='convite-usado__alerta'>
+                  <Alerta texto="Presença confirmada! Aguarde aprovação do organizador!" status="sucesso" ativado={true}/>
+                </div>
         }
     </div>
   )
