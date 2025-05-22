@@ -29,7 +29,6 @@ interface Evento{
 
   export interface Convite {
     idConvite: string;
-    linkConvite: string;
     dataConvite: string;
     status: 'Utilizado' | 'Pendente';
   }
@@ -216,7 +215,7 @@ const Convites = () => {
                             <tbody>
                                 {convites.map(convite => (
                                 <tr key={convite.idConvite}>
-                                    <td>{convite.linkConvite}</td>
+                                    <td><a href={`${window.location.origin}/confirmar-presenca/${convite.idConvite}`} target="_blank" className="link-convite">{convite.idConvite}</a></td>
                                     <td>{new Date(convite.dataConvite).toLocaleDateString()}</td>
                                     <td>
                                     <span className={`status-convidado ${convite.status.toLowerCase()}`}>

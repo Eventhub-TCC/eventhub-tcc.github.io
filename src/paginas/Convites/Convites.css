@@ -100,6 +100,16 @@
     font-size: 0.9rem;
     font-weight: 500;
   }
+
+  .link-convite{
+    color: var(--purple-700);
+    font-weight: 400;
+    transition: text-decoration 0.3s ease-in-out;
+  }
+
+  .link-convite:hover{
+    text-decoration-color: transparent;
+  }
   
   .status-convidado.confirmado {
     color: #0F5132;
