@@ -61,6 +61,7 @@ const MeuPerfil = () => {
   const [ confirmarSenhaOculta, setConfirmarSenhaOculta ] = useState(true);
   const [excluir, setExcluir] = useState<boolean>(false);
   const [cpfOriginal, setCpfOriginal] = useState<string>('');
+  const [cnpjOriginal, setCnpjOriginal] = useState<string>('');
   const [ erros, setErros ] = useState<Erro[]>([
   {ativo: false, tipo: 'confirmar-senha', mensagem: 'A confirmação da senha não confere'},
   {ativo: false, tipo: 'cpf', mensagem: 'CPF inválido'},
@@ -107,6 +108,7 @@ useEffect(() => {
       setUsuario(response.data);
       setNomeExibido(`${response.data.nomeUsu} ${response.data.sobrenomeUsu}`);
       setCpfOriginal(response.data.cpfUsu);
+      setCnpjOriginal(response.data.cnpjEmpresa);
       setPreview(isOrganizador ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '' : '');
       if (tipo.find((value) => value === 'prestador')) {
         setTipoUsuario(prestador => ({ ...prestador, prestador: true }));
@@ -230,6 +232,9 @@ const validarCampos = async (): Promise<boolean> => {
       case 'CNPJ':
         if (!usuario?.cnpjEmpresa?.trim()) {
           return { ...erro, ativo: true };
+        }
+        if (usuario.cnpjEmpresa === cnpjOriginal) {
+          return { ...erro, ativo: false };
         }
         try {
           const response = await api.post(`/users/validate-cnpj`, {
