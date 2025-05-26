@@ -77,6 +77,7 @@ const InformacoesServico = () => {
                     preViewSv={preView}
                     setServico={setServico}
                     idUsuario={idUsuario}
+                    setPreviewSv={setPreview}
                 />
             </div>
             <div className='informacoes-servico__container'>
