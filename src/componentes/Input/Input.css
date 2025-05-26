@@ -30,6 +30,14 @@
     min-height: 2.75rem;
 }
 
+.input-esquerda{
+    text-align: left;
+}
+
+.input-centro{
+    text-align: center;
+}
+
 .input-padding-sem-icone{
     padding: 9px 16px;
 }

@@ -1,6 +1,6 @@
 import './Input.css'
 
-const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor,cor = 'var(--purple-700)', ...props}: any) => {
+const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, obrigatorio = true, onChange, onBlur, icone = null, posicaoIcone = 'sem-icone', funcaoIcone = null, name, min, max, tamanhoMin, tamanhoMax, autoComplete, valor,cor = 'var(--purple-700)', alinharTexto = 'left', ...props}: any) => {
   return (
     <div>
       <div className={cabecalho === true? 'd-block' : 'd-none'}>
@@ -11,7 +11,7 @@ const Input = ({cabecalho = false, cabecalhoTexto = '' , tipo = 'text', dica, ob
         style={{'--cor-principal': cor} as React.CSSProperties}
         type={tipo}
         className={
-          `input ${!icone && posicaoIcone === 'sem-icone' ? 
+          `input ${alinharTexto === 'center' ? 'input-centro' : 'input-esquerda'} ${!icone && posicaoIcone === 'sem-icone' ? 
             'input-padding-sem-icone' 
           : (icone && posicaoIcone === 'sem-icone') || posicaoIcone === 'direita' ? 
             'input-padding-direita' : 'input-padding-esquerda'}`

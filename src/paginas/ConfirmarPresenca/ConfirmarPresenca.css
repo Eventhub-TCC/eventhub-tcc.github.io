@@ -83,6 +83,8 @@
     width: 329px;
     flex-direction: column;
     gap: 8px;
+    width: 100%;
+    text-align: justify;
 }
 
 .mensagem{
@@ -91,7 +93,7 @@
     font-weight: 400;
 }
 
-.titulo{
+.confirmar-presenca__titulo{
     color: #000;
     font-size: 32px;
     font-weight: 300;
@@ -101,6 +103,7 @@
     color: #575555;
     font-size: 18px;
     font-weight: 300;
+    margin: 0;
 }
 
 .dados-evento{
@@ -119,6 +122,14 @@
     color: var(--purple-900);
     font-size: 14px;
     font-weight: 500;
+    margin: 0;
+}
+
+.confirmar-presenca__form{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 48px;
 }
 
 .campos-dados-convidado{
@@ -139,6 +150,12 @@
     color: #000;
     font-size: 24px;
     font-weight: 300;
+    margin: 0;
+}
+
+.subtitulo-dados{
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .instrucao-dados{
@@ -146,9 +163,10 @@
     font-size: 16px;
     font-weight: 300;
     text-align: justify;
+    margin: 0;
 }
 
-.formulario-dados-convidado{
+.confirmar-presenca__campos{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -172,6 +190,64 @@
     z-index: 2;
 }
 
+.confirmar-presenca__acompanhantes{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confirmar-presenca__acompanhantes-texto{
+    color: black;
+    font-weight: 300;
+}
+
+.confirmar-presenca__acompanhantes-container-escolha{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.confirmar-presenca__acompanhantes-botao{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--purple-700);
+    padding: 0;
+}
+
+.confirmar-presenca__acompanhantes-botao:hover{
+    background-color: var(--purple-800);
+}
+
+.confirmar-presenca__acompanhantes-botao:active{
+    background-color: var(--purple-900);
+}
+
+.confirmar-presenca__acompanhantes-botao:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.confirmar-presenca__acompanhantes-input{
+    width: 60px;
+}
+
+.confirmar-presenca__botao-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmar-presenca__botao-enviar{
+    min-width: 200px;
+}
+
 @media screen and (max-width: 768px){
     .logo-eventhub{
         max-width: 190px;
@@ -179,6 +255,13 @@
 
     .container-logo-eventhub{
         padding: 24px 0;
+    }
+}
+
+@media screen and (max-width: 700px){
+    .confirmar-presenca__botao-enviar{
+        min-width: 100%;
+        padding: 0 1.5rem;
     }
 }
 
@@ -193,5 +276,33 @@
 
     .logo-eventhub{
         max-width: 170px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .confirmar-presenca__dados-texto,
+    .mensagem{
+        font-size: 12px;
+    }
+
+    .caixa-texto-evento{
+        font-size: 16px;
+    }
+
+    .instrucao-dados{
+        font-size: 14px;
+    }
+
+    .confirmar-presenca__titulo{
+        font-size: 28px;
+    }
+
+    .titulo-dados{
+        font-size: 20px;
+    }
+
+    .confirmar-presenca__acompanhantes{
+        flex-direction: column;
+        gap: 8px;
     }
 }
