@@ -39,12 +39,21 @@
     font-size: 18px;
     font-weight: 600;
     color: var(--cor-secundaria);
+    margin: 0;
 }
 
 .modal__container-botoes{
     display: flex;
     gap: 16px;
     justify-content: flex-end;
+}
+
+.modal__container-botoes--direita{
+    justify-content: flex-end;
+}
+
+.modal__container-botoes--centro{
+    justify-content: center;
 }
 
 .modal__container-botao{

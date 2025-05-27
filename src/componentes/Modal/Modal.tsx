@@ -3,7 +3,7 @@ import './Modal.css'
 
 import Botao from '../Botao/Botao'
 
-export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao = 'Salvar', prestador = false,children}:any) => {
+export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao = 'Salvar', prestador = false, centralizarBotoes = false, children}:any) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
 
     const corSecundaria = prestador ? 'var(--yellow-800)' : 'var(--purple-800)'
@@ -47,7 +47,7 @@ export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao
         </div>
         {
             botoes && 
-            <div className='modal__container-botoes'>
+            <div className={`modal__container-botoes ${centralizarBotoes ? 'modal__container-botoes--centro' : 'modal__container-botoes--direita'}`}>
                 <div className='modal__container-botao'>
                     <Botao funcao={fecharModal} texto='Cancelar' tamanho = 'min' className='modal__botao-cancelar' vazado cor={prestador?'var(--yellow-700':'var(--purple-700'}/>
                 </div>

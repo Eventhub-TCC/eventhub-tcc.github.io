@@ -8,6 +8,7 @@ import api from '../../axios';
 import Alerta from '../../componentes/Alerta/Alerta';
 import logo from '../../assets/logo_eventhub_fonte_branca.png'
 import Select from '../../componentes/Select/Select';
+import InputQuantidade from '../../componentes/InputQuantidade/InputQuantidade';
 
 interface Acompanhante {
     nome: string;
@@ -290,42 +291,12 @@ const ConfirmarPresenca = () => {
                                                 </p>
                                                 <div className='confirmar-presenca__acompanhantes'>
                                                     <label htmlFor='acompanhantes' className='confirmar-presenca__acompanhantes-texto'>Acompanhantes</label>
-                                                    <div className='confirmar-presenca__acompanhantes-container-escolha'>
-                                                        <button 
-                                                            className='confirmar-presenca__acompanhantes-botao' 
-                                                            type='button' 
-                                                            onClick={() => setQtdAcompanhantes(qtdAcompanhantes > 0 ? qtdAcompanhantes - 1 : 0)}
-                                                            disabled={qtdAcompanhantes <= 0}
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                                <path d="M14.4001 9L3.6001 9" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                                                            </svg>
-                                                        </button>
-                                                        <div className='confirmar-presenca__acompanhantes-input'>
-                                                            <PatternFormat   
-                                                                format={'##'}             
-                                                                value={qtdAcompanhantes}
-                                                                onValueChange={(values) => {
-                                                                    setQtdAcompanhantes(Number(values.value));
-                                                                }}
-                                                                isAllowed={(values) => (Number(values.value) <= qtdMaxAcompanhantes && Number(values.value) >= 0)}
-                                                                customInput={Input}
-                                                                placeholder=''
-                                                                name='acompanhantes'
-                                                                alinharTexto='center'
-                                                            />
-                                                        </div>
-                                                        <button 
-                                                            className='confirmar-presenca__acompanhantes-botao' 
-                                                            type='button' 
-                                                            onClick={() => setQtdAcompanhantes(qtdAcompanhantes < qtdMaxAcompanhantes ? qtdAcompanhantes + 1 : qtdMaxAcompanhantes)}
-                                                            disabled={qtdAcompanhantes >= qtdMaxAcompanhantes}
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                                <path d="M9.0001 3.59961L9.0001 14.3996M14.4001 8.99961L3.6001 8.99961" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
+                                                    <InputQuantidade 
+                                                        qtdMaxima={qtdMaxAcompanhantes} 
+                                                        qtdAtual={qtdAcompanhantes} 
+                                                        setQtdAtual={setQtdAcompanhantes}
+                                                        name='acompanhantes'
+                                                    />
                                                 </div>
                                             </div>
                                             {

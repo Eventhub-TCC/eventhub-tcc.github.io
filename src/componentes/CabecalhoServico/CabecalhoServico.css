@@ -393,6 +393,10 @@
 }
 
 @media screen and (max-width: 470px){
+    .botoes-evento{
+        flex-direction: column;
+    }
+
     .aba-evento{
         font-size: 14px;
     }
@@ -401,10 +405,6 @@
 @media screen and (max-width: 380px){
     .cabecalho-evento__titulo{
         font-size: 1.5rem;
-    }
-
-    .botoes-evento{
-        flex-direction: column;
     }
 
     .abas-evento {

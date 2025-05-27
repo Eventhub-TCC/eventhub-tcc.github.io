@@ -30,8 +30,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     margin: 0;
-  }
-
+}
+  
 .botoes-evento{
     display: flex;
     gap: 16px;
@@ -40,6 +40,34 @@
 .botao-evento{
     width: 100%;
     width: 152px;
+}
+
+.botao-configuracao-container{
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.botao-configuracao-evento{
+    width: 40px;
+    height: 40px;
+    border-radius: 16px;
+    border: none;
+    background-color: var(--purple-700);
+    transition: background-color 0.3s;
+}
+
+.botao-configuracao-evento:hover{
+    background-color: var(--purple-800);
+}
+
+.botao-configuracao-evento:active{
+    background-color: var(--purple-900);
+}
+
+.botao-configuracao-evento i{
+    color: #FFF;
+    font-size: 16px;
 }
 
 .informacoes-evento-data-hora,
@@ -333,9 +361,34 @@
     align-self: stretch;
 }
 
+.modal-configuracoes-evento{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.label-input-acompanhantes{
+    color: black;
+    font-weight: 300;
+}
+
 @media screen and (max-width: 1400px){
     .botoes-evento{
         flex-direction: column;
+        width: 100%;
+    }
+
+    .botoes-evento-container{
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .botao-configuracao-container{
+        margin-top: 0;
+        display: inline-block;
     }
 }
 
@@ -388,6 +441,10 @@
 }
 
 @media screen and (max-width: 470px){
+    .botoes-evento{
+        flex-direction: column;
+    }
+
     .aba-evento{
         font-size: 14px;
     }
@@ -396,10 +453,6 @@
 @media screen and (max-width: 380px){
     .cabecalho-evento__titulo{
         font-size: 1.5rem;
-    }
-
-    .botoes-evento{
-        flex-direction: column;
     }
 
     .abas-evento {

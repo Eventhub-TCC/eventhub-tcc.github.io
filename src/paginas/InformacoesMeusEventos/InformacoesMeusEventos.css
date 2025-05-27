@@ -7,7 +7,7 @@
 
 .informacoes-evento__container{
     display: flex;
-    padding: calc(147px + 32px) 0 32px;
+    padding: calc(158px + 32px) 0 32px;
     flex-direction: column;
     gap: 40px;
 }
@@ -202,12 +202,6 @@
     }
 }
 
-@media screen and (max-width: 1400px){
-    .informacoes-evento__container{
-        padding: calc(158px + 32px) 0 32px;
-    }
-}
-
 @media screen and (max-width: 1200px){
     .informacoes-evento__numero-resumo-convite{
         font-size: 18px;
@@ -313,6 +307,12 @@
     }
 }
 
+@media screen and (max-width: 470px){
+    .informacoes-evento__container{
+        padding: calc(328px + 32px) 0 32px;
+    }
+}
+
 @media screen and (max-width: 400px){
     .informacoes-evento__cronometro-tempo{
         min-width: 152.45px;
@@ -320,11 +320,5 @@
     
     .informacoes-evento__cronometro-texto p{
         font-size: 12px;
-    }
-}
-
-@media screen and (max-width: 380px){
-    .informacoes-evento__container{
-        padding: calc(328px + 32px) 0 32px;
     }
 }

@@ -1,0 +1,36 @@
+.input-quantidade{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.input-quantidade__botao{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--purple-700);
+    padding: 0;
+    user-select: none;
+    transition: background-color 0.3s;
+}
+
+.input-quantidade__botao:hover{
+    background-color: var(--purple-800);
+}
+
+.input-quantidade__botao:active{
+    background-color: var(--purple-900);
+}
+
+.input-quantidade__botao:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.input-quantidade__campo{
+    width: 3.75rem;
+}

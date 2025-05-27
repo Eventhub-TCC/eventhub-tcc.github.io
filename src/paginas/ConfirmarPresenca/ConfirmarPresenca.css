@@ -202,41 +202,6 @@
     font-weight: 300;
 }
 
-.confirmar-presenca__acompanhantes-container-escolha{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.confirmar-presenca__acompanhantes-botao{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background-color: var(--purple-700);
-    padding: 0;
-}
-
-.confirmar-presenca__acompanhantes-botao:hover{
-    background-color: var(--purple-800);
-}
-
-.confirmar-presenca__acompanhantes-botao:active{
-    background-color: var(--purple-900);
-}
-
-.confirmar-presenca__acompanhantes-botao:disabled{
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.confirmar-presenca__acompanhantes-input{
-    width: 60px;
-}
-
 .confirmar-presenca__botao-container{
     width: 100%;
     display: flex;
