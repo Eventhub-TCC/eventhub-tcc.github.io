@@ -69,15 +69,13 @@
   .tabela-convidados {
     width: 100%;
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
   }
 
   .tabela-convidados th{
-    border-top: 1px solid var(--Purple-800, #6A40C3);
-    border-bottom: 1px solid var(--Purple-800, #6A40C3);
-    background: var(--Purple-700, #8C5DFF);
+    border-top: 1px solid var(--purple-800);
+    border-bottom: 1px solid var(--purple-800);
+    background: var(--purple-700);
     color: #FFF;
-    font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
@@ -95,7 +93,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 4px 10px;
+    padding: 5px 14px;
     border-radius: 12px;
     font-size: 0.9rem;
     font-weight: 500;

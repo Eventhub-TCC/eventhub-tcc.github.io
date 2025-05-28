@@ -3,7 +3,7 @@ import './Modal.css'
 
 import Botao from '../Botao/Botao'
 
-export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao = 'Salvar', prestador = false, centralizarBotoes = false, children}:any) => {
+export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, funcaoCancelar = undefined, textoBotao = 'Salvar', prestador = false, centralizarBotoes = false, children}:any) => {
     const dialogRef = useRef<HTMLDialogElement>(null)
 
     const corSecundaria = prestador ? 'var(--yellow-800)' : 'var(--purple-800)'
@@ -26,6 +26,7 @@ export const Modal = ({titulo, enviaModal, botoes=true, funcaoSalvar, textoBotao
     }, []);
 
     const fecharModal = () => {
+        funcaoCancelar && funcaoCancelar()
         dialogRef.current?.close()
         enviaModal()
     }

@@ -46,7 +46,6 @@ const Convidados = () => {
     const [indiceConvidadoPendente, setIndiceConvidadoPendente] = useState(0);
     const [idUsuario, setIdUsuario] = useState<any>(null);
     const [preView, setPreview] = useState('')
-    const [tipoEvento, setTipoEvento] = useState(0)
     const [carregandoImprimir, setCarregandoImprimir] = useState(false);
 
     const convidadosPendentes = convidados.filter(convidado => convidado.status === 'Pendente');
@@ -63,7 +62,6 @@ const Convidados = () => {
                     .then((res) => {
                         setEvento(res.data);
                         const status = definirStatusEvento(res.data);
-                        setTipoEvento(res.data.idTipoEvento);
                         const urlPreview = res.data.imagemEvento
                         ? `http://localhost:3000/files/${res.data.imagemEvento}`
                         : '';
@@ -275,7 +273,7 @@ const Convidados = () => {
                                 <td>{convidado.rg}</td>
                                 <td>
                                 <span className={`status-convidado ${convidado.status.toLowerCase()}`}>
-                                    {convidado.status}
+                                    <span>{convidado.status}</span>
                                 </span>
                                 </td>
                             </tr>

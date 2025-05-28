@@ -69,15 +69,13 @@
   .tabela-convidados {
     width: 100%;
     border-collapse: collapse;
-    font-family: Arial, sans-serif;
   }
 
   .tabela-convidados th{
-    border-top: 1px solid var(--Purple-800, #6A40C3);
-    border-bottom: 1px solid var(--Purple-800, #6A40C3);
-    background: var(--Purple-700, #8C5DFF);
+    border-top: 1px solid var(--purple-800);
+    border-bottom: 1px solid var(--purple-800);
+    background: var(--purple-700);
     color: #FFF;
-    font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
@@ -90,16 +88,6 @@
     text-align: left;
     border-bottom: 1px solid #ddd;
   }
-  
-  .status-convidado {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
 
   .link-convite{
     color: var(--purple-700);
@@ -110,23 +98,54 @@
   .link-convite:hover{
     text-decoration-color: transparent;
   }
-  
-  .status-convidado.confirmado {
-    color: #0F5132;
+
+  .status-convidado{
+    width: 127px;
     border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .status-convidado span::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .status-convidado.confirmado span::before,
+  .status-convidado.utilizado span::before{
+    background-color: #0F5132;
+  }
+
+  .status-convidado.recusado span::before {
+    background-color: #842029;
+  }
+
+  .status-convidado.pendente span::before {
+    background-color: #055160;
+  }
+  
+  .status-convidado.confirmado,
+  .status-convidado.utilizado {
+    color: #0F5132;
     border: 1px solid #BADBCC;
     background: #D1E7DD;
   }
   
   .status-convidado.recusado {
     color: #842029;
-    border-radius: 16px;
     border: 1px solid #F5C2C7;
     background: #F8D7DA;
   }
   
   .status-convidado.pendente {
-    border-radius: 16px;
     border: 1px solid #B6EFFB;
     background: #CFF4FC;
     color: #055160;
@@ -149,3 +168,43 @@
     font-weight: 400;
     line-height: 24px;
   }
+
+  .gerar-convite__nao-gerado{
+    margin: 0;
+  }
+
+  .gerar-convite{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .gerar-convite__texto{
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: justify;
+  }
+
+  .gerar-convite__input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .gerar-convite__checkbox{
+    display: flex;
+    gap: 8px;
+  }
+
+  .gerar-convite__checkbox label{
+    font-size: 14px;
+    font-weight: 300;
+    text-align: justify;
+  }
+
+@media screen and (max-width: 500px){
+  .gerar-convite__texto{
+    font-size: 16px;
+  }
+}

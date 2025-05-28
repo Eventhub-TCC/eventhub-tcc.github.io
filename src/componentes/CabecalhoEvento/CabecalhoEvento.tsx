@@ -139,6 +139,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
   useEffect(() => {
     if (evento) {
       setEventoEditado({ ...evento, tipoEvento: evento.tipoEvento.idTipoEvento });
+      setQtdAcompanhantes(evento.qtdMaxAcompanhantes);
     }
   }, [evento]);
 
