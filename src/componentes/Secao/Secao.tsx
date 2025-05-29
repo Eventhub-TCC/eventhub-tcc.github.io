@@ -13,7 +13,7 @@ const Secao = ({titulo, children, corBorda = 'var(--purple-700)', corTitulo = 'v
     else {
       setAltura('0px');
     }
-  }, [aberto]);
+  }, [aberto, children]);
 
   return (
     <section style={{'--cor-borda-secao': corBorda} as CSSProperties} className="secao-organizador">

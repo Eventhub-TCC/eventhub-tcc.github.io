@@ -7,6 +7,7 @@ import { Modal } from "../../componentes/Modal/Modal";
 import api from "../../axios";
 import InputQuantidade from "../../componentes/InputQuantidade/InputQuantidade";
 import CheckBox from "../../componentes/CheckBox/CheckBox";
+import Secao from "../../componentes/Secao/Secao";
 
 interface Evento {
   idEvento: number;
@@ -195,7 +196,7 @@ const Convites = () => {
   if (!evento) return <p>Carregando evento...</p>;
 
   return (
-    <div className="tela-convidados-evento">
+    <div className="tela-convites-evento">
       <div className="informacoes-evento__cabecalho">
         <CabecalhoEvento
           idEvento={idEvento}
@@ -206,15 +207,14 @@ const Convites = () => {
         />
       </div>
       <div className="informacoes-evento__container">
-        <div className="conteudo-convidados">
-          <div className="convidados">
-            <div className="titulo-convidados">Convites</div>
-            <div className="botoes-convidados">
+        <Secao titulo='Convites'>
+          <div className="convites">
+            <div className="botoes-convites">
               <div className="confirmar-presencas">
                 <Botao funcao={abrirModalGerarConvite} texto='Gerar convite' />
               </div>
             </div>
-            <table className="tabela-convidados">
+            <table className="tabela-convites">
               <thead>
                 <tr>
                   <th>Convite</th>
@@ -303,7 +303,7 @@ const Convites = () => {
               :''
             }
           </div>
-        </div>
+        </Secao>
       </div>
     </div>
   )

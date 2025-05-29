@@ -1,33 +1,12 @@
-.conteudo-convidados{
+.convites{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
-    flex: 1 0 0;
-    align-self: stretch;
-}
-.convidados{
-    display: flex;
-    padding: 48px 40px;
     flex-direction: column;
     align-items: flex-start;
     gap: 42px;
     align-self: stretch;
-    border-radius: 32px;
-    border: 1px solid var(--Purple-700, #8C5DFF);
-    background: #FFF;
 }
 
-.titulo-convidados{
-    color: var(--Purple-800, #6A40C3);
-    font-family: Inter;
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-
-.botoes-convidados{
+.botoes-convites{
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -35,7 +14,7 @@
     align-self: stretch;
 }
 
-.atualizar-lista-convidados {
+.atualizar-lista-convites {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -66,12 +45,12 @@
     cursor:pointer
   }
 
-  .tabela-convidados {
+  .tabela-convites {
     width: 100%;
     border-collapse: collapse;
   }
 
-  .tabela-convidados th{
+  .tabela-convites th{
     border-top: 1px solid var(--purple-800);
     border-bottom: 1px solid var(--purple-800);
     background: var(--purple-700);
@@ -82,11 +61,11 @@
     line-height: normal;
   }
   
-  .tabela-convidados th,
-  .tabela-convidados td {
+  .tabela-convites th,
+  .tabela-convites td {
     padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--purple-700);
   }
 
   .link-convite{
@@ -159,7 +138,7 @@
     color: #999;
   }
 
-  .texto-atualizar-convidados{
+  .texto-atualizar-convites{
     color: #000;
     text-align: center;
     font-family: Inter;
