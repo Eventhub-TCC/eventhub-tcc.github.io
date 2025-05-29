@@ -10,6 +10,8 @@ import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
 import sweetAlert from 'sweetalert2'
 import Alerta from '../Alerta/Alerta'
 
+
+
 interface TipoServico {
   idTipoServico: string;
   descricaoTipoServico: string;
@@ -20,23 +22,27 @@ interface Unidade{
   nome: string;
 }
 
-const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}: any) => {
+const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario, setPreviewSv}: any) => {
   const [abrirEdicaoServico, setAbrirEdicaoServico] = useState(false)
   const [abrirApagarServico, setAbrirApagarServico] = useState(false)
   const [servicoEditado, setServicoEditado] = useState({...servico, tipoServico: servico.idTipoServico})
   const [erros, setErros] = useState<{ [key: string]: string }>({});
   const [tipoServicoDisponiveis, setTipoServicoDisponiveis] = useState<TipoServico[]>([])
-  const inputImagemref = useRef<HTMLInputElement>(null)
-  const [imagemServico, setImagemServico] = useState<[File|null]>([null])
-  const [preView, setPreview] = useState(preViewSv)
-  const [imagemEditada, setImagemEditada] = useState(false)
+  const inputImagemRef = useRef<HTMLInputElement>(null)
+  const [imagemServico, setImagemServico] = useState<File[]>([])
+  const [preView, setPreview] = useState(preViewSv.filter((imagem: string)=> imagem !== null))
   const [editadoOk, setEditadoOk] = useState(false);
   const [unidade, setUnidade] = useState('')
 
+  const [imagemOriginal, setImagemOriginal] = useState<string[]>(preViewSv.filter((imagem: string) => imagem !== null));
+
   const navigate = useNavigate();
+
+  const maxImagemServico = 6;
   
   const AbrirModalEditarServico = () => {
     setServicoEditado({...servico, tipoServico: servico.tipoServico.idTipoServico});
+    setPreview(preViewSv.filter((imagem: string)=> imagem !== null))
     setAbrirEdicaoServico(!abrirEdicaoServico)
   }
 
@@ -61,7 +67,15 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
     return Object.keys(novosErros).length === 0;
   };
 
+  useEffect(() => {
+    setPreview(preViewSv.filter((imagem: string) => imagem !== null));
+  },[preViewSv])
 
+  useEffect(()=>{
+    setPreview(()=> [...imagemOriginal, ...imagemServico.map((imagem: File) => URL.createObjectURL(imagem))])
+    console.log('imagens antigas: ', imagemOriginal.length);
+    console.log('imagens novas: ', imagemServico.length);
+  },[imagemServico,imagemOriginal])
   
   useEffect(()=>{
     const buscarTiposDeServicos = async () => {
@@ -100,19 +114,15 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
       formData.append("qntMinima", servicoEditado.qntMinima);
       formData.append("qntMaxima", servicoEditado.qntMaxima);
       formData.append("valorServico", servicoEditado.valorServico);
+      imagemOriginal.map((imagem: string) => {
+        const imagemSemLink = imagem.split('/')
+        formData.append("imagensMantidas", imagemSemLink[imagemSemLink.length - 1]);
+      })
+      imagemServico.map((imagem: File)=>{
+        formData.append("files", imagem);
+      })
 
-    //   if (imagemEditada) {
-    //     if (imagemEvento) {
-    //       formData.append("file", imagemEvento);
-    //       formData.append("imagemEditada", "true");
-    //     } else if (imagemEvento === null) {
-    //       formData.append("imagemEditada", "true");
-    //     }
-    //   } else {
-    //     formData.append("imagemEditada", "false");
-    //   }
-
-      await api.put(`/users/services/${servico.idServico}`, formData, {
+      const {data} = await api.put(`/users/services/${servico.idServico}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });    
       setEditadoOk(true);
@@ -131,6 +141,8 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario}
         },
         imagemServico: imagemServico instanceof File ? URL.createObjectURL(imagemServico) : servico.imagemServico,
       })
+      const imagens = [data.servico.imagem1, data.servico.imagem2, data.servico.imagem3, data.servico.imagem4, data.servico.imagem5, data.servico.imagem6];
+      setPreviewSv(imagens.map((imagem) => imagem !== null ? `http://localhost:3000/files/${imagem}` : null));
     } 
     catch (err) {
       console.error("Erro ao editar Servico:", err);
@@ -275,53 +287,47 @@ const unidadeValor: Unidade[] = [
                     {erros.descricaoServico && <ErroCampoForm mensagem={erros.descricaoServico}/>} 
                   </div>
                 </div>
-                {/* <div className='imagem-evento'>
-                  <div className='imagem-evento-texto-botao'>
-                    <div className='texto-imagem-evento'>Imagem do servico(Opcional)</div>
-                    <div className='input-imagem-evento'>
-                      <div className='cadastro-evento__container-imagem'>
-                        <input 
-                          type='file' 
-                          className='cadastro-evento__input_imagem'
-                          accept='image/*'
-                          ref={ inputImagemref }
-                          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                            if (e.target.files && e.target.files.length > 0) {
-                              setImagemServico(e.target.files[0])
-                              setPreview(URL.createObjectURL(e.target.files[0]))
-                              setImagemEditada(true)
-                            }
-                            else {
-                              setImagemServico(null)
-                              setPreview('')
-                            }
-                          }}
-                        />
-                        {preView?<img src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
-                      </div>
-                      <div className='botoes-imagem'>
-                        <Botao 
-                          tamanho='min' 
-                          texto='Selecionar arquivo' 
-                          funcao={()=>inputImagemref.current?.click()}
-                        />
-                        <Botao 
-                          tamanho='min' 
-                          texto='Remover' 
-                          funcao={()=>{
-                            setImagemServico(null)
-                            URL.revokeObjectURL(preView)
-                            setPreview('')
-                            setImagemEditada(true)
-                            console.log('imagemEditada', imagemEditada)
-                            if(inputImagemref.current)
-                              inputImagemref.current.value = ""
-                          }}
-                        />
-                      </div>
+                <div className='d-flex row g-4 justify-content-center cadastro-servico__etapa-imagem-com-imagem'>
+                  <input
+                  style={{ display: 'none' }}
+                  ref={inputImagemRef} 
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    if(e.target.files && e.target.files.length + preView.length <= maxImagemServico) {
+                    setImagemServico((prevState:File[])=> [...prevState, ...Array.from(e.target.files || [])]);
+                    // inputImagemRef.current!.value = '';
+                    return
+                    }
+                    console.log('limite de imagens atingido',  preView.length + e.target.files!.length);
+                  }}
+                  />
+                  {preView ? preView.map((imagem: string, index:number)=>{
+                    if (preView[index] !== null)
+                    return <div className="col-12 col-sm-6 cadastro-servico__container-imagem">
+                      <img key={imagem} src={imagem} alt="imagem do serviço" className="cadastro-servico__imagem-preview"/>
+                      <button className='cadastro-servico__remover-image' type="button" onClick={()=>{
+                        inputImagemRef.current!.value = ''
+                        setImagemOriginal((prevState: string[]) => prevState.filter((_, i) => i !== index));
+                        setImagemServico((prevState: File[]) => prevState.filter((_, i) => imagemOriginal.length + i !== index));
+                        }}>
+                        <i className="fa-solid fa-xmark cadastro-servico__remover-image-icone"></i>
+                      </button>
                     </div>
-                  </div>
-                </div> */}
+                  })
+                  :''}
+                  {preView.length < maxImagemServico ? 
+                  <button 
+                  type="button"
+                  onClick={()=>{inputImagemRef.current?.click()}}
+                  className="col-12 col-sm-6 cadastro-servico__adicionar-imagem">
+                    <div className="cadastro-servico__adicionar-imagem-info">
+                      <div><i className="fa-solid fa-plus cadastro-servico__adicionar-imagem-icone"></i></div>
+                      <div>Adicionar mais imagens</div>
+                    </div>
+                  </button>:''}
+                </div>    
               </div>
               <div className='novos-dados-eventos'>
                 <div className='texto-input-hora-inicio-evento'>

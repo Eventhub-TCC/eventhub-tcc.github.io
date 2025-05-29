@@ -17,7 +17,12 @@ interface Servico {
   valorServico: number;
   qntMinima: number;
   qntMaxima: number;
-  imagens?: [string];
+  imagem1: string;
+  imagem2: string | null;
+  imagem3: string | null;
+  imagem4: string | null;
+  imagem5: string | null;
+  imagem6: string | null;
 }
 
 interface categoria {
@@ -312,7 +317,7 @@ const obterServicos = async () => {
                         >
                               <CardServico
                                 titulo={servico.nomeServico}
-                                imagem={servico.imagens}
+                                imagem={servico.imagem1}
                                 id={servico.idServico}
                               />
                         </div>
@@ -339,7 +344,7 @@ const obterServicos = async () => {
                             >
                               <CardServico
                                 titulo={servico.nomeServico}
-                                imagem={servico.imagens}
+                                imagem={servico.imagem1}
                                 id={servico.idServico}
                               />
                             </div>
