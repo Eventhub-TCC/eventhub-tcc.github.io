@@ -1,0 +1,114 @@
+.card-marketplace{
+    width: 307px;
+    background-color: #FFF;
+    border: 1px solid #D2D2D2;
+    border-radius: 16px;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.card-marketplace:hover{
+    border-color: var(--purple-700);
+    transform: scale(1.02);
+}
+
+.card-marketplace__imagem{
+    width: 100%;
+}
+
+.card-marketplace__imagem img{
+    width: 275px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-marketplace__descricao{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-marketplace__nome-servico{
+    color: #42464D;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 16px;
+    font-weight: 600;
+    overflow: hidden;
+    line-height: 1.4em;
+    height: calc(1.4em * 2);
+    max-height: calc(1.4em * 2);
+}
+
+.card-marketplace__container-prestador{
+    font-size: 14px;
+    font-weight: 400;
+    color: #42464D;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-marketplace__prestador{
+    color: var(--purple-700);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-marketplace__container-preco{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-marketplace__preco-inteiro{
+    color: var(--purple-800);
+    font-size: 12px;
+    font-weight: 400;
+    text-decoration: line-through;
+    min-height: 18px;
+}
+
+.card-marketplace__container-preco-atual{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.card-marketplace__preco-unidade{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-marketplace__preco-atual{
+    color: var(--purple-700);
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.card-marketplace__unidade{
+    color: #42464D;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.card-marketplace__porcentagem-desconto{
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFF;
+    padding: 2px 4px;
+    background-color: var(--purple-700);
+    border-radius: 32px;
+    line-height: normal;
+}
