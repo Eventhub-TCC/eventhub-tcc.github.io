@@ -1,0 +1,65 @@
+.botao-toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  border: 2px solid var(--yellow-700); 
+  border-radius: 999px;
+  padding: 6px 12px;
+  background-color: white;
+  transition: background-color 0.3s ease;
+  height: 48px;
+}
+
+.botao-toggle input {
+  display: none;
+}
+
+.slider {
+  width: 40px;
+  height: 24px;
+  background-color: #b0b0b0; 
+  border-radius: 999px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  margin-right: 8px;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+/* Estado ATIVO */
+.botao-toggle.on {
+  background-color: var(--yellow-700); 
+}
+
+.botao-toggle.on .slider {
+  background-color: #f97316; 
+}
+
+.botao-toggle.on .slider::before {
+  transform: translateX(16px);
+}
+
+.botao-toggle.on .texto {
+  color: white;
+  font-family: Inter;
+  font-size: 14px;
+}
+
+.texto {
+  color: #b0b0b0;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  font-family: Inter;
+  font-size: 14px;
+}
+

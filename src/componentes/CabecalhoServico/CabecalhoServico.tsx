@@ -1,6 +1,6 @@
 import './CabecalhoServico.css'
 import Botao from '../../componentes/Botao/Botao'
-import { NavLink, useNavigate } from 'react-router'
+import { data, NavLink, useNavigate } from 'react-router'
 import { Modal } from '../Modal/Modal'
 import Input from '../Input/Input'
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
@@ -9,7 +9,8 @@ import Select from '../../componentes/Select/Select';
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
 import sweetAlert from 'sweetalert2'
 import Alerta from '../Alerta/Alerta'
-
+import ToggleBotao from '../ToggleBotao/ToggleBotao'    
+import InputRadio from '../InputRadio/InputRadio'
 
 
 interface TipoServico {
@@ -33,13 +34,37 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
   const [preView, setPreview] = useState(preViewSv.filter((imagem: string)=> imagem !== null))
   const [editadoOk, setEditadoOk] = useState(false);
   const [unidade, setUnidade] = useState('')
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState('indefinida');
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const [dataInicioAnuncio, setDataInicioAnuncio] = useState<Date | null>(hoje);
+  const [dataTerminoAnuncio, setDataTerminoAnuncio] = useState<Date | null>(null);
+  const diferencaDatas = dataTerminoAnuncio && dataInicioAnuncio ? Math.max(
+                      Math.ceil(
+                        (dataTerminoAnuncio.getTime() - dataInicioAnuncio.getTime()) /
+                          (1000 * 60 * 60 * 24)
+                      ),
+                      0
+                    )
+                  : 0;
+  const dataFormatada =
+    dataInicioAnuncio &&
+    !isNaN(dataInicioAnuncio.getTime()) &&
+    new Date(dataInicioAnuncio).setHours(0, 0, 0, 0) === hoje.getTime()
+      ? 'hoje'
+      : dataInicioAnuncio
+      ? `${dataInicioAnuncio.toLocaleDateString('pt-BR')}`
+      : '';
 
+  const [modalAnunciarServico, setModalAnunciarServico] = useState(false);
+
+  const AbrirModalAnunciarServico = () => {
+    setModalAnunciarServico(!modalAnunciarServico);
+  }
+  const [anunciado, setAnunciado] = useState(servico.anunciado || false); 
   const [imagemOriginal, setImagemOriginal] = useState<string[]>(preViewSv.filter((imagem: string) => imagem !== null));
-
   const navigate = useNavigate();
-
   const maxImagemServico = 6;
-  
   const AbrirModalEditarServico = () => {
     setServicoEditado({...servico, tipoServico: servico.tipoServico.idTipoServico});
     setPreview(preViewSv.filter((imagem: string)=> imagem !== null))
@@ -49,6 +74,38 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
   const AbrirModalApagarServico = () => {
     setAbrirApagarServico(!abrirApagarServico)
   }
+
+  const anunciarServico = async () => {
+        console.log(idServico);
+        api.put(`users/services/${idServico}/anunciar`, {
+            dataInicioAnuncio: dataInicioAnuncio,
+            dataTerminoAnuncio: dataTerminoAnuncio
+        })
+        .then((res) => {
+            console.log("Serviço anunciado com sucesso", res.data);
+        })
+        .catch((err) => {
+            console.error("Erro ao anunciar serviço", err);
+        });
+        AbrirModalAnunciarServico();
+        setAnunciado(true);
+    }
+
+    const encerrarAnuncioServico = async () => {
+        api.put(`users/services/${idServico}/encerrar-anuncio`)
+        .then((res) => {
+            console.log("Anúncio encerrado com sucesso", res.data);
+        })
+        .catch((err) => {
+            console.error("Erro ao encerrar anúncio", err);
+        });
+        setAnunciado(false);
+    }
+
+    const anunciarOuEncerrar = async () => {
+      anunciado ?
+      encerrarAnuncioServico() :
+      setModalAnunciarServico(!modalAnunciarServico)}
 
 
   const validarFormulario = async () => {
@@ -100,6 +157,8 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
       setServicoEditado({...servico, tipoServico: servico.tipoServico.idTipoServico});
     }
   }, [servico]);
+
+  
 
   const editarServico = async () => {
     if (!await validarFormulario()) return;
@@ -204,24 +263,29 @@ const unidadeValor: Unidade[] = [
               </div>
             </div>
           </div>
-          <div className="botoes-evento">
-              <div className='botao-evento'>
-                <Botao
-                  texto="Editar serviço"
-                  tamanho="med"
-                  tipo="botao"
-                  cor='var(--yellow-700)'
-                  funcao={() => setAbrirEdicaoServico(true)}
-                />
+            <div className="botoes-servico">
+              <div className='botoes-evento_container'>
+                <div className='botao-evento'>
+                  <Botao
+                    texto="Editar serviço"
+                    tamanho="med"
+                    tipo="botao"
+                    cor='var(--yellow-700)'
+                    funcao={() => setAbrirEdicaoServico(true)}
+                  />
+                </div>
+                <div className='botao-evento'>
+                  <Botao
+                    texto="Apagar serviço"
+                    tamanho="med"
+                    tipo="botao"
+                    cor='var(--yellow-700)'
+                    funcao={() => setAbrirApagarServico(true)}
+                  />
+                </div>
               </div>
-              <div className='botao-evento'>
-                <Botao
-                  texto="Apagar serviço"
-                  tamanho="med"
-                  tipo="botao"
-                  cor='var(--yellow-700)'
-                  funcao={() => setAbrirApagarServico(true)}
-                />
+              <div className='botao-evento__anunciado'>
+                <ToggleBotao   ativo={anunciado} aoAlternar={() => anunciarOuEncerrar()} texto = "Anunciado"/>
               </div>
             </div>
         </div>
@@ -234,6 +298,81 @@ const unidadeValor: Unidade[] = [
           </NavLink>
         </div>
       </div>
+      {
+        modalAnunciarServico ?
+        <Modal titulo='Anunciar Serviço' prestador textoBotao="Anunciar" funcaoSalvar={anunciarServico} enviaModal={AbrirModalAnunciarServico}>
+        <div className='modal-anunciar-servico'>
+          <div className='modal-anunciar-servico__input-data'>
+            <Input 
+              cabecalho = {true}
+              cabecalhoTexto='Data de início'
+              tipo = 'date'
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                if (e.target.value !== '') {
+                  const [ano, mes, dia] = e.target.value.split('-').map(Number);
+                  const dataLocal = new Date(ano, mes - 1, dia); 
+                  setDataInicioAnuncio(dataLocal);
+                } else {
+                  setDataInicioAnuncio(null);
+                }
+              }}
+              valor={
+                dataInicioAnuncio ? dataInicioAnuncio.toISOString().split('T')[0] : ''
+              }
+              min={hoje.toISOString().split('T')[0]}
+              >
+            </Input>
+          </div>
+          <div className='modal-anunciar-servico__duracao'>
+            Duração
+            <div className='teste'>
+              <InputRadio
+                nome = 'duracao'
+                id = '1'
+                textoLabel = 'Data de termino indefinida'
+                value='indefinida'
+                funcao={(e:any) => {setOpcaoSelecionada(e.target.value); setDataTerminoAnuncio(null)}}
+                prestador>
+              </InputRadio>  
+            </div>
+            <InputRadio
+              nome = 'duracao'
+              id = '2'
+              textoLabel = 'Determinar uma data de término'
+              value='determinar'
+              funcao={(e:any) => setOpcaoSelecionada(e.target.value)}
+              prestador>
+            </InputRadio>
+          </div>
+          {
+            opcaoSelecionada === 'determinar' ?
+            <>
+              <div className='modal-anunciar-servico__input-data'>
+                <Input 
+                  cabecalho = {true}
+                  cabecalhoTexto='Data de término'
+                  tipo = 'date'
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    if (e.target.value !== '') {
+                      const [ano, mes, dia] = e.target.value.split('-').map(Number);
+                      const dataLocal = new Date(ano, mes - 1, dia);
+                      setDataTerminoAnuncio(dataLocal);
+                    } else {
+                      setDataTerminoAnuncio(null);
+                    } 
+                  }}>
+                </Input>
+              </div>
+              <div>
+                Exibição por {diferencaDatas} dias a partir de {dataFormatada}.
+              </div>
+            </>
+           : '' 
+           }
+          </div>
+      </Modal>
+      : ''
+      }
       {
         abrirEdicaoServico ? 
           <Modal funcaoSalvar={editarServico} titulo='Editar serviço' enviaModal={AbrirModalEditarServico} prestador>

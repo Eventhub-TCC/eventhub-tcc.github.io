@@ -42,6 +42,27 @@
     width: 160px;
 }
 
+.botoes-servico{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 16px;
+    }
+
+.botoes-evento_container{
+    display: flex;
+    gap: 16px;
+}
+
+.botao-eveto_anunciado{
+    gap: 16px;
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    gap: 8px;
+}
+
 .informacoes-evento-data-hora,
 .informacoes-evento{
     display: flex;
@@ -99,6 +120,33 @@
 .aba-servico--ativo{
     border-bottom: var(--yellow-700) 3px solid;
 }
+
+/* Modal anunciar servico */
+.modal-anunciar-servico{
+    display: flex;
+    width: 410px;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.modal-anunciar-servico__input-data input{
+    width: 380px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    align-self: stretch;
+}
+
+.modal-anunciar-servico__duracao{
+    text-align: left;
+}
+
+.teste input{
+    align-items: flex-start;
+}
+
 
 /* Modal */
 

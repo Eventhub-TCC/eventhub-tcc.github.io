@@ -7,8 +7,8 @@
 .label_radio{
     display: flex;
     flex-direction: row-reverse;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     gap: 8px;
 }
 
@@ -26,9 +26,6 @@
     transition: all 250ms ease-in-out;
 }
 
-.radio:checked ~ .radio_span{
-    background-color: var(--purple-700);
-}
 
 .radio:not(:checked) ~ .radio_span:hover{
     border: 1px solid rgb(88, 88, 88);
@@ -42,10 +39,26 @@
     background-color: white;
 }
 
-.radio:checked ~ .radio_span:hover{
+.radio:checked ~ .organizador:hover{
     background-color: var(--purple-800);
 }
 
-.radio:checked ~ .radio_span:active{
+.radio:checked ~ .organizador:active{
     background-color: var(--purple-700);
+}
+
+.radio:checked ~ .organizador{
+    background-color: var(--purple-700);
+}
+
+.radio:checked ~ .prestador:hover{
+    background-color: var(--yellow-800);
+}
+
+.radio:checked ~ .prestador:active{
+    background-color: var(--yellow-700);
+}
+
+.radio:checked ~ .prestador{
+    background-color: var(--yellow-700);
 }

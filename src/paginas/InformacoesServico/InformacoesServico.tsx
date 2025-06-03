@@ -20,6 +20,9 @@ interface Servico{
     imagem5?: string;
     imagem6?: string;
     tipoServico: TipoServico;
+    anunciado: boolean;
+    dataInicioAnuncio: string | null;
+    dataFimAnuncio: string | null;
 }
 
 interface TipoServico {
