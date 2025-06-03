@@ -18,6 +18,7 @@ import PrestadorLayout from './componentes/PrestadorLayout/PrestadorLayout'
 import MeusServicos from './paginas/MeusServicos/MeusServicos'
 import CadastroServico from './paginas/CadastroServico/CadastroServico'
 import InformacoesServico from './paginas/InformacoesServico/InformacoesServico'
+import CarrinhoDeCompras from './paginas/CarrinhoDeCompras/CarrinhoDeCompras'
 
 const App = () => {
   return (
@@ -42,7 +43,7 @@ const App = () => {
           <Route path='marketplace' element={<OrganizadorLayout />}>
             {/* <Route index element={<Marketplace />}/> */}
             {/* <Route path='servico/:idServico' element={<ServicoMarketplace />}/> */}
-            {/* <Route path='carrinho' element={<CarrinhoDeCompras />}/> */}
+            <Route path='carrinho' element={<CarrinhoDeCompras />}/>
           </Route>
           <Route path='prestador' element={<PrestadorLayout />}>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
