@@ -5,10 +5,16 @@ import { useEffect, useState } from "react";
 import ItemBarraLateral from "../ItemBarraLateral/ItemBarraLateral";
 import { Navigate, Outlet } from "react-router";
 import { jwtDecode } from "jwt-decode";
+import api from "../../axios";
+import CategoriasMarketplace from "../CategoriasMarketplace/CategoriasMarketplace";
 
 const OrganizadorLayout = () => {
   const [minimizada, setMinimizada] = useState(() => window.innerWidth <= 1024);
   const [ autenticado, setAutenticado ] = useState<null | boolean>(null);
+
+  const marketplace = window.location.pathname.includes('marketplace');
+  const categoriasPrincipais = ['Alimentação', 'Decoração', 'Fotografia', 'Locação de Espaço', 'Música'];
+  const [outrasCategorias, setOutrasCategorias] = useState<any[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,7 +25,6 @@ const OrganizadorLayout = () => {
     (async () => {
       try{
         const tokenDecodificado:any = jwtDecode(token);
-        console.log(tokenDecodificado);
         if(!tokenDecodificado.tipo.includes('organizador')){
           setAutenticado(false);
           return;
@@ -34,6 +39,16 @@ const OrganizadorLayout = () => {
       }
     })();
   }, []);
+  
+  useEffect(() => {
+    if(marketplace){
+      (async () => {
+        const {data: categorias} = await api.get('/users/tipo-servico');
+        const outrasCategorias = categorias.filter((categoria:any) => !categoriasPrincipais.includes(categoria.descricaoTipoServico));
+        setOutrasCategorias(outrasCategorias);
+      })();
+    }
+  }, [marketplace]);
 
     if (autenticado === null) {
         return; 
@@ -49,21 +64,25 @@ const OrganizadorLayout = () => {
     autenticado ?
     <div className="layout">
       <div className="cabecalho-layout">
-        <CabecalhoLogado minimizada={minimizada} enviaMinimizada={guardarMinimizada} organizador={true}/>
+        {
+          marketplace ?
+            <CabecalhoLogado minimizada={minimizada} enviaMinimizada={guardarMinimizada} tipo='marketplace'/>
+          : <CabecalhoLogado minimizada={minimizada} enviaMinimizada={guardarMinimizada} tipo='organizador'/>
+        }
       </div>
       <div className="layout-conteudo">
         <div className={`barra-layout ${minimizada ? 'barra-layout--fechada-mobile' : 'barra-layout--aberta-mobile'}`}>
           <BarraLateral minimizada={minimizada} enviaMinimizada={guardarMinimizada}>
-            <ItemBarraLateral texto="Home" caminho="/">
+            {/* <ItemBarraLateral texto="Home" caminho="/">
               <path d="M9 21V14.1528C9 13.5226 9.53726 13.0116 10.2 13.0116H13.8C14.4627 13.0116 15 13.5226 15 14.1528V21M11.3046 3.21117L3.50457 8.48603C3.18802 8.7001 3 9.04665 3 9.41605V19.2882C3 20.2336 3.80589 21 4.8 21H19.2C20.1941 21 21 20.2336 21 19.2882V9.41605C21 9.04665 20.812 8.70011 20.4954 8.48603L12.6954 3.21117C12.2791 2.92961 11.7209 2.92961 11.3046 3.21117Z"/>
-            </ItemBarraLateral>
+            </ItemBarraLateral> */}
             <ItemBarraLateral texto="Eventos" caminho="/organizador/meus-eventos">
               <path d="M14.4002 15.1404V14.9466M14.3997 12.1375V11.9437M14.3997 9.14741V8.95358M5.01196 3.45996H12.0012C12.0409 4.87503 13.2005 6.00996 14.6252 6.00996C16.0499 6.00996 17.2094 4.87503 17.2491 3.45996H18.9884C21.0936 3.45996 22.8002 5.16655 22.8002 7.27173V16.7287C22.8002 18.8338 21.0936 20.5404 18.9884 20.5404H17.2491C17.2094 19.1254 16.0499 17.9904 14.6252 17.9904C13.2005 17.9904 12.0409 19.1254 12.0012 20.5404H5.01197C2.90679 20.5404 1.20021 18.8338 1.20021 16.7287L1.2002 7.27173C1.2002 5.16655 2.90678 3.45996 5.01196 3.45996Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </ItemBarraLateral>
-            <ItemBarraLateral texto="Agenda" caminho="/organizador/agenda">
+            {/* <ItemBarraLateral texto="Agenda" caminho="/organizador/agenda">
               <path d="M7.75 17.2202V17.1428M12.25 17.2202V17.1428M12.25 13.0286V12.9512M16.25 13.0286V12.9512M4.75 8.91425H18.75M6.55952 3V4.54304M16.75 3V4.54285M16.75 4.54285H6.75C5.09315 4.54285 3.75 5.92436 3.75 7.62855V17.9143C3.75 19.6185 5.09315 21 6.75 21H16.75C18.4069 21 19.75 19.6185 19.75 17.9143L19.75 7.62855C19.75 5.92436 18.4069 4.54285 16.75 4.54285Z" stroke="white" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </ItemBarraLateral>
-            <ItemBarraLateral texto="MarketPlace" caminho="/organizador/marketplace">
+            </ItemBarraLateral> */}
+            <ItemBarraLateral texto="Marketplace" caminho="/marketplace">
               <path d="M15.5999 8.3998V5.39981C15.5999 3.41158 13.9881 1.7998 11.9999 1.7998C10.0117 1.7998 8.3999 3.41158 8.3999 5.3998V8.3998M4.72717 22.1998H19.2726C20.5579 22.1998 21.5999 21.1772 21.5999 19.9158L20.109 7.79977C20.109 6.53835 19.067 5.51576 17.7817 5.51576H5.92717C4.64186 5.51576 3.5999 6.53835 3.5999 7.79977L2.3999 19.9158C2.3999 21.1772 3.44186 22.1998 4.72717 22.1998Z"/>
             </ItemBarraLateral>
             <ItemBarraLateral texto="Pedidos" caminho="/organizador/pedidos"> 
@@ -75,10 +94,26 @@ const OrganizadorLayout = () => {
             </ItemBarraLateral>
           </BarraLateral>
         </div>
-        <main className={`layout-info ${minimizada ? 'layout-info-minimizada' : ''}`}>
-          <div className="container">
-            <Outlet/>
-          </div>
+        <main className={`layout-info ${!marketplace ? 'layout-info--padding' : ''} ${minimizada ? 'layout-info-minimizada' : ''}`}>
+          {
+            marketplace &&
+            <CategoriasMarketplace 
+              categoriasPrincipais={categoriasPrincipais} 
+              outrasCategorias={outrasCategorias}
+            />
+          }
+          {
+            marketplace ?
+            <div className="layout-info--padding">
+              <div className="container">
+                <Outlet/>
+              </div>
+            </div>
+            :
+            <div className="container">
+              <Outlet/>
+            </div>
+          }
         </main>
       </div>
     </div> : <Navigate to="/prestador/meu-perfil" />

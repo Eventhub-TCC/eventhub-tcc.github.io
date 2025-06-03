@@ -21,10 +21,13 @@
 .layout-info {
   margin-left: var(--barra-lateral-largura);
   transition: margin-left .3s ease-out;
-  padding: 3.5rem 1rem;
   background: #F5F5F5;
   min-height: 100vh;
   position: relative;
+}
+
+.layout-info--padding{
+  padding: 3.5rem 1rem;
 }
 
 .layout-info-minimizada {

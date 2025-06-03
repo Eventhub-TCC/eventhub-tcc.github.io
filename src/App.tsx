@@ -39,6 +39,11 @@ const App = () => {
             <Route path="meus-eventos/:idEvento/convidados" element={<Convidados/>} />
             <Route path="meus-eventos/:idEvento/convites" element={<Convites/>} />
           </Route>
+          <Route path='marketplace' element={<OrganizadorLayout />}>
+            {/* <Route index element={<Marketplace />}/> */}
+            {/* <Route path='servico/:idServico' element={<ServicoMarketplace />}/> */}
+            {/* <Route path='carrinho' element={<CarrinhoDeCompras />}/> */}
+          </Route>
           <Route path='prestador' element={<PrestadorLayout />}>
             <Route path='meu-perfil' element={<MeuPerfil />}/>
             <Route path='meus-servicos' element={<MeusServicos />}/>
