@@ -1,0 +1,94 @@
+.layout-categorias{
+  background-color: var(--purple-900);
+  border-bottom: 3px solid var(--purple-700);
+  position: sticky;
+  top: 80px;
+}
+
+.layout-categorias > ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  padding: 10px 32px;
+  display: flex;
+  gap: 16px;
+}
+
+.layout-categorias > ul > li{
+  font-size: 14px;
+  color: #FFF;
+  font-weight: 400;
+  border-radius: 16px;
+  transition: background-color .3s ease-in-out;
+}
+
+.layout-categorias > ul > li:last-child{
+  position: relative;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+.layout-categorias li:hover{
+  background-color: var(--purple-700);
+}
+
+.layout-categorias li a{
+  color: #FFF;
+  text-decoration: none;
+  display: block;
+  padding: 6px 16px;
+}
+
+.layout-categorias-mais{
+  margin-left: 8px;
+  margin-bottom: 1px;
+}
+
+.layout-categorias-mais-container{
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding: 8px 0;
+  width: max-content;
+  display: none; 
+}
+
+.layout-categorias-mais-container::after{
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  transform: rotate(45deg);
+}
+
+.layout-categorias li:last-child:hover .layout-categorias-mais-container{
+  display: block;
+}
+
+.layout-categorias-mais-container > ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.layout-categorias-mais-container ul li{
+  font-size: 14px;
+}
+
+.layout-categorias-mais-container li a{
+  color: #42464D;
+  text-decoration: none;
+  display: block;
+  padding: 8px 16px;
+}
+
+.layout-categorias-mais-container li a:hover{
+  background-color: var(--purple-700);
+  color: #FFF;
+}
