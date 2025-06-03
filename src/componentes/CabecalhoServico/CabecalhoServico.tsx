@@ -11,6 +11,7 @@ import sweetAlert from 'sweetalert2'
 import Alerta from '../Alerta/Alerta'
 import ToggleBotao from '../ToggleBotao/ToggleBotao'    
 import InputRadio from '../InputRadio/InputRadio'
+import ToolTip from '../ToolTip/ToolTip'
 
 
 interface TipoServico {
@@ -57,6 +58,8 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
       : '';
 
   const [modalAnunciarServico, setModalAnunciarServico] = useState(false);
+  const [erroDataInicio, setErroDataInicio] = useState<string | null>(null);
+  const [erroDataTermino, setErroDataTermino] = useState<string | null>(null);
 
   const AbrirModalAnunciarServico = () => {
     setModalAnunciarServico(!modalAnunciarServico);
@@ -76,6 +79,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
   }
 
   const anunciarServico = async () => {
+        if (!await validarAnuncio()) return;
         console.log(idServico);
         api.put(`users/services/${idServico}/anunciar`, {
             dataInicioAnuncio: dataInicioAnuncio,
@@ -106,6 +110,32 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
       anunciado ?
       encerrarAnuncioServico() :
       setModalAnunciarServico(!modalAnunciarServico)}
+
+  const validarAnuncio = async () => {
+    let valido = true;
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    if (!dataInicioAnuncio || dataInicioAnuncio < hoje) {
+      setErroDataInicio('A data de início não pode ser anterior a hoje.');
+      valido = false;
+    } else {
+      setErroDataInicio(null);
+    }
+
+    if (dataTerminoAnuncio) {
+      if (dataTerminoAnuncio < dataInicioAnuncio!) {
+        setErroDataTermino('A data de término não pode ser anterior à data de início.');
+        valido = false;
+      } else {
+        setErroDataTermino(null);
+      }
+    } else {
+      setErroDataTermino(null);
+    }
+
+    return valido;
+  }
 
 
   const validarFormulario = async () => {
@@ -322,9 +352,14 @@ const unidadeValor: Unidade[] = [
               min={hoje.toISOString().split('T')[0]}
               >
             </Input>
+                {erroDataInicio && <ErroCampoForm mensagem={erroDataInicio}/>
+                }
           </div>
           <div className='modal-anunciar-servico__duracao'>
-            Duração
+            <div className='modal-anunciar-servico__titulo-duracao'>
+              Duração
+              <ToolTip prestador mensagem='Você pode desativar este anúncio manualmente a qualquer momento. Caso defina uma data de término, o anúncio será encerrado automaticamente ao início desse dia, sem necessidade de ação manual.'/>
+            </div>
             <div className='teste'>
               <InputRadio
                 nome = 'duracao'
@@ -362,6 +397,8 @@ const unidadeValor: Unidade[] = [
                     } 
                   }}>
                 </Input>
+                {erroDataTermino && <ErroCampoForm mensagem={erroDataTermino}/>
+                }
               </div>
               <div>
                 Exibição por {diferencaDatas} dias a partir de {dataFormatada}.

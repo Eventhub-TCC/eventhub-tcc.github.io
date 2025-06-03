@@ -10,6 +10,7 @@ import FeedbackFormulario from "../../componentes/FeedbackFormulario/FeedbackFor
 import { PatternFormat } from "react-number-format"
 import Instrucoes from "../../componentes/Instrucao/Instrucao"
 import api from "../../axios"
+import ToolTip from "../../componentes/ToolTip/ToolTip"
 
 interface Usuarios{
     organizador: boolean;
@@ -667,6 +668,11 @@ const CadastroUsuario = () => {
                                     }}
                                 >
                                     <span>Organizar eventos</span>
+                                    {!organizador &&
+                                        <div className="cadastro-usuario__tooltip">
+                                            <ToolTip mensagem='Você deseja organizar festas, shows, casamentos ou outros eventos? Essa opção de cadastro vai permitir que você crie e gerencie seus eventos aqui, distribua convites, gere listas de presenças e conecte-se em um marketplace com os melhores prestadores de serviços e fornecedores!'/>
+                                        </div>
+                                    }
                                 </div>
                                 <div 
                                     className={`cadastro-usuario__opcao ${prestador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
@@ -681,6 +687,11 @@ const CadastroUsuario = () => {
                                     }}
                                 >
                                     <span>Prestar serviços</span>
+                                    {!prestador &&
+                                        <div className="cadastro-usuario__tooltip">
+                                            <ToolTip mensagem='Você deseja oferecer serviços ou produtos para eventos, como por exemplo, buffet, som, decoração, fotografia ou entrega de doces, salgados ou outros produtos? Essa opção de cadastro vai permitir que você anuncie seus serviços ou produtos para ser encontrado por organizadores que precisam do seu trabalho!'/>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             {

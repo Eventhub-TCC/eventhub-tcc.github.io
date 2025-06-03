@@ -131,6 +131,11 @@
     gap: 16px;
 }
 
+.modal-anunciar-servico__titulo-duracao{
+    display: flex;
+    gap: 8px;
+}
+
 .modal-anunciar-servico__input-data input{
     width: 380px;
     flex-direction: column;

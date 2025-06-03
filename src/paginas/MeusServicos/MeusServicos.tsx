@@ -23,6 +23,9 @@ interface Servico {
   imagem4: string | null;
   imagem5: string | null;
   imagem6: string | null;
+  anunciado: boolean;
+  dataInicioAnuncio: string | null;
+  dataFimAnuncio: string | null;
 }
 
 interface categoria {
@@ -46,6 +49,13 @@ const [servicosOrdenados, setServicosOrdenados] = useState<Servico[]>([]);
   const [valorMaximoSelecionado, setValorMaximoSelecionado] = useState("");
   const [statusSelecionado, setStatusSelecionado] = useState("");
   const [servicosFiltrados, setServicosFiltrados] = useState<Servico[]>([]);
+  const [servicosClassificados, setServicosClassificados] = useState<{
+    anunciados: Servico[];
+    naoAnunciados: Servico[];
+  }>({
+    anunciados: [],
+    naoAnunciados: [],
+  });
 
 const obterServicos = async () => {
     try {
@@ -103,6 +113,11 @@ const obterServicos = async () => {
   };
 
     useEffect(() => {
+      const classificados = {
+        anunciados: [] as Servico[],
+        naoAnunciados: [] as Servico[],
+      }
+      
       const servicosOrdenados = ordenarServicos(
         servicos,
         criterioOrdenacao,
@@ -114,9 +129,19 @@ const obterServicos = async () => {
         criterioOrdenacao,
         ordemCrescente
       );
+
+      servicosOrdenados.forEach((servico) => {
+        if (servico.anunciado) {
+            classificados.anunciados.push(servico);
+          } else {
+            classificados.naoAnunciados.push(servico);
+          }
+        } 
+      );
   
       setServicosFiltrados(servicosFiltradosOrdenados);
       setServicosOrdenados(servicosOrdenados);
+      setServicosClassificados(classificados);
     }, [servicos, criterioOrdenacao, ordemCrescente]);
     
 
@@ -335,9 +360,16 @@ const obterServicos = async () => {
                   <div className="sem-servicos-encontrados"></div>
                 </div>
               ) : (
-                    <div className="container">
+                <>
+                  {servicosClassificados.anunciados.length > 0 && (
+                    <details open className="exibicao-eventos">
+                      <summary className="sumario-servicos">
+                        Serviços Anunciados (
+                        {servicosClassificados.anunciados.length})
+                      </summary>
+                      <div className="container">
                         <div className="row g-5">
-                          {servicosOrdenados.map((servico) => (
+                          {servicosClassificados.anunciados.map((servico) => (
                             <div
                               className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4"
                               key={servico.idServico}
@@ -351,6 +383,34 @@ const obterServicos = async () => {
                           ))}
                         </div>
                       </div>
+                    </details>
+                  )}
+                  {servicosClassificados.naoAnunciados.length > 0 && (
+                    <details open className="exibicao-eventos">
+                      <summary className="sumario-servicos">
+                        Serviços Não Anunciados (
+                        {servicosClassificados.naoAnunciados.length})
+                      </summary>
+                      <div className="container">
+                        <div className="row g-5">
+                          {servicosClassificados.naoAnunciados.map((servico) => (
+                            <div
+                              className="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4"
+                              key={servico.idServico}
+                            >
+                              <CardServico
+                                titulo={servico.nomeServico}
+                                imagem={servico.imagem1}
+                                id={servico.idServico}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </details>
+                  )}
+                </>
+                    
               )}
             </div>
             <div

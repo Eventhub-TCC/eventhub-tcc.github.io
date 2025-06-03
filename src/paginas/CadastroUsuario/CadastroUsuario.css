@@ -14,6 +14,20 @@
     padding: 1rem .625rem;
     cursor: pointer;
     transition: background-color 0.3s ease-out;
+    display: flex;
+    height: 60px;
+    padding: 8px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+}
+
+
+.cadastro-usuario__tooltip{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .cadastro-usuario__opcao--selecionada{
@@ -26,6 +40,8 @@
     color: var(--purple-900);
     font-size: 1rem;
     font-weight: 400;
+    flex: 1;
+    text-align: center;
 }
 
 .cadastro-usuario__opcao--selecionada span{
