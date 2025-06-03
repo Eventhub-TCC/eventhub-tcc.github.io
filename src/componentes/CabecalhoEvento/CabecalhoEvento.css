@@ -369,6 +369,14 @@
     gap: 1rem;
 }
 
+.modal-configuracoes-evento__organizador{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+}
+
 .label-input-acompanhantes{
     color: black;
     font-weight: 300;

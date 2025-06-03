@@ -109,7 +109,7 @@ const CadastroServico = () => {
   const instrucao = [
     {
       titulo:'Detalhes do Serviço',
-      texto:'Preencha os campos com os detalhes do serviço que você deseja criar.',
+      texto:'Preencha os campos com os detalhes do serviço que você deseja criar. Um serviço pode representar tanto a prestação de um serviço tradicional — como DJ, buffet, fotografia, segurança, decoração, etc. — quanto a entrega de um produto físico relacionado ao evento, como lembrancinhas, arranjos florais, bolos ou doces e salgados personalizados.',
       campos: [
         <Input
         cabecalho
@@ -206,7 +206,7 @@ const CadastroServico = () => {
           setValorServico(values.floatValue || 0);
         }}
         cabecalho
-        cabecalhoTexto='Valor do Serviço'
+        cabecalhoTexto='Preço do Serviço (Por Unidade Escolhida)'
         dica='Digite o valor do Serviço'
         cor='#F3C623'
         />,
