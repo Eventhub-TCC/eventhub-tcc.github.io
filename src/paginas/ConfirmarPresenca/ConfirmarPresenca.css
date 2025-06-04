@@ -6,6 +6,10 @@
     padding-bottom: 48px;
 }
 
+.confirmar-presenca__input-quantidade{
+    width: 140px;
+}
+
 .confirmar-evento__imagem{
     width: 100%;
     max-height: 341px;

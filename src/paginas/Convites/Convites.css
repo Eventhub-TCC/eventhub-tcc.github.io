@@ -169,6 +169,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 140px;
+  }
+
+  .gerar-convite__container-input{
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   .gerar-convite__checkbox{

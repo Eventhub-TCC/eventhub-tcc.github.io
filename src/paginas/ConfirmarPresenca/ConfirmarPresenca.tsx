@@ -291,12 +291,16 @@ const ConfirmarPresenca = () => {
                                                 </p>
                                                 <div className='confirmar-presenca__acompanhantes'>
                                                     <label htmlFor='acompanhantes' className='confirmar-presenca__acompanhantes-texto'>Acompanhantes</label>
-                                                    <InputQuantidade 
-                                                        qtdMaxima={qtdMaxAcompanhantes} 
-                                                        qtdAtual={qtdAcompanhantes} 
-                                                        setQtdAtual={setQtdAcompanhantes}
-                                                        name='acompanhantes'
-                                                    />
+                                                    <div className="d-flex align-itens-center">
+                                                        <div className='confirmar-presenca__input-quantidade'>
+                                                            <InputQuantidade 
+                                                            qtdMaxima={qtdMaxAcompanhantes} 
+                                                            qtdAtual={qtdAcompanhantes} 
+                                                            setQtdAtual={setQtdAcompanhantes}
+                                                            name='acompanhantes'
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             {

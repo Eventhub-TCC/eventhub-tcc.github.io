@@ -595,12 +595,16 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
               <label htmlFor="qtd-acompanhantes" className='label-input-acompanhantes'>Máximo padrão de acompanhantes por convite</label>
               <ToolTip mensagem="Define o número máximo de acompanhantes que um convidado poderá levar ao preencher seu convite. Esse valor será aplicado como padrão, mas poderá ser ajustado individualmente para convites específicos, se necessário."></ToolTip>
             </div>
-            <InputQuantidade 
+            <div className='d-flex align-itens-center'>
+              <div className='cabecalho-evento__input-acompanhantes'>
+              <InputQuantidade 
               qtdMaxima={99} 
               qtdAtual={qtdAcompanhantes} 
               setQtdAtual={setQtdAcompanhantes}
               name='qtd-acompanhantes'
-            />
+              />
+              </div>
+            </div>
           </div>
         </Modal>
       }

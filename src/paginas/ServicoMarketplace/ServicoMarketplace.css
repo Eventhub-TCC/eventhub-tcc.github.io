@@ -1,0 +1,88 @@
+.servico-marketplace{
+    display: flex;
+    flex-direction: column;
+    padding: 56px 32px;
+    gap: 40px;
+}
+
+.servico-marketplace__prestador{
+    color: var(--purple-700);
+}
+
+.servico-marketplace__compra-info{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--purple-700);
+    border-radius: 16px;
+    padding: 48px 40px ;
+    gap: 42px;
+    background-color: white;
+    width: 40%;
+}
+
+.servico-marketplace__descricao{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--purple-700);
+    border-radius: 16px;
+    padding: 48px 40px ;
+    gap: 16px;
+    background-color: white;
+}
+
+.servico-marketplace__botao-quantidade{
+    border-radius: 100%;
+    border: none;
+    background-color: var(--purple-700);
+    color: white;
+    height: 32px;
+    width: 32px;
+}
+
+.servico-marketplace__compra-info-titulo{
+    font-size: 22px;
+    color: var(--purple-700);
+}
+
+.servico-marketplace__compra-info-texto{
+    font-size: 16px;
+    color: var(--purple-700);
+}
+
+.servico-marketplace__compra-info-preco{
+    font-size: 32px;
+    color: var(--purple-700);
+    font-weight: semibold;
+}
+
+.servico-marketplace__compra-info-unidade{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.servico-marketplace__compra-info-total{
+    font-size: 20px;
+    color: var(--purple-800);
+}
+
+.traco-roxo{
+    width: 100%;
+    height: 2px;
+    background-color: var(--purple-700);
+}
+
+.hiperlink{
+    color: var(--purple-700);
+    text-decoration: none;
+}
+
+.servico-marketplace__imagens-container{
+    display: flex;
+    width: 60%;
+}
+.servico-marketplace__imagens{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+}

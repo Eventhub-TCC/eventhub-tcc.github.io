@@ -4,6 +4,10 @@
     box-shadow: 0px 4px 9px 0px rgba(140, 93, 255, 0.16);
 }
 
+.cabecalho-evento__input-acompanhantes{
+    width: 140px;
+}
+
 .titulo-infos-eventos{
     display: flex;
     justify-content: space-between;

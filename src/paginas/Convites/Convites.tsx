@@ -281,13 +281,15 @@ const Convites = () => {
                     :
                     <div className="gerar-convite">
                       <p className="gerar-convite__texto">Defina a quantidade máxima de acompanhantes para este convite.</p>
-                      <div className="gerar-convite__input">
+                      <div className="gerar-convite__container-input">
+                        <div className="gerar-convite__input">
                         <InputQuantidade 
                           qtdMaxima={99}
                           qtdAtual={qtdAcompanhantes}
                           setQtdAtual={setQtdAcompanhantes}
                           nome='qtd-acompanhantes'
                         />
+                      </div>
                       </div>
                       <div className="gerar-convite__checkbox">
                         <CheckBox 

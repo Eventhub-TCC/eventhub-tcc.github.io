@@ -5,7 +5,8 @@ import Input from "../Input/Input";
 const InputQuantidade = ({qtdMinima = 0, qtdMaxima, qtdAtual, setQtdAtual, name}: any) => {
   return (
     <div className='input-quantidade'>
-        <button 
+        <div>
+            <button 
             className='input-quantidade__botao' 
             type='button' 
             onClick={() => setQtdAtual(qtdAtual > qtdMinima ? qtdAtual - 1 : qtdMinima)}
@@ -15,9 +16,10 @@ const InputQuantidade = ({qtdMinima = 0, qtdMaxima, qtdAtual, setQtdAtual, name}
                 <path d="M14.4001 9L3.6001 9" stroke="white" strokeWidth="2" strokeLinecap="round"/>
             </svg>
         </button>
+        </div>
         <div className='input-quantidade__campo'>
             <PatternFormat   
-                format={'##'}             
+                format={'#'.repeat(qtdMaxima.toString().length)}  
                 value={qtdAtual}
                 onValueChange={(values) => {
                     setQtdAtual(Number(values.value));
@@ -29,7 +31,8 @@ const InputQuantidade = ({qtdMinima = 0, qtdMaxima, qtdAtual, setQtdAtual, name}
                 alinharTexto='center'
             />
         </div>
-        <button 
+        <div>
+            <button 
             className='input-quantidade__botao' 
             type='button' 
             onClick={() => setQtdAtual(qtdAtual < qtdMaxima ? qtdAtual + 1 : qtdMaxima)}
@@ -39,6 +42,7 @@ const InputQuantidade = ({qtdMinima = 0, qtdMaxima, qtdAtual, setQtdAtual, name}
                 <path d="M9.0001 3.59961L9.0001 14.3996M14.4001 8.99961L3.6001 8.99961" stroke="white" strokeWidth="2" strokeLinecap="round"/>
             </svg>
         </button>
+        </div>
     </div>
   )
 }

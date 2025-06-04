@@ -22,6 +22,7 @@ import CarrinhoDeCompras from './paginas/CarrinhoDeCompras/CarrinhoDeCompras'
 import Pedidos from './paginas/Pedidos/Pedidos'
 import Marketplace from './paginas/Marketplace/Marketplace'
 import InformacoesPedido from './paginas/InformacoesPedido/InformacoesPedido'
+import ServicoMarketplace from './paginas/ServicoMarketplace/ServicoMarketplace'
 
 const App = () => {
   return (
@@ -47,7 +48,7 @@ const App = () => {
           </Route>
           <Route path='marketplace' element={<OrganizadorLayout />}>
             <Route index element={<Marketplace />}/>
-            {/* <Route path='servico/:idServico' element={<ServicoMarketplace />}/> */}
+            <Route path='servico/:idServico' element={<ServicoMarketplace />}/>
             <Route path='carrinho' element={<CarrinhoDeCompras />}/>
           </Route>
           <Route path='prestador' element={<PrestadorLayout />}>
