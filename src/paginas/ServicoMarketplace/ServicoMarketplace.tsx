@@ -190,7 +190,8 @@ const ServicoMarketplace = () => {
         nomeItem: nomeServico,
         valorUnitario: valor,
         quantidade: quantidade,
-        instrucoes: instrucao
+        instrucoes: instrucao,
+        imagem: imagens[0] 
     }
 
     const carrinho = localStorage.getItem('carrinho')
