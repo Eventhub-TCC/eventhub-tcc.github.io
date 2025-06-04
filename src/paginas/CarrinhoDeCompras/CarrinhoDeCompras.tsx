@@ -20,11 +20,13 @@ interface ItemCarrinho {
 }
 
 const CarrinhoDeCompras = () => {
-  const [exibirInstrucoes, setExibirInstrucoes] = useState(false);
 const [carrinho, setCarrinho] = useState<ItemCarrinho[]>(() => {
   const carrinhoSalvo = localStorage.getItem("carrinho");
   return carrinhoSalvo ? JSON.parse(carrinhoSalvo) : [];
 });
+const [exibirInstrucoes, setExibirInstrucoes] = useState(() =>
+  carrinho.map(item => !!item.instrucoes)
+);
   const [evento, setEvento] = useState("");
   const [modalFinalizar, setModalFinalizar] = useState(false);
   const [eventos, setEventos] = useState<{ id: string; nome: string }[]>([]);
@@ -96,7 +98,7 @@ const formatarPreco = (valor: number) => {
         nomeItem: item.nomeItem,
         valorUnitario: item.valorUnitario,
         quantidade: item.quantidade,
-        instrucoes: item.instrucoes,
+        instrucao: item.instrucoes,
         imagem: item.imagem,
       }));
       await api.post("users/pedidos", {
@@ -291,12 +293,12 @@ const formatarPreco = (valor: number) => {
                 </div>
                 <div className="container-carrinho-item__checkbox">
                   <Checkbox
-                    ativado={exibirInstrucoes}
-                    funcao={() => setExibirInstrucoes(!exibirInstrucoes)}
+                    ativado={exibirInstrucoes[index]}
+                    funcao={() => setExibirInstrucoes(prev => prev.map((val, i) => i === index ? !val : val))}
                     texto="Incluir instrução para o prestador de serviços"
                   ></Checkbox>
                 </div>
-                {exibirInstrucoes ? (
+                {exibirInstrucoes[index] ? (
                   <div className="container-carrinho-item__instrucoes">
                     <details open className="container-carrinho-item__detalhes">
                       <summary className="container-carrinho-item__sumario">
@@ -311,6 +313,12 @@ const formatarPreco = (valor: number) => {
                           maximo={4000}
                           obrigatorio
                           valor={item.instrucoes}
+                          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+                            const novoCarrinho = [...carrinho];
+                            novoCarrinho[index].instrucoes = e.target.value;
+                            setCarrinho(novoCarrinho);
+                          }}
+                          
                         />
                       </div>
                     </details>

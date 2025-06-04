@@ -62,7 +62,7 @@ export default function TabelaPedido({ titulo, cor, pedidos }: any) {
               <div key={pedido.idPedido} className="tabela-pedido__pedido">
                 <div className="tabela-pedido__pedido-infos">
                   <div className="tabela-pedido__pedido-id">
-                    <NavLink style={{color:` ${cor}`}} to={`/pedidos/${pedido.idPedido}/informacoes-pedido`}> Pedido#{pedido.idPedido} </NavLink>
+                    <NavLink style={{color:` ${cor}`}} to={`/organizador/pedidos/${pedido.idPedido}/informacoes-pedido`}> Pedido#{pedido.idPedido} </NavLink>
                   </div>
                   <div className="tabela-pedido__pedidos-data-num">
                     <div className="tabela-pedido__pedidos-data">{new Date(pedido.dataPedido).toLocaleDateString('pt-BR')}</div>

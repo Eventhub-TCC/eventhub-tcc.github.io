@@ -175,7 +175,23 @@ const ServicoMarketplace = () => {
                 })}   
                 </Select>
                 {erro.evento.status ? <ErroCampoForm mensagem={erro.evento.mensagem}/> : ''}
-            </div>
+                <CheckBox
+                    texto='Incluir instrução para o Prestador de serviços'
+                    funcao={() => {setInstrucaoModal(!instrucaoModal);}}
+                    ativado ={instrucaoModal}
+                    />
+                </div>
+                {instrucaoModal?
+                <div>
+                <TextArea
+                    titulo='Instrução (opcional)'
+                    placeholder='Digite as instruções...'
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {setInstrucao(e.target.value)}} 
+                    valor={instrucao}
+                    maximo={500}
+                    contador
+                />
+                </div>:''}
         </Modal>
     }
 
@@ -220,7 +236,7 @@ const ServicoMarketplace = () => {
                 nomeItem: nomeServico,
                 valorUnitario: valor,
                 quantidade: quantidade,
-                instrucoes: instrucao,
+                instrucao: instrucao,
                 imagem: imagens[0] 
             }]
             await api.post('users/pedidos', {

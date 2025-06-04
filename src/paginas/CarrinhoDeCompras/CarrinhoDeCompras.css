@@ -88,11 +88,15 @@
 .container-carrinho-item-info__produto-imagem{
     width: 120px;
     height: 87px;
+    border-radius: 8px;
+    margin-right: 12px;
 }
 
 .container-carrinho-item-info__produto-imagem img{
     width: 120px;
     height: 87px;
+    border-radius: 8px;
+    margin-right: 12px;
 }
 
 .container-carrinho-item-info__produto-nome-preco{
