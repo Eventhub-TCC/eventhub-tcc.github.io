@@ -1,0 +1,112 @@
+.tabela-pedido-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 16px;
+    background: #FFF;
+    }
+
+.tabela-pedido-titulo{
+    display: flex;
+    padding: 24px;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    cursor: pointer;
+    border-radius: 16px 16px 0px 0px;
+    justify-content: space-between;
+}
+
+.tabela-pedido-titulo__itens{
+    display: flex;
+    gap: 16px;
+    flex-direction: row;
+}
+
+.tabela-pedido-titulo span{
+    color: #FFF;
+    text-align: justify;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.tabela-pedido__seta{
+    width: 24px;
+    height: 24px;
+    transform: rotate(-90deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+.tabela-pedido__seta-abrir{
+    transform: rotate(-0deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+.tabela-pedido__pedido{
+    display: flex;
+    padding: 16px 24px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+}
+
+.tabela-pedido__pedido-infos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.tabela-pedido__pedido-id{
+    text-align: justify;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.tabela-pedido__pedidos-data-num{
+    color: #6C757D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.tabela-pedido__pedido-valor{
+    color: #000;
+    text-align: justify;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    display: flex;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+.tabela-pedido__total{
+    display: flex;
+    padding: 24px;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+    border-radius: 0px 0px 16px 16px;
+}
+
+.tabela-pedido__total span{
+    color: #FFF;
+    text-align: justify;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
