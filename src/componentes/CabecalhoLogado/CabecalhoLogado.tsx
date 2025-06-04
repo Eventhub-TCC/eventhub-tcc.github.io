@@ -82,7 +82,7 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
                         </div>
                     </Link>
                 </div>
-                {
+                {/* {
                     tipo === 'marketplace' &&
                     <div className='cabecalho-logado__container-pesquisa'>
                         <Input 
@@ -95,7 +95,7 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPesquisa(e.target.value)} 
                         />
                     </div>
-                }
+                } */}
                 <div className='cabecalho-logado__container-opcoes'>
                     {
                         tipo === 'marketplace' &&

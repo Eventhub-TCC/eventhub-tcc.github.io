@@ -203,6 +203,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
       formData.append("qntMinima", servicoEditado.qntMinima);
       formData.append("qntMaxima", servicoEditado.qntMaxima);
       formData.append("valorServico", servicoEditado.valorServico);
+      formData.append("valorPromoServico", servicoEditado.valorPromoServico);
       imagemOriginal.map((imagem: string) => {
         const imagemSemLink = imagem.split('/')
         formData.append("imagensMantidas", imagemSemLink[imagemSemLink.length - 1]);
@@ -506,25 +507,25 @@ const unidadeValor: Unidade[] = [
                 </div>    
               </div>
               <div className='novos-dados-eventos'>
-                <div className='texto-input-hora-inicio-evento'>
-                  <div className='texto-input-data'>
-                    <div className='textos'>Unidade de cobrança</div>
-                    <div className='input-tamanho'>
-                      <Select 
-                        textoPadrao = 'Selecione a Unidade'
-                        esconderValorPadrao
-                        cor='var(--yellow-700)'
-                        value={servicoEditado?.unidadeCobranca || ""}
-                        onChange={(e:any) => setServicoEditado((prev:any) =>
-                          prev ? { ...prev, unidadeCobranca: e.target.value } : null
-                        )}>
-                        {unidadeValor.map((unidade)=>{
-                        return <option id={unidade.id.toString()} value={unidade.id}>{unidade.nome}</option>
-                        })}
-                      </Select>
-                      {erros.unidadeCobranca && <ErroCampoForm mensagem={erros.unidadeCobranca}/>}
-                    </div>
+                <div className='texto-input-data' style={{width: '100%'}}>
+                  <div className='textos'>Unidade de cobrança</div>
+                  <div className='input-tamanho' style={{width: '100%'}}>
+                    <Select 
+                      textoPadrao = 'Selecione a Unidade'
+                      esconderValorPadrao
+                      cor='var(--yellow-700)'
+                      value={servicoEditado?.unidadeCobranca || ""}
+                      onChange={(e:any) => setServicoEditado((prev:any) =>
+                        prev ? { ...prev, unidadeCobranca: e.target.value } : null
+                      )}>
+                      {unidadeValor.map((unidade)=>{
+                      return <option id={unidade.id.toString()} value={unidade.id}>{unidade.nome}</option>
+                      })}
+                    </Select>
+                    {erros.unidadeCobranca && <ErroCampoForm mensagem={erros.unidadeCobranca}/>}
                   </div>
+                </div>
+                <div className='texto-input-hora-inicio-evento'>
                   <div className='horario-inicio-fim-evento'>
                     <div className='textos'>Valor do serviço por unidade</div>
                     <div className='input-tamanho'>
@@ -535,6 +536,20 @@ const unidadeValor: Unidade[] = [
                           prev ? { ...prev, valorServico: e.target.value } : null
                         )} 
                         dica='R$'
+                      />
+                      {erros.valorServico && <ErroCampoForm mensagem={erros.valorServico}/>}
+                    </div>
+                  </div>
+                  <div className='horario-inicio-fim-evento'>
+                    <div className='textos'>Valor promocional do serviço por unidade</div>
+                    <div className='input-tamanho'>
+                      <Input 
+                        cor='var(--yellow-700)'
+                        value={servicoEditado?.valorPromoServico || ""}  
+                        onChange={(e:any) => setServicoEditado((prev:any) =>
+                          prev ? { ...prev, valorPromoServico: e.target.value } : null
+                        )} 
+                        dica='Digite um valor promocional'
                       />
                       {erros.valorServico && <ErroCampoForm mensagem={erros.valorServico}/>}
                     </div>

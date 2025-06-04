@@ -11,6 +11,7 @@ interface Servico{
     descricaoServico: string;
     unidadeCobranca: string;
     valorServico: number;
+    valorServicoPromo: number | null;
     qntMinima: number;
     qntMaxima: number;
     imagem1: string;

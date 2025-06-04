@@ -3,6 +3,7 @@
   border-bottom: 3px solid var(--purple-700);
   position: sticky;
   top: 80px;
+  z-index: 1;
 }
 
 .layout-categorias > ul{
