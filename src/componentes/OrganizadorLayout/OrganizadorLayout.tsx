@@ -95,13 +95,13 @@ const OrganizadorLayout = () => {
           </BarraLateral>
         </div>
         <main className={`layout-info ${!marketplace ? 'layout-info--padding' : ''} ${minimizada ? 'layout-info-minimizada' : ''}`}>
-          {
+          {/* {
             marketplace &&
             <CategoriasMarketplace 
               categoriasPrincipais={categoriasPrincipais} 
               outrasCategorias={outrasCategorias}
             />
-          }
+          } */}
           {
             marketplace ?
             <div className="layout-info--padding">
