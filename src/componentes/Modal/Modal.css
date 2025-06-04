@@ -5,7 +5,6 @@
     flex-direction: column;
     border: solid 1px #CED4DA;
     border-radius: 20px;
-    overflow: visible;
     box-shadow: 0px 2px 2px 0px rgba(33, 37, 41, 0.06), 0px 0px 1px 0px rgba(33, 37, 41, 0.08);
 }
 
