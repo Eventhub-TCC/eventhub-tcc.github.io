@@ -7,6 +7,7 @@ import Instrucao from '../../componentes/Instrucao/Instrucao';
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm';
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario';
 import api from '../../axios';
+import { Helmet } from 'react-helmet-async';
 
 const EsqueciSenha = () => {
     const [email, setEmail] = useState('');
@@ -35,71 +36,76 @@ const EsqueciSenha = () => {
     }
 
     return (
-        <Formulario titulo={formSucesso === null ? 'Esqueci minha senha' : ''} onSubmit={enviarLink}>
-            {
-                formSucesso === null ?
-                    <>
-                        <Instrucao 
-                            titulo="Informe o seu e-mail" 
-                            texto="Para redefinir sua senha de acesso, informe o e-mail associado à sua conta. Enviaremos um link para a criação de uma nova senha."
-                        />
-                        <div>
-                            <Input 
-                                cabecalho
-                                cabecalhoTexto='E-mail'
-                                tipo='email'
-                                dica='Digite seu e-mail'
-                                obrigatorio
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                    setEmail(e.target.value);
-                                    setErro(false);
-                                }}
-                                valor={email}
-                                name='email'
-                                autoComplete='email'
+        <>
+            <Helmet>
+                <title>Esqueci minha senha | EventHub</title>
+            </Helmet>
+            <Formulario titulo={formSucesso === null ? 'Esqueci minha senha' : ''} onSubmit={enviarLink}>
+                {
+                    formSucesso === null ?
+                        <>
+                            <Instrucao 
+                                titulo="Informe o seu e-mail" 
+                                texto="Para redefinir sua senha de acesso, informe o e-mail associado à sua conta. Enviaremos um link para a criação de uma nova senha."
                             />
-                            {
-                                erro &&
-                                <ErroCampoForm 
-                                    mensagem='E-mail não encontrado'
+                            <div>
+                                <Input 
+                                    cabecalho
+                                    cabecalhoTexto='E-mail'
+                                    tipo='email'
+                                    dica='Digite seu e-mail'
+                                    obrigatorio
+                                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                        setEmail(e.target.value);
+                                        setErro(false);
+                                    }}
+                                    valor={email}
+                                    name='email'
+                                    autoComplete='email'
                                 />
-                            }
-                        </div>
-                        <div className='esqueci-senha__container-botao'>
-                            <div className='esqueci-senha__botao'>
-                                <Botao 
-                                    tamanho='max'
-                                    texto={
-                                        carregando ?
-                                            <div className="spinner-border spinner-border-sm" role="status">
-                                                <span className="visually-hidden">Carregando...</span>
-                                            </div>
-                                        : 'Enviar'
-                                    }
-                                    submit
-                                />
+                                {
+                                    erro &&
+                                    <ErroCampoForm 
+                                        mensagem='E-mail não encontrado'
+                                    />
+                                }
                             </div>
-                        </div>
-                    </>
-                : formSucesso ?
+                            <div className='esqueci-senha__container-botao'>
+                                <div className='esqueci-senha__botao'>
+                                    <Botao 
+                                        tamanho='max'
+                                        texto={
+                                            carregando ?
+                                                <div className="spinner-border spinner-border-sm" role="status">
+                                                    <span className="visually-hidden">Carregando...</span>
+                                                </div>
+                                            : 'Enviar'
+                                        }
+                                        submit
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    : formSucesso ?
+                        <FeedbackFormulario 
+                            icone='fa-solid fa-envelope-circle-check'
+                            titulo='E-mail enviado!'
+                            texto='O e-mail de redefinição de senha foi enviado. Caso não encontre na caixa de entrada, verifique a caixa de spam.'
+                            textoBotao='Voltar ao início'
+                            caminhoBotao='/'
+                        />
+                    : 
                     <FeedbackFormulario 
-                        icone='fa-solid fa-envelope-circle-check'
-                        titulo='E-mail enviado!'
-                        texto='O e-mail de redefinição de senha foi enviado. Caso não encontre na caixa de entrada, verifique a caixa de spam.'
+                        erro
+                        icone='fa-regular fa-circle-xmark'
+                        titulo='Oops...'
+                        texto='Um problema inesperado ocorreu e não foi possível enviar o e-mail de redefinição de senha. Por favor, tente novamente mais tarde.'
                         textoBotao='Voltar ao início'
                         caminhoBotao='/'
                     />
-                : 
-                <FeedbackFormulario 
-                    erro
-                    icone='fa-regular fa-circle-xmark'
-                    titulo='Oops...'
-                    texto='Um problema inesperado ocorreu e não foi possível enviar o e-mail de redefinição de senha. Por favor, tente novamente mais tarde.'
-                    textoBotao='Voltar ao início'
-                    caminhoBotao='/'
-                />
-            }
-        </Formulario>
+                }
+            </Formulario>
+        </>
     )
 }
 

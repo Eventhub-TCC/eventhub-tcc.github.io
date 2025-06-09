@@ -31,6 +31,7 @@
 .informacoes-servico__texto-detalhes{
     font-size: 18px;
     margin: 0;
+    white-space: pre-line;
 }
 
 .informacoes-servico__imagens{

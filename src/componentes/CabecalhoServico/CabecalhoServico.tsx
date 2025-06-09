@@ -12,6 +12,7 @@ import Alerta from '../Alerta/Alerta'
 import ToggleBotao from '../ToggleBotao/ToggleBotao'    
 import InputRadio from '../InputRadio/InputRadio'
 import ToolTip from '../ToolTip/ToolTip'
+import TextArea from '../TextArea/TextArea'
 
 
 interface TipoServico {
@@ -160,8 +161,6 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
 
   useEffect(()=>{
     setPreview(()=> [...imagemOriginal, ...imagemServico.map((imagem: File) => URL.createObjectURL(imagem))])
-    console.log('imagens antigas: ', imagemOriginal.length);
-    console.log('imagens novas: ', imagemServico.length);
   },[imagemServico,imagemOriginal])
   
   useEffect(()=>{
@@ -289,7 +288,7 @@ const unidadeValor: Unidade[] = [
               <div className='alinhamento-info-icone-servico'>
                 <span className='icone-preco-servico'>R$</span>
                 <div>
-                  {Number(servico.valorServico).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim()}<span className='cor-unidade-servico'>{`/${unidade}`}</span>
+                  {Number(servico.valorServico).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim()}<span className='cor-unidade-servico'>{`/${unidade.toLowerCase()}`}</span>
                 </div>
               </div>
             </div>
@@ -443,24 +442,26 @@ const unidadeValor: Unidade[] = [
                         funcao={(e: ChangeEvent<HTMLSelectElement>) => setServicoEditado((prev:any) => prev ? { ...prev, tipoServico: e.target.value } : null)}
                         required={true}
                       >
-                        {tipoServicoDisponiveis.map(tipo => <option value={tipo.idTipoServico}>{tipo.descricaoTipoServico}</option>)}
+                        {tipoServicoDisponiveis.map(tipo => <option value={tipo.idTipoServico} key={tipo.idTipoServico}>{tipo.descricaoTipoServico}</option>)}
                       </Select>
                       {erros.idTipoServico && <ErroCampoForm mensagem={erros.idTipoServico}/>}
                     </div>
                   </div>
                 </div>
                 <div className='descricao-input-evento'>
-                  <div>Descrição do servico(Opcional)</div>
                   <div className='input-tamanho-descricao'>
-                    <Input 
+                    <TextArea
+                      titulo='Descrição do serviço'
+                      placeholder='Digite uma descrição para o seu serviço...'
+                      name='descricao-servico'
                       cor='var(--yellow-700)'
-                      value={servicoEditado?.descricaoServico || ""}  
+                      valor={servicoEditado?.descricaoServico || ""}
                       onChange={(e:any) => setServicoEditado((prev:any) =>
-                      prev ? { ...prev, descricaoServico: e.target.value } : null
+                        prev ? { ...prev, descricaoServico: e.target.value } : null
                       )} 
-                      type='text' 
-                      dica='Digite uma descrição para o seu servico...'
-                    />
+                      maximo={4000}
+                      obrigatorio
+                      />
                     {erros.descricaoServico && <ErroCampoForm mensagem={erros.descricaoServico}/>} 
                   </div>
                 </div>
@@ -482,7 +483,7 @@ const unidadeValor: Unidade[] = [
                   />
                   {preView ? preView.map((imagem: string, index:number)=>{
                     if (preView[index] !== null)
-                    return <div className="col-12 col-sm-6 cadastro-servico__container-imagem">
+                    return <div className="col-12 col-sm-6 cadastro-servico__container-imagem" key={index}>
                       <img key={imagem} src={imagem} alt="imagem do serviço" className="cadastro-servico__imagem-preview"/>
                       <button className='cadastro-servico__remover-image' type="button" onClick={()=>{
                         inputImagemRef.current!.value = ''
@@ -519,7 +520,7 @@ const unidadeValor: Unidade[] = [
                         prev ? { ...prev, unidadeCobranca: e.target.value } : null
                       )}>
                       {unidadeValor.map((unidade)=>{
-                      return <option id={unidade.id.toString()} value={unidade.id}>{unidade.nome}</option>
+                      return <option id={unidade.id.toString()} value={unidade.id} key={unidade.id}>{unidade.nome}</option>
                       })}
                     </Select>
                     {erros.unidadeCobranca && <ErroCampoForm mensagem={erros.unidadeCobranca}/>}

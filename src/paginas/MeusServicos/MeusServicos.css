@@ -94,3 +94,11 @@
     width: 500px;
     height: 500px;
 }
+
+.conteudo-principal-meus-servicos__limpar-filtros{
+    color: var(--yellow-700);
+    font-size: 14px;
+    font-weight: 300;
+    text-decoration-line: underline;
+    cursor: pointer;
+}

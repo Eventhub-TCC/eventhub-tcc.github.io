@@ -2,7 +2,7 @@ import { NavLink } from "react-router"
 import "./ItemBarraLateral.css"
 import { useEffect, useState } from "react";
 
-const ItemBarraLateral = ({minimizado = false, texto, icone, caminho, corSelecionado = "var(--purple-700)", children}: any) => {
+const ItemBarraLateral = ({minimizado = false, texto, icone, caminho, corSelecionado = "var(--purple-700)", corIconeTextoSelecionado="white", children}: any) => {
     const [larguraTela, setLarguraTela] = useState(window.innerWidth);
     
     useEffect(() => {
@@ -18,7 +18,7 @@ const ItemBarraLateral = ({minimizado = false, texto, icone, caminho, corSelecio
           <NavLink 
               to={caminho} 
               className={({isActive}: any) => (`item-barra__link ${isActive ? "item-barra__link--ativo" : ''}`)} 
-              style={{'--cor-barra-lateral': corSelecionado} as React.CSSProperties}
+              style={{'--cor-barra-lateral': corSelecionado, '--cor-icone-texto-barra': corIconeTextoSelecionado} as React.CSSProperties}
           >
               <div className="item-barra__icone-container">
                   {

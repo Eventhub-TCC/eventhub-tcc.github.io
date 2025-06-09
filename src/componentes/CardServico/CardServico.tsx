@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 const CardServico = ({titulo, imagem, id}:any) => {
 
   return (
-  <Link to={`${id}/informacoes-meus-servicos`}>
+  <Link to={`${id}/informacoes-meus-servicos`} style={{textDecoration: 'none', color: 'inherit'}}>
     <div className="card-servico">
       <div className="card-servico__centro">
         <div className="card-servico__frente">

@@ -9,6 +9,7 @@ import InputQuantidade from '../../componentes/InputQuantidade/InputQuantidade'
 import Select from '../../componentes/Select/Select'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import { useParams } from 'react-router'
+import { Helmet } from 'react-helmet-async'
 
 interface TipoServico {
     idTipoServico: string
@@ -251,77 +252,82 @@ const ServicoMarketplace = () => {
         }
     }
   return (
-    <div className='servico-marketplace'>
-        <div>
+    <>
+        <Helmet>
+            <title>{nomeServico} | Marketplace | EventHub</title>
+        </Helmet>
+        <div className='servico-marketplace'>
             <div>
-                <div className='d-flex gap-1'>
-                    <a href="" className='hiperlink'>Marketplace</a>
-                    <p>&gt;</p>
-                    {/* <a href="" className='hiperlink'>{tipoServico.descricaoTipoServico}</a>
-                    <p>&gt;</p> */}
-                    <a href="" className='hiperlink'>{nomeServico}</a>
-                </div>
-                <div className='traco-roxo'/>
-                <h1 className='layout-titulo'>
-                    {nomeServico}
-                </h1>
-            </div>
-            <div className='d-flex gap-1'>
-                <p>Oferecido por</p>
-                <a href="" className='servico-marketplace__prestador'>{nomePrestador}</a>
-            </div>
-        </div>
-        <div className='d-flex gap-5'>
-            <div className='servico-marketplace__imagens-container'>
-                    <img className={'servico-marketplace__imagens'}src={`http://localhost:3000/files/${imagens[0]}`}/>
-            </div>
-            <div className='servico-marketplace__compra-info'>
-                <div className='servico-marketplace__compra-info-titulo'>Informações de compra</div>
-                <div className='d-flex flex-column gap-2'>
-                    <div className='servico-marketplace__compra-info-texto'>Preço</div>
-                    <div className='d-flex align-items-baseline'>
-                        <div className='servico-marketplace__compra-info-preco'>{formatarPreco(valor)}</div>
-                        <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
+                <div>
+                    <div className='d-flex gap-1'>
+                        <a href="" className='hiperlink'>Marketplace</a>
+                        <p>&gt;</p>
+                        {/* <a href="" className='hiperlink'>{tipoServico.descricaoTipoServico}</a>
+                        <p>&gt;</p> */}
+                        <a href="" className='hiperlink'>{nomeServico}</a>
                     </div>
+                    <div className='traco-roxo'/>
+                    <h1 className='layout-titulo'>
+                        {nomeServico}
+                    </h1>
                 </div>
-                <div className='d-flex gap-5'>
-                    <div className='d-flex row flex-column gap-3 col-6'>
-                        <div className='servico-marketplace__compra-info-texto'>quantidade</div>
-                        <div className='d-flex gap-2'>
-                            {qntMinima !== qntMaxima ?
-                            <InputQuantidade
-                            qtdMinima={qntMinima}
-                            qtdMaxima={qntMaxima}
-                            qtdAtual={quantidade}
-                            setQtdAtual={setQuantidade}
-                            name='quantidade'
-                            />
-                            :
-                            <p>{qntMinima} {unidadeValor[Number(unidade)].nome}</p>}
+                <div className='d-flex gap-1'>
+                    <p>Oferecido por</p>
+                    <a href="" className='servico-marketplace__prestador'>{nomePrestador}</a>
+                </div>
+            </div>
+            <div className='d-flex gap-5'>
+                <div className='servico-marketplace__imagens-container'>
+                        <img className={'servico-marketplace__imagens'}src={`http://localhost:3000/files/${imagens[0]}`}/>
+                </div>
+                <div className='servico-marketplace__compra-info'>
+                    <div className='servico-marketplace__compra-info-titulo'>Informações de compra</div>
+                    <div className='d-flex flex-column gap-2'>
+                        <div className='servico-marketplace__compra-info-texto'>Preço</div>
+                        <div className='d-flex align-items-baseline'>
+                            <div className='servico-marketplace__compra-info-preco'>{formatarPreco(valor)}</div>
+                            <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
                         </div>
                     </div>
-                    <div className='d-flex flex-column gap-3 col-6'>
-                        <div className='servico-marketplace__compra-info-texto'>Total</div>
-                        <div className='servico-marketplace__compra-info-total'>{formatarPreco(valorTotal)}</div>
+                    <div className='d-flex gap-5'>
+                        <div className='d-flex row flex-column gap-3 col-6'>
+                            <div className='servico-marketplace__compra-info-texto'>quantidade</div>
+                            <div className='d-flex gap-2'>
+                                {qntMinima !== qntMaxima ?
+                                <InputQuantidade
+                                qtdMinima={qntMinima}
+                                qtdMaxima={qntMaxima}
+                                qtdAtual={quantidade}
+                                setQtdAtual={setQuantidade}
+                                name='quantidade'
+                                />
+                                :
+                                <p>{qntMinima} {unidadeValor[Number(unidade)].nome}</p>}
+                            </div>
+                        </div>
+                        <div className='d-flex flex-column gap-3 col-6'>
+                            <div className='servico-marketplace__compra-info-texto'>Total</div>
+                            <div className='servico-marketplace__compra-info-total'>{formatarPreco(valorTotal)}</div>
+                        </div>
                     </div>
-                </div>
-                <div className='d-flex flex-column gap-2'>
-                    <div>
-                        <Botao tamanho='max' texto='Comprar' funcao={()=>{setModalFinalizar(true)}}/>
-                    </div>
-                    <div>
-                        <Botao texto='Adicionar Carrinho' tamanho='max' vazado funcao={()=>{setModalAdicionar(true)}}/>
+                    <div className='d-flex flex-column gap-2'>
+                        <div>
+                            <Botao tamanho='max' texto='Comprar' funcao={()=>{setModalFinalizar(true)}}/>
+                        </div>
+                        <div>
+                            <Botao texto='Adicionar Carrinho' tamanho='max' vazado funcao={()=>{setModalAdicionar(true)}}/>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div className='servico-marketplace__descricao'>
+                <div className='servico-marketplace__compra-info-titulo'>descrição</div>
+                <div className='servico-marketplace__descricao-texto'>{descricao}</div>
+            </div>
+            {modalAdicionar ?  modals.adicionarCarrinho :''}
+            {modalFinalizar ? modals.finalizarCompra :''}
         </div>
-        <div className='servico-marketplace__descricao'>
-            <div className='servico-marketplace__compra-info-titulo'>descrição</div>
-            <div>{descricao}</div>
-        </div>
-        {modalAdicionar ?  modals.adicionarCarrinho :''}
-        {modalFinalizar ? modals.finalizarCompra :''}
-    </div>
+    </>
   )
 }
 
