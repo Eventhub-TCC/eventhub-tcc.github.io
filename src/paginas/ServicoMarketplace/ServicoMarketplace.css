@@ -90,6 +90,9 @@
 .servico-marketplace__descricao-texto{
     white-space: pre-line;
 }
+.servico-marketplace__descricao-texto{
+    white-space: pre-line;
+}
 .comprar-servico__alertas {
     position: fixed;
     top: 10%;
