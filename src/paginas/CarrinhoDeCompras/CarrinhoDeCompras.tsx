@@ -430,16 +430,30 @@ const formatarPreco = (valor: number) => {
             Pedido realizado com sucesso!
         </div>
         <div className="carrinho-finalizado__texto">
-            Seu pedido foi realizado com sucesso!
+            Seu pedido foi realizado com sucesso! Você pode acompanhar o status do seu pedido na seção "Meus Pedidos" do Marketplace, ou então acessar o marketplace para continuar comprando.
         </div>
         <div> 
-            <Botao
-            tamanho="max"
-            texto="Ver meus pedidos"
-            funcao={() => {
+          <div className='carrinho-finalizado__botoes'> 
+            <div style={{width: '225px'}}>
+              <Botao
+                tamanho="max"
+                texto="Continuar comprando"
+                funcao={() => {
+                window.location.href = "/marketplace";
+                }}
+                cor='#1A7A56'
+              />
+            </div> 
+            <div style={{width: '225px'}}>
+              <Botao
+                tamanho="max"
+                texto="Ver meus pedidos"
+                funcao={() => {
                 window.location.href = "/organizador/pedidos";
-            }}
-            cor='#1A7A56' />
+                }}
+                cor='#1A7A56' />
+              </div>
+            </div>
         </div>
 
 

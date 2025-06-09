@@ -367,4 +367,14 @@
     font-style: normal;
     font-weight: 300;
     line-height: 28px;
+    max-width: 90%;
+}
+
+.carrinho-finalizado__botoes{
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    padding: 8px;
+    justify-content: center;
 }

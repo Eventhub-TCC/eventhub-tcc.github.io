@@ -43,7 +43,7 @@ const App = () => {
             <Route path='meus-eventos/:idEvento/informacoes-meus-eventos' element={<InformacoesMeusEventos />}/>
             <Route path="meus-eventos/:idEvento/convidados" element={<Convidados/>} />
             <Route path="meus-eventos/:idEvento/convites" element={<Convites/>} />
-            <Route path='pedidos' element={<Pedidos />}/>
+            <Route path='pedidos' element={<Pedidos tipo='organizador' />}/>
             <Route path='pedidos/:idPedido/informacoes-pedido' element={<InformacoesPedido />}/>
           </Route>
           <Route path='marketplace' element={<OrganizadorLayout />}>
@@ -56,6 +56,7 @@ const App = () => {
             <Route path='meus-servicos' element={<MeusServicos />}/>
             <Route path='criar-servico' element={<CadastroServico />}/>
             <Route path='meus-servicos/:idServico/informacoes-meus-servicos' element={<InformacoesServico />}/>
+            <Route path='pedidos' element={<Pedidos tipo='prestador' />}/>
           </Route>
         </Route>
         <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>

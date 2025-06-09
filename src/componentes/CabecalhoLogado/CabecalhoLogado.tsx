@@ -1,5 +1,5 @@
 import './CabecalhoLogado.css'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ModalPerfil from '../ModalPerfil/ModalPerfil';
 import ItemModal from '../ItemModalPerfil/ItemModalPerfil';
 import logoOrganizador from '../../assets/logo_eventhub-sem-fundo.png';
@@ -32,6 +32,8 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
         setBarraLateralMobileAberta(!barraLateralMobileAberta);
         enviaMinimizada(!barraLateralMobileAberta);
     }
+
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const redimensionarTela = () => setLarguraTela(window.innerWidth);
@@ -69,6 +71,22 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
             setTipoUsuario(prev => ({ ...prev, prestador: true }));
           }
     }, []);
+
+        useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                setModalAberto(false);
+            }
+        }
+
+        if (ModalAberto) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [ModalAberto]);
 
 
     return(
@@ -123,12 +141,12 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
             </div>  
             {
                 ModalAberto && 
-                <div className='modal1'>
+                <div ref={modalRef} className='modal1'>
                     <ModalPerfil fecharModal={AbrirModal}> 
-                        <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => navigate( tipo === 'organizador' || tipo === 'marketplace' ? '/organizador/meu-perfil' : '/prestador/meu-perfil')} /> 
-                        { tipoUsuario.organizador && tipoUsuario.prestador ? <ItemModal icone="fa fa-refresh" texto='Alterar Função' funcao={() => navigate( tipo === 'organizador' || tipo === 'marketplace' ? '/prestador/meus-servicos' : '/organizador/meus-eventos')} organizador={tipo === 'organizador' || tipo === 'marketplace'} prestador={!(tipo === 'organizador' || tipo === 'marketplace')}/> : '' }
+                        <ItemModal texto='Perfil' icone="fa fa-user" funcao={() => {navigate( tipo === 'organizador' || tipo === 'marketplace' ? '/organizador/meu-perfil' : '/prestador/meu-perfil'); AbrirModal()}} /> 
+                        { tipoUsuario.organizador && tipoUsuario.prestador ? <ItemModal icone="fa fa-refresh" texto='Alterar Função' funcao={() => { navigate( tipo === 'organizador' || tipo === 'marketplace' ? '/prestador/meus-servicos' : '/organizador/meus-eventos'); AbrirModal() }} organizador={tipo === 'organizador' || tipo === 'marketplace'} prestador={!(tipo === 'organizador' || tipo === 'marketplace') }/> : '' }
 
-                        <ItemModal texto='Sair' icone="fa fa-sign-out" funcao={() => {navigate('/login'); localStorage.removeItem("token") }}/> 
+                        <ItemModal texto='Sair' icone="fa fa-sign-out" funcao={() => {navigate('/login'); localStorage.removeItem("token")}}/> 
                     </ModalPerfil>
                 </div>
             }
