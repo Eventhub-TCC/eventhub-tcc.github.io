@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router'
 import logoOrganizador from '../../assets/logo_eventhub-sem-fundo.png';
 import logoPrestador from '../../assets/eventhub_logo_prestador.png';
 import { jwtDecode } from 'jwt-decode'
+import { Helmet } from 'react-helmet-async'
 
 interface Usuario { 
   nomeUsu: string;
@@ -52,6 +53,7 @@ const MeuPerfil = () => {
     localizacaoEmpresa: '',
   });
   const [nomeExibido, setNomeExibido] = useState<string>('');
+  const [nomeEmpresaExibido, setNomeEmpresaExibido] = useState<string>('');
   const [modoEdicao, setModoEdicao] = useState<boolean>(false);
   const [senhaAtual, setSenhaAtual] = useState<string>('');
   const [novaSenha, setNovaSenha] = useState<string>('');
@@ -107,6 +109,7 @@ useEffect(() => {
       const response = await api.get<Usuario>(`/users/get-user`);
       setUsuario(response.data);
       setNomeExibido(`${response.data.nomeUsu} ${response.data.sobrenomeUsu}`);
+      setNomeEmpresaExibido(response.data.nomeEmpresa);
       setCpfOriginal(response.data.cpfUsu);
       setCnpjOriginal(response.data.cnpjEmpresa);
       setPreview(isOrganizador ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '' : '');
@@ -318,6 +321,7 @@ const editarPerfil = async () => {
       setModoEdicao(false);
       setErros(erros.map(erro => ({ ...erro, ativo: false })));
       setNomeExibido(`${usuario?.nomeUsu} ${usuario?.sobrenomeUsu}`);
+      setNomeEmpresaExibido(usuario?.nomeEmpresa || '');
       setSenhaAtual('');
       setNovaSenha('');
       setConfirmarSenha('');
@@ -376,907 +380,920 @@ const editarPerfil = async () => {
   if (carregando) return null; 
 
 return (
-  <div>
-      { isOrganizador ? <div className='perfil'>
-        <div className="perfil--titulo-botao">
-          <h1 className='layout-titulo'>Perfil</h1>
-          {
-            tipoUsuario.prestador && tipoUsuario.organizador ?
-            ''
-            :
-            <div className="perfil--botao-notificacao" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
-              <i className="fa-regular fa-bell"></i>
-            </div>
+  <>
+    <Helmet>
+      <title>Perfil | EventHub</title>
+    </Helmet>
+    <div>
+        { isOrganizador ? <div className='perfil'>
+          <div className="perfil--titulo-botao">
+            <h1 className='layout-titulo'>Perfil</h1>
+            {
+              tipoUsuario.prestador && tipoUsuario.organizador ?
+              ''
+              :
+              <div className="perfil--botao-notificacao" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
+                <i className="fa-regular fa-bell"></i>
+              </div>
 
-          }
+            }
 
-        </div>
-          <div className='caixa-perfil'>
-            <div className='formulario-perfil'>
-              <div className='perfil-foto-nome-email-organizador'>
-                <div className='foto-perfil'> 
-                  {preView ? 
-                    <img className='imagem-perfil' src={preView} alt="Imagem de perfil" />
-                    :
-                    <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
-                      <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
-                      <path fillRule="evenodd" clipRule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
-                    </svg>}
-                    <input 
-                      type='file' 
-                      className='cadastro-evento__input_imagem'
-                      accept='image/*'
-                      ref={ inputImagemref }
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
-                          setPreview(URL.createObjectURL(e.target.files[0]))
-                          alterarImagemPerfil(e.target.files[0])
-                        }
-                      }}
-                    />
-                  <div className='nome-email-organizador'>
-                    <h2 className='nome-perfil-organizador'>{nomeExibido}</h2>
-                    <h2 className='email-perfil-organizador'>{usuario?.emailUsu}</h2>
+          </div>
+            <div className='caixa-perfil'>
+              <div className='formulario-perfil'>
+                <div className='perfil-foto-nome-email-organizador'>
+                  <div className='foto-perfil'> 
+                    {preView ? 
+                      <img className='imagem-perfil' src={preView} alt="Imagem de perfil" />
+                      :
+                      <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
+                        <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
+                        <path fillRule="evenodd" clipRule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
+                      </svg>}
+                      <input 
+                        type='file' 
+                        className='cadastro-evento__input_imagem'
+                        accept='image/*'
+                        ref={ inputImagemref }
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
+                            setPreview(URL.createObjectURL(e.target.files[0]))
+                            alterarImagemPerfil(e.target.files[0])
+                          }
+                        }}
+                      />
+                    <div className='nome-email-organizador'>
+                      <h2 className='nome-perfil-organizador'>{nomeExibido}</h2>
+                      <h2 className='email-perfil-organizador'>{usuario?.emailUsu}</h2>
+                    </div>
                   </div>
-                </div>
-                <div className='botoes-foto-perfil'>
-                  <div className='botao-alterar-foto-perfil'>
-                    <Botao 
-                      tamanho='med' 
-                      texto='Alterar foto' 
-                      funcao={()=>{inputImagemref.current?.click()}}
-                    />       
-                  </div>
-                  <div className='botao-remover-foto-perfil'>
-                    <Botao 
-                      tamanho='med' 
-                      texto='Remover foto' 
-                      funcao={()=>{setModalExcluirFoto(true)}}
-                    />
+                  <div className='botoes-foto-perfil'>
+                    <div className='botao-alterar-foto-perfil'>
+                      <Botao 
+                        tamanho='med' 
+                        texto='Alterar foto' 
+                        funcao={()=>{inputImagemref.current?.click()}}
+                      />       
+                    </div>
+                    <div className='botao-remover-foto-perfil'>
+                      <Botao 
+                        tamanho='med' 
+                        texto='Remover foto' 
+                        funcao={()=>{setModalExcluirFoto(true)}}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className='caixa-input-perfil'>
+              <div className='informacoes-pessoais-perfil-organizador'>
+                <p className='texto-informacoes-pessoal'>Informações Pessoais</p>
+              </div>
+              <div className='row g-4'>
+                <div className='col-12 col-md-6'>
+                  <div>
+                    <Input 
+                      value={usuario?.nomeUsu}              
+                      dica='Digite seu nome'
+                      obrigatorio
+                      name='nome'
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeUsu: event.target.value})}
+                      cabecalho
+                      cabecalhoTexto='Nome'
+                      disabled={!modoEdicao}
+                    />
+                  </div>
+                  {erros.find((e) => e.tipo === 'nome' && e.ativo) && (
+                      <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nome')?.mensagem}/>
+                    )}
+                </div>
+                <div className='col-12 col-md-6'>
+                  <div>
+                    <Input
+                      value={usuario?.sobrenomeUsu}                      
+                      dica='Digite seu sobrenome'
+                      obrigatorio
+                      name='sobrenome'
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, sobrenomeUsu: event.target.value})}
+                      cabecalho
+                      cabecalhoTexto='Sobrenome'
+                      disabled={!modoEdicao}/>
+                  </div>
+                  {erros.find((e) => e.tipo === 'sobrenome' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'sobrenome')?.mensagem}/>
+                  )}
+                </div>
+                <div className='col-12 col-md-6'>
+                  <div>
+                    <PatternFormat 
+                      format="###.###.###-##"
+                      mask="_"
+                      value={usuario?.cpfUsu}
+                      customInput={Input}
+                      onValueChange={(values) => {setUsuario({...usuario!, cpfUsu:values.value})}}
+                      dica='Digite seu CPF'
+                      obrigatorio
+                      name='cpf'
+                      cabecalho 
+                      cabecalhoTexto='CPF'
+                      disabled={!modoEdicao}
+                    />
+                    {erros.find((e) => e.tipo === 'cpf' && e.ativo) && (
+                      <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cpf')?.mensagem}/>
+                    )}
+                  </div>
+                </div>
+                <div className='col-12 col-md-6'>
+                  <div>
+                    <Input 
+                      value={usuario?.dtNasUsu}
+                      dica='Digite sua data de nascimento'
+                      obrigatorio
+                      name='dataNascimento'
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, dtNasUsu: event.target.value})}
+                      cabecalho
+                      cabecalhoTexto='Data de Nascimento'
+                      disabled={!modoEdicao}
+                      type="date"/>
+                  </div>
+                  {erros.find((e) => e.tipo === 'dataNascimento' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'dataNascimento')?.mensagem}/>
+                  )}
+                </div>
+            </div>
           </div>
+
           <div className='caixa-input-perfil'>
             <div className='informacoes-pessoais-perfil-organizador'>
-              <p className='texto-informacoes-pessoal'>Informações Pessoais</p>
+              <p className='texto-informacoes-pessoal'>Contato</p>
             </div>
             <div className='row g-4'>
               <div className='col-12 col-md-6'>
                 <div>
-                  <Input 
-                    value={usuario?.nomeUsu}              
-                    dica='Digite seu nome'
+                  <Input  
+                    value={usuario?.emailUsu}                
+                    dica='Digite seu email'
                     obrigatorio
-                    name='nome'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeUsu: event.target.value})}
+                    name='email'
                     cabecalho
-                    cabecalhoTexto='Nome'
-                    disabled={!modoEdicao}
+                    cabecalhoTexto='Email'
+                    autoComplete='email'
+                    disabled
                   />
                 </div>
-                {erros.find((e) => e.tipo === 'nome' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nome')?.mensagem}/>
-                  )}
-              </div>
-              <div className='col-12 col-md-6'>
-                <div>
-                  <Input
-                    value={usuario?.sobrenomeUsu}                      
-                    dica='Digite seu sobrenome'
-                    obrigatorio
-                    name='sobrenome'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, sobrenomeUsu: event.target.value})}
-                    cabecalho
-                    cabecalhoTexto='Sobrenome'
-                    disabled={!modoEdicao}/>
-                </div>
-                {erros.find((e) => e.tipo === 'sobrenome' && e.ativo) && (
-                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'sobrenome')?.mensagem}/>
-                )}
               </div>
               <div className='col-12 col-md-6'>
                 <div>
                   <PatternFormat 
-                    format="###.###.###-##"
+                    format="(##) #####-####"
                     mask="_"
-                    value={usuario?.cpfUsu}
-                    customInput={Input}
-                    onValueChange={(values) => {setUsuario({...usuario!, cpfUsu:values.value})}}
-                    dica='Digite seu CPF'
+                    customInput={Input} 
+                    value={usuario?.telUsu}           
+                    dica='Digite seu telefone'
+                    onValueChange={(values) => {setUsuario({...usuario!, telUsu:values.value});}}
                     obrigatorio
-                    name='cpf'
-                    cabecalho 
-                    cabecalhoTexto='CPF'
+                    name='telefone'
+                    cabecalho
+                    cabecalhoTexto='Telefone'
                     disabled={!modoEdicao}
+                    type="tel"
                   />
-                  {erros.find((e) => e.tipo === 'cpf' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cpf')?.mensagem}/>
+                  {erros.find((e) => e.tipo === 'telefone' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefone')?.mensagem}/>
                   )}
+                </div>
+              </div>
+            </div>
+          </div>
+          {
+            modalExcluirFoto ?
+            <Modal titulo="Excluir foto" enviaModal={setModalExcluirFoto} textoBotao="Excluir" funcaoSalvar={()=>{
+                        URL.revokeObjectURL(preView)
+                        setPreview('')
+                        if(inputImagemref.current)
+                          inputImagemref.current.value = ""
+                        alterarImagemPerfil(null)
+                        }}> Tem certeza que deseja excluir sua foto? </Modal>
+            : ''
+          }
+
+          {modoEdicao ? 
+            (
+              <motion.div key="modoEdicao" {...transicao} className='perfil-modo-edicao'>
+                <div className='caixa-input-perfil'>
+                  <div className='informacoes-pessoais-perfil-organizador'>
+                    <p className='texto-informacoes-pessoal'>Segurança</p>
+                  </div>
+                  <div className='row g-4'>
+                    <div className='col-12'>
+                      <div>
+                        <Input 
+                          tipo={senhaAtualOculta ? 'password' : 'text'}
+                          dica='Digite sua senha atual'
+                          cabecalho 
+                          cabecalhoTexto='Senha atual' 
+                          name='senha-atual'
+                          value={senhaAtual}
+                          onChange={(event: ChangeEvent<HTMLInputElement>) => setSenhaAtual(event.target.value)}
+                          icone={
+                            senhaAtual !== '' ? 
+                              `fa-solid ${senhaAtualOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                            : ''
+                          }
+                          funcaoIcone={() => setSenhaAtualOculta(!senhaAtualOculta)}
+                        />
+                      </div>
+                    </div>
+                      <div className='col-12 col-md-6'>
+                        <div>
+                          <Input
+                            tipo={novaSenhaOculta ? 'password' : 'text'}           
+                            dica='Digite sua nova senha'
+                            obrigatorio
+                            name='nova-senha'
+                            value={novaSenha}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setNovaSenha(event.target.value)}
+                            cabecalho
+                            cabecalhoTexto='Nova senha'
+                            icone={
+                              novaSenha !== '' ? 
+                                `fa-solid ${novaSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                              : ''
+                            }
+                            funcaoIcone={() => setNovaSenhaOculta(!novaSenhaOculta)}
+                          />
+                        </div>
+                      </div>
+                      <div className='col-12 col-md-6'>
+                        <div>
+                          <Input   
+                            tipo={confirmarSenhaOculta ? 'password' : 'text'}                 
+                            dica='Confirme sua nova senha'
+                            obrigatorio
+                            name='Confirme'
+                            value={confirmarSenha}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(event.target.value)}
+                            cabecalho
+                            cabecalhoTexto='Confirme sua nova senha'
+                            icone={
+                              confirmarSenha !== '' ? 
+                                `fa-solid ${confirmarSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                              : ''
+                            }
+                            funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
+                          />
+                        </div>
+                      </div>
+                  
+                    {erros.find((e) => e.tipo === 'confirmar-senha' && e.ativo) && (
+                      <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'confirmar-senha')?.mensagem}/>
+                    )}
+                </div>
+              </div>
+              <div className='botoes-alterar-perfil-edicao'>
+                <div className='botao-editar'>
+                  <Botao 
+                    tamanho='max' 
+                    funcao={() => {
+                      setModoEdicao(false);
+                      api.get<Usuario>(`/users/get-user`)
+                      .then(response => {
+                        setUsuario(response.data);
+                      })
+                      .catch(error => {
+                        console.error('Erro ao obter usuário', error);
+                      });   
+                      setErros(erros => erros.map(erro => {
+                        erro.ativo = false;
+                        return erro;
+                      }));
+                      setSenhaAtual('');
+                      setNovaSenha('');
+                      setConfirmarSenha('');
+                      setSenhaAtualOculta(true);
+                      setNovaSenhaOculta(true);
+                      setConfirmarSenhaOculta(true);
+                    }} 
+                    texto='Cancelar' 
+                  />
+                </div>
+                <div className='botao-editar'>
+                  <Botao tamanho='max' funcao={editarPerfil} texto='Salvar' />
+                </div>
+              </div>
+              </motion.div>
+                ) 
+                : 
+                (
+                  <motion.div key="foraModoEdicao" {...transicao} className='perfil-fora-modo-edicao'>
+                    <div className='caixa-input-perfil'>
+                      <div className='informacoes-pessoais-perfil-organizador'>
+                        <p className='texto-informacoes-pessoal'>Segurança</p>
+                      </div>
+                      <div>
+                        <Input 
+                          cabecalho 
+                          cabecalhoTexto='Senha atual' 
+                          disabled={true}
+                          dica="••••••••••"
+                          name='senha-atual-desabilitado'
+                        />
+                      </div>
+                  </div>
+                  <div className='botoes-alterar-perfil'>
+                    <div className='botao-editar'>
+                      <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' />
+                    </div>
+                    <div className='botao-deletar'>
+                      <Botao tamanho='max' funcao={() => setExcluir(true)} texto='Excluir conta' />
+                    </div>
+                    {excluir ? 
+                      <Modal titulo="Excluir conta" enviaModal={setarExcluir} textoBotao="Excluir" funcaoSalvar={deletarPerfil}> Tem certeza que deseja excluir sua conta? </Modal>
+                    : ""}
+                  </div>
+                </motion.div>  
+              )}
+              {
+                modalCompletarCadastro ?
+                <Modal titulo='Completar Cadastro' prestador enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
+                  <div className="completar-cadastro--imagem">
+                    <img className='completar-cadastro--imagem--tamanho'src={logoPrestador} alt="Imagem de completar cadastro" />
+                  </div>
+                  <div className="completar-cadastro--titulo">
+                    <div className="completar-cadastro--titulo-texto">
+                      Descubra novas oportunidades na plataforma!
+                    </div>
+                    <div className="completar-cadastro--descricao">
+                      Você pode também oferecer seus serviços como prestador e ampliar sua atuação.
+                    </div>
+                  </div>
+                  <div className="completar-cadastro--texto">
+                  {
+                    `Ao ativar o perfil de prestador de serviços, você poderá:
+
+                      - Gerenciar seus próprios serviços;
+                      - Oferecer seus serviços para milhares de organizadores;
+                      - Gerenciar pedidos recebidos diretamente pelo app;
+                      - Controlar tudo em um só lugar, de forma simples e rápida.
+
+                    Tudo isso com o mesmo login e sem custos extras. Falta só completar seu cadastro para começar!`
+                  }
+                  </div>
+                </Modal>
+                :
+                ''
+              }
+              {
+                modalCompletarCadastroDados ?
+                <Modal titulo='Completar Cadastro' funcaoSalvar={completarCadastro} enviaModal={() => {setModalCompletarCadastroDados(false)}} textoBotao="Salvar">
+                  <div className='modal-completar-cadastro--texto'>
+                    <div>Para alterar seu tipo de usuário é necessário completar seu cadastro!</div>
+                  </div>
+                  <div className="modal-completar-cadastro--campos">
+                    <div className="modal-completar-cadastro--nome-cnpj">
+                        <div className='col-12 col-md-5'>
+                            <Input 
+                                    value={usuario?.nomeEmpresa}              
+                                    dica='Digite o nome de sua empresa'
+                                    obrigatorio
+                                    name='nome_empresa'
+                                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeEmpresa: event.target.value})}
+                                    cabecalho
+                                    cabecalhoTexto='Nome da Empresa'
+                            />
+                            {erros.find((e) => e.tipo === 'NomeEmpresa' && e.ativo) && (
+                              <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'NomeEmpresa')?.mensagem}/>
+                            )}
+                        </div>
+                        <div className='col-12 col-md-5'>
+                          <PatternFormat 
+                                format="##.###.###/####-##"
+                                mask="_"
+                                value={usuario?.cnpjEmpresa}
+                                customInput={Input}
+                                onValueChange={(values) => {setUsuario({...usuario!, cnpjEmpresa:values.value})}}
+                                dica='Digite seu CNPJ'
+                                obrigatorio
+                                name='cnpj'
+                                cabecalho 
+                                cabecalhoTexto='CNPJ'
+                              />
+                            {erros.find((e) => e.tipo === 'CNPJ' && e.ativo) && (
+                              <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'CNPJ')?.mensagem}/>
+                            )}
+                        </div>
+                    </div>
+                      <div className='col-12 col-md-12'>
+                        <div>
+                        <Input 
+                              value={usuario?.localizacaoEmpresa}
+                              dica='Digite a localização de sua empresa'
+                              obrigatorio
+                              name='localizacaoEmpresa'
+                              onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, localizacaoEmpresa: event.target.value})}
+                              cabecalho
+                              cabecalhoTexto='Localização da Empresa'
+                              type="local"/>
+                              {erros.find((e) => e.tipo === 'localizacaoEmpresa' && e.ativo) && (
+                                <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'localizacaoEmpresa')?.mensagem}/>
+                              )}
+                        </div>
+                      </div>
+                      <div className='col-12 col-md-12'>
+                        <div>
+                        <PatternFormat 
+                            format="(##) #####-####"
+                            mask="_"
+                            customInput={Input} 
+                            value={usuario?.telEmpresa}           
+                            dica='Digite o telefone de sua empresa'
+                            onValueChange={(values) => {setUsuario({...usuario!, telEmpresa:values.value});}}
+                            obrigatorio
+                            name='telefoneEmpresa'
+                            cabecalho
+                            cabecalhoTexto='Telefone da Empresa'
+                            type="tel"
+                          />
+                          {erros.find((e) => e.tipo === 'telefoneEmpresa' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefoneEmpresa')?.mensagem}/>
+                          )}
+                        </div>
+                    </div>
+                  </div>
+
+                    
+
+                </Modal>
+                :
+                ''
+              }
+      </div> : ''}
+
+  {/* pagina prestador */}
+      { isPrestador ? <div className='perfil'>
+          <div className="perfil--titulo-botao">
+            <h1 className='layout-titulo'>Perfil</h1>
+            {
+              tipoUsuario.prestador && tipoUsuario.organizador ?
+              ''
+              :
+              <div className="perfil--botao-notificacao-prestador" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
+                <i className="fa-regular fa-bell"></i>
+              </div>
+
+            }
+        </div>
+        
+            <div className='caixa-perfil'>
+              <div className='formulario-perfil-prestador'>
+                <div className='perfil-foto-nome-email-organizador'>
+                  <div className='foto-perfil'> 
+                    {preView ? 
+                      <img className='imagem-perfil' src={preView} alt="Imagem de perfil" />
+                      :
+                      <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
+                        <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
+                        <path fillRule="evenodd" clipRule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
+                      </svg>}
+                      <input 
+                        type='file' 
+                        className='cadastro-evento__input_imagem'
+                        accept='image/*'
+                        ref={ inputImagemref }
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                          if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
+                            setPreview(URL.createObjectURL(e.target.files[0]))
+                            alterarImagemPerfil(e.target.files[0])
+                          }
+                        }}
+                      />
+                    <div className='nome-email-organizador'>
+                      <h2 className='nome-perfil-organizador'>{nomeEmpresaExibido}</h2>
+                      <h2 className='email-perfil-organizador'>{usuario?.emailUsu}</h2>
+                    </div>
+                  </div>
+                  <div className='botoes-foto-perfil'>
+                    <div className='botao-alterar-foto-perfil'>
+                      <Botao 
+                        tamanho='med' 
+                        texto='Alterar foto' 
+                        funcao={()=>{inputImagemref.current?.click()}}
+                        cor='var(--yellow-700)'
+                      />       
+                    </div>
+                    <div className='botao-remover-foto-perfil'>
+                      <Botao 
+                        tamanho='med' 
+                        texto='Remover foto' 
+                        funcao={()=>{setModalExcluirFoto(true)}}
+                        cor='var(--yellow-700)'
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='caixa-input-perfil-prestador'>
+              <div className='informacoes-pessoais-perfil-organizador'>
+                <p className='texto-informacoes-empresa'>Informações da Empresa</p>
+              </div>
+              <div className='row g-4'>
+                <div className='col-12 col-md-6'>
+                  <div>
+                    <Input 
+                      value={usuario?.nomeEmpresa}              
+                      dica='Digite o nome de sua empresa'
+                      obrigatorio
+                      name='nome empresa'
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeEmpresa: event.target.value})}
+                      cabecalho
+                      cabecalhoTexto='Nome da empresa'
+                      disabled={!modoEdicao}
+                      cor="var(--yellow-700)"
+                    />
+                  </div>
+                  {erros.find((e) => e.tipo === 'NomeEmpresa' && e.ativo) && (
+                      <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'NomeEmpresa')?.mensagem}/>
+                    )}
+                </div>
+                <div className='col-12 col-md-6'>
+                <div>
+                    <PatternFormat 
+                      format="##.###.###/####-##"
+                      mask="_"
+                      value={usuario?.cnpjEmpresa}
+                      customInput={Input}
+                      onValueChange={(values) => {setUsuario({...usuario!, cnpjEmpresa:values.value})}}
+                      dica='Digite seu CNPJ'
+                      obrigatorio
+                      name='cnpj'
+                      cabecalho 
+                      cabecalhoTexto='CNPJ'
+                      disabled={!modoEdicao}
+                      cor="var(--yellow-700)"
+                    />
+                    {erros.find((e) => e.tipo === 'CNPJ' && e.ativo) && (
+                      <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'CNPJ')?.mensagem}/>
+                    )}
+                  </div>
+
+                </div>
+                <div className='col-12 col-md-12'>
+                <div>
+                    <Input
+                      value={usuario?.localizacaoEmpresa}                      
+                      dica='Digite a Localização da sua empresa'
+                      obrigatorio
+                      name='localizacao'
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, localizacaoEmpresa: event.target.value})}
+                      cabecalho
+                      cabecalhoTexto='Localização'
+                      disabled={!modoEdicao}
+                      cor="var(--yellow-700)"/>
+                  </div>
+                  {erros.find((e) => e.tipo === 'localizacaoEmpresa' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'localizacaoEmpresa')?.mensagem}/>
+                  )}
+                </div>
+            </div>
+          </div>
+
+          <div className='caixa-input-perfil-prestador'>
+            <div className='informacoes-pessoais-perfil-organizador'>
+              <p className='texto-informacoes-empresa'>Contato</p>
+            </div>
+            <div className='row g-4'>
+              <div className='col-12 col-md-6'>
+                <div>
+                  <Input  
+                    value={usuario?.emailUsu}                
+                    dica='Digite seu email'
+                    obrigatorio
+                    name='email'
+                    cabecalho
+                    cabecalhoTexto='Email'
+                    autoComplete='email'
+                    disabled
+                    cor="var(--yellow-700)"
+                  />
                 </div>
               </div>
               <div className='col-12 col-md-6'>
                 <div>
-                  <Input 
-                    value={usuario?.dtNasUsu}
-                    dica='Digite sua data de nascimento'
+                  <PatternFormat 
+                    format="(##) #####-####"
+                    mask="_"
+                    customInput={Input} 
+                    value={usuario?.telEmpresa}           
+                    dica='Digite o telefone da sua empresa'
+                    onValueChange={(values) => {setUsuario({...usuario!, telEmpresa:values.value});}}
                     obrigatorio
-                    name='dataNascimento'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, dtNasUsu: event.target.value})}
+                    name='telefone empresa'
                     cabecalho
-                    cabecalhoTexto='Data de Nascimento'
+                    cabecalhoTexto='Telefone da Empresa'
                     disabled={!modoEdicao}
-                    type="date"/>
-                </div>
-                {erros.find((e) => e.tipo === 'dataNascimento' && e.ativo) && (
-                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'dataNascimento')?.mensagem}/>
-                )}
-              </div>
-          </div>
-        </div>
-
-        <div className='caixa-input-perfil'>
-          <div className='informacoes-pessoais-perfil-organizador'>
-            <p className='texto-informacoes-pessoal'>Contato</p>
-          </div>
-          <div className='row g-4'>
-            <div className='col-12 col-md-6'>
-              <div>
-                <Input  
-                  value={usuario?.emailUsu}                
-                  dica='Digite seu email'
-                  obrigatorio
-                  name='email'
-                  cabecalho
-                  cabecalhoTexto='Email'
-                  autoComplete='email'
-                  disabled
-                />
-              </div>
-            </div>
-            <div className='col-12 col-md-6'>
-              <div>
-                <PatternFormat 
-                  format="(##) #####-####"
-                  mask="_"
-                  customInput={Input} 
-                  value={usuario?.telUsu}           
-                  dica='Digite seu telefone'
-                  onValueChange={(values) => {setUsuario({...usuario!, telUsu:values.value});}}
-                  obrigatorio
-                  name='telefone'
-                  cabecalho
-                  cabecalhoTexto='Telefone'
-                  disabled={!modoEdicao}
-                  type="tel"
-                />
-                {erros.find((e) => e.tipo === 'telefone' && e.ativo) && (
-                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefone')?.mensagem}/>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        {
-          modalExcluirFoto ?
-          <Modal titulo="Excluir foto" enviaModal={setModalExcluirFoto} textoBotao="Excluir" funcaoSalvar={()=>{
-                      URL.revokeObjectURL(preView)
-                      setPreview('')
-                      if(inputImagemref.current)
-                        inputImagemref.current.value = ""
-                      alterarImagemPerfil(null)
-                      }}> Tem certeza que deseja excluir sua foto? </Modal>
-          : ''
-        }
-
-        {modoEdicao ? 
-          (
-            <motion.div key="modoEdicao" {...transicao} className='perfil-modo-edicao'>
-              <div className='caixa-input-perfil'>
-                <div className='informacoes-pessoais-perfil-organizador'>
-                  <p className='texto-informacoes-pessoal'>Segurança</p>
-                </div>
-                <div className='row g-4'>
-                  <div className='col-12'>
-                    <div>
-                      <Input 
-                        tipo={senhaAtualOculta ? 'password' : 'text'}
-                        dica='Digite sua senha atual'
-                        cabecalho 
-                        cabecalhoTexto='Senha atual' 
-                        name='senha-atual'
-                        value={senhaAtual}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) => setSenhaAtual(event.target.value)}
-                        icone={
-                          senhaAtual !== '' ? 
-                            `fa-solid ${senhaAtualOculta ? 'fa-eye-slash' : 'fa-eye'}` 
-                          : ''
-                        }
-                        funcaoIcone={() => setSenhaAtualOculta(!senhaAtualOculta)}
-                      />
-                    </div>
-                  </div>
-                    <div className='col-12 col-md-6'>
-                      <div>
-                        <Input
-                          tipo={novaSenhaOculta ? 'password' : 'text'}           
-                          dica='Digite sua nova senha'
-                          obrigatorio
-                          name='nova-senha'
-                          value={novaSenha}
-                          onChange={(event: ChangeEvent<HTMLInputElement>) => setNovaSenha(event.target.value)}
-                          cabecalho
-                          cabecalhoTexto='Nova senha'
-                          icone={
-                            novaSenha !== '' ? 
-                              `fa-solid ${novaSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
-                            : ''
-                          }
-                          funcaoIcone={() => setNovaSenhaOculta(!novaSenhaOculta)}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-12 col-md-6'>
-                      <div>
-                        <Input   
-                          tipo={confirmarSenhaOculta ? 'password' : 'text'}                 
-                          dica='Confirme sua nova senha'
-                          obrigatorio
-                          name='Confirme'
-                          value={confirmarSenha}
-                          onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(event.target.value)}
-                          cabecalho
-                          cabecalhoTexto='Confirme sua nova senha'
-                          icone={
-                            confirmarSenha !== '' ? 
-                              `fa-solid ${confirmarSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
-                            : ''
-                          }
-                          funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
-                        />
-                      </div>
-                    </div>
-                
-                  {erros.find((e) => e.tipo === 'confirmar-senha' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'confirmar-senha')?.mensagem}/>
+                    type="tel"
+                    cor="var(--yellow-700)"
+                  />
+                  {erros.find((e) => e.tipo === 'telefoneEmpresa' && e.ativo) && (
+                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefoneEmpresa')?.mensagem}/>
                   )}
+                </div>
               </div>
             </div>
-            <div className='botoes-alterar-perfil-edicao'>
-              <div className='botao-editar'>
-                <Botao 
-                  tamanho='max' 
-                  funcao={() => {
-                    setModoEdicao(false);
-                    api.get<Usuario>(`/users/get-user`)
-                    .then(response => {
-                      setUsuario(response.data);
-                    })
-                    .catch(error => {
-                      console.error('Erro ao obter usuário', error);
-                    });   
-                    setErros(erros => erros.map(erro => {
-                      erro.ativo = false;
-                      return erro;
-                    }));
-                    setSenhaAtual('');
-                    setNovaSenha('');
-                    setConfirmarSenha('');
-                    setSenhaAtualOculta(true);
-                    setNovaSenhaOculta(true);
-                    setConfirmarSenhaOculta(true);
-                  }} 
-                  texto='Cancelar' 
-                />
-              </div>
-              <div className='botao-editar'>
-                <Botao tamanho='max' funcao={editarPerfil} texto='Salvar' />
-              </div>
-            </div>
-            </motion.div>
-              ) 
-              : 
-              (
-                <motion.div key="foraModoEdicao" {...transicao} className='perfil-fora-modo-edicao'>
-                  <div className='caixa-input-perfil'>
-                    <div className='informacoes-pessoais-perfil-organizador'>
-                      <p className='texto-informacoes-pessoal'>Segurança</p>
-                    </div>
-                    <div>
-                      <Input 
-                        cabecalho 
-                        cabecalhoTexto='Senha atual' 
-                        disabled={true}
-                        dica="••••••••••"
-                        name='senha-atual-desabilitado'
-                      />
-                    </div>
-                </div>
-                <div className='botoes-alterar-perfil'>
-                  <div className='botao-editar'>
-                    <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' />
-                  </div>
-                  <div className='botao-deletar'>
-                    <Botao tamanho='max' funcao={() => setExcluir(true)} texto='Excluir conta' />
-                  </div>
-                  {excluir ? 
-                    <Modal titulo="Excluir conta" enviaModal={setarExcluir} textoBotao="Excluir" funcaoSalvar={deletarPerfil}> Tem certeza que deseja excluir sua conta? </Modal>
-                  : ""}
-                </div>
-              </motion.div>  
-            )}
-            {
-              modalCompletarCadastro ?
-              <Modal titulo='Completar Cadastro' enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
-                <div className="completar-cadastro--imagem">
-                  <img className='completar-cadastro--imagem--tamanho'src={logoPrestador} alt="Imagem de completar cadastro" />
-                </div>
-                <div className="completar-cadastro--titulo">
-                  <div className="completar-cadastro--titulo-texto">
-                    Descubra novas oportunidades na plataforma!
-                  </div>
-                  <div className="completar-cadastro--descricao">
-                    Você pode também oferecer seus serviços como prestador e ampliar sua atuação.
-                  </div>
-                </div>
-                <div className="completar-cadastro--texto">
-                {
-                  `Ao ativar o perfil de prestador de serviços, você poderá:
+          </div>
 
-                    - Gerenciar seus próprios serviços;
-                    - Oferecer seus serviços para milhares de organizadores;
-                    - Gerenciar pedidos recebidos diretamente pelo app;
-                    - Controlar tudo em um só lugar, de forma simples e rápida.
-
-                  Tudo isso com o mesmo login e sem custos extras. Falta só completar seu cadastro para começar!`
-                }
-                </div>
-              </Modal>
-              :
-              ''
-            }
-            {
-              modalCompletarCadastroDados ?
-              <Modal titulo='Completar Cadastro' funcaoSalvar={completarCadastro} enviaModal={() => {setModalCompletarCadastroDados(false)}} textoBotao="Salvar">
-                <div className='modal-completar-cadastro--texto'>
-                  <div>Para alterar seu tipo de usuário é necessário completar seu cadastro!</div>
-                </div>
-                <div className="modal-completar-cadastro--campos">
-                  <div className="modal-completar-cadastro--nome-cnpj">
-                      <div className='col-12 col-md-5'>
-                          <Input 
-                                  value={usuario?.nomeEmpresa}              
-                                  dica='Digite o nome de sua empresa'
-                                  obrigatorio
-                                  name='nome_empresa'
-                                  onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeEmpresa: event.target.value})}
-                                  cabecalho
-                                  cabecalhoTexto='Nome da Empresa'
-                          />
-                          {erros.find((e) => e.tipo === 'NomeEmpresa' && e.ativo) && (
-                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'NomeEmpresa')?.mensagem}/>
-                          )}
-                      </div>
-                      <div className='col-12 col-md-5'>
-                        <PatternFormat 
-                              format="##.###.###/####-##"
-                              mask="_"
-                              value={usuario?.cnpjEmpresa}
-                              customInput={Input}
-                              onValueChange={(values) => {setUsuario({...usuario!, cnpjEmpresa:values.value})}}
-                              dica='Digite seu CNPJ'
-                              obrigatorio
-                              name='cnpj'
-                              cabecalho 
-                              cabecalhoTexto='CNPJ'
-                            />
-                          {erros.find((e) => e.tipo === 'CNPJ' && e.ativo) && (
-                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'CNPJ')?.mensagem}/>
-                          )}
-                      </div>
+          {modoEdicao ? 
+            (
+              <motion.div key="modoEdicao" {...transicao} className='perfil-modo-edicao'>
+                <div className='caixa-input-perfil-prestador'>
+                  <div className='informacoes-pessoais-perfil-organizador'>
+                    <p className='texto-informacoes-empresa'>Segurança</p>
                   </div>
-                    <div className='col-12 col-md-12'>
+                  <div className='row g-4'>
+                    <div className='col-12'>
                       <div>
-                      <Input 
-                            value={usuario?.localizacaoEmpresa}
-                            dica='Digite a localização de sua empresa'
+                        <Input 
+                          tipo={senhaAtualOculta ? 'password' : 'text'}
+                          dica='Digite sua senha atual'
+                          cabecalho 
+                          cabecalhoTexto='Senha atual' 
+                          name='senha-atual'
+                          value={senhaAtual}
+                          onChange={(event: ChangeEvent<HTMLInputElement>) => setSenhaAtual(event.target.value)}
+                          icone={
+                            senhaAtual !== '' ? 
+                              `fa-solid ${senhaAtualOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                            : ''
+                          }
+                          funcaoIcone={() => setSenhaAtualOculta(!senhaAtualOculta)}
+                          cor="var(--yellow-700)"
+                        />
+                      </div>
+                    </div>
+                      <div className='col-12 col-md-6'>
+                        <div>
+                          <Input
+                            tipo={novaSenhaOculta ? 'password' : 'text'}           
+                            dica='Digite sua nova senha'
                             obrigatorio
-                            name='localizacaoEmpresa'
-                            onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, localizacaoEmpresa: event.target.value})}
+                            name='nova-senha'
+                            value={novaSenha}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setNovaSenha(event.target.value)}
                             cabecalho
-                            cabecalhoTexto='Localização da Empresa'
-                            type="local"/>
-                            {erros.find((e) => e.tipo === 'localizacaoEmpresa' && e.ativo) && (
-                              <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'localizacaoEmpresa')?.mensagem}/>
+                            cabecalhoTexto='Nova senha'
+                            icone={
+                              novaSenha !== '' ? 
+                                `fa-solid ${novaSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                              : ''
+                            }
+                            funcaoIcone={() => setNovaSenhaOculta(!novaSenhaOculta)}
+                            cor="var(--yellow-700)"
+                          />
+                        </div>
+                      </div>
+                      <div className='col-12 col-md-6'>
+                        <div>
+                          <Input   
+                            tipo={confirmarSenhaOculta ? 'password' : 'text'}                 
+                            dica='Confirme sua nova senha'
+                            obrigatorio
+                            name='Confirme'
+                            value={confirmarSenha}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(event.target.value)}
+                            cabecalho
+                            cabecalhoTexto='Confirme sua nova senha'
+                            icone={
+                              confirmarSenha !== '' ? 
+                                `fa-solid ${confirmarSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
+                              : ''
+                            }
+                            funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
+                            cor="var(--yellow-700)"
+                          />
+                        </div>
+                      </div>
+                  
+                    {erros.find((e) => e.tipo === 'confirmar-senha' && e.ativo) && (
+                      <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'confirmar-senha')?.mensagem}/>
+                    )}
+                </div>
+              </div>
+              <div className='botoes-alterar-perfil-edicao'>
+                <div className='botao-editar'>
+                  <Botao 
+                    tamanho='max' 
+                    funcao={() => {
+                      setModoEdicao(false);
+                      api.get<Usuario>(`/users/get-user`)
+                      .then(response => {
+                        setUsuario(response.data);
+                      })
+                      .catch(error => {
+                        console.error('Erro ao obter usuário', error);
+                      });   
+                      setErros(erros => erros.map(erro => {
+                        erro.ativo = false;
+                        return erro;
+                      }));
+                      setSenhaAtual('');
+                      setNovaSenha('');
+                      setConfirmarSenha('');
+                      setSenhaAtualOculta(true);
+                      setNovaSenhaOculta(true);
+                      setConfirmarSenhaOculta(true);
+                    }} 
+                    texto='Cancelar' 
+                    cor='var(--yellow-700)'
+                  />
+                </div>
+                <div className='botao-editar'>
+                  <Botao tamanho='max' funcao={editarPerfil} texto='Salvar' cor='var(--yellow-700)' />
+                </div>
+              </div>
+              </motion.div>
+                ) 
+                : 
+                (
+                  <motion.div key="foraModoEdicao" {...transicao} className='perfil-fora-modo-edicao'>
+                    <div className='caixa-input-perfil-prestador'>
+                      <div className='informacoes-pessoais-perfil-organizador'>
+                        <p className='texto-informacoes-empresa'>Segurança</p>
+                      </div>
+                      <div>
+                        <Input 
+                          cabecalho 
+                          cabecalhoTexto='Senha atual' 
+                          disabled={true}
+                          dica="••••••••••"
+                          name='senha-atual-desabilitado'
+                        />
+                      </div>
+                  </div>
+                  <div className='botoes-alterar-perfil'>
+                    <div className='botao-editar'>
+                      <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' cor='var(--yellow-700)' />
+                    </div>
+                    <div className='botao-deletar'>
+                      <Botao tamanho='max' funcao={() => setExcluir(true)} texto='Excluir conta' cor='var(--yellow-700)' />
+                    </div>
+                    {excluir ? 
+                      <Modal titulo="Excluir conta" enviaModal={setarExcluir} textoBotao="Excluir" funcaoSalvar={deletarPerfil}> Tem certeza que deseja excluir sua conta? </Modal>
+                    : ""}
+                  </div>
+                </motion.div>  
+              )}
+              {
+                modalExcluirFoto ?
+                <Modal titulo="Excluir foto" prestador enviaModal={setModalExcluirFoto} textoBotao="Excluir" funcaoSalvar={()=>{
+                            URL.revokeObjectURL(preView)
+                            setPreview('')
+                            if(inputImagemref.current)
+                              inputImagemref.current.value = ""
+                            alterarImagemPerfil(null)
+                            }}> Tem certeza que deseja excluir sua foto? </Modal>
+                : ''
+              }
+                  {
+                modalCompletarCadastro ?
+                <Modal titulo='Completar Cadastro' enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
+                  <div className="completar-cadastro--imagem">
+                    <img className='completar-cadastro--imagem--tamanho'src={logoOrganizador} alt="Imagem de completar cadastro" />
+                  </div>
+                  <div className="completar-cadastro--titulo">
+                    <div className="completar-cadastro-prestador--titulo-texto">
+                      Pronto para organizar seu próprio evento?
+                    </div>
+                    <div className="completar-cadastro--descricao">
+                      Que tal realizar seus próprios eventos? Como um organizador torne essa experiência algo possível.
+                    </div>
+                  </div>
+                  <div className="completar-cadastro--texto">
+                  {
+                    `Ao ativar o perfil de organizador de eventos, você poderá:
+
+                    Gerenciar seus próprios eventos;
+                    Enviar convites e gerenciar sua lista de convidados;
+                    Contratar prestadores de forma rápida e segura diretamente pelo app;
+                    Acompanhar os pedidos feitos;
+                    Centralizar toda a organização em um só lugar.
+
+                    Tudo isso com o mesmo login e sem custos extras. Falta só completar seu cadastro para começar!`
+                  }
+                  </div>
+                </Modal>
+                :
+                ''
+              }
+              {
+                modalCompletarCadastroDados ?
+                <Modal titulo='Completar Cadastro' funcaoSalvar={completarCadastro} enviaModal={() => {setModalCompletarCadastroDados(false)}} textoBotao="Salvar">
+                  <div className='modal-completar-cadastro--texto'>
+                    <div>Para alterar seu tipo de usuário é necessário completar seu cadastro!</div>
+                  </div>
+                  <div className="modal-completar-cadastro--campos">
+                    <div className="modal-completar-cadastro--nome-cnpj">
+                        <div className='col-12 col-md-6'>
+                          <Input 
+                                  value={usuario?.nomeUsu}              
+                                  dica='Digite seu nome'
+                                  obrigatorio
+                                  name='nome'
+                                  onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeUsu: event.target.value})}
+                                  cabecalho
+                                  cabecalhoTexto='Nome'
+                          />
+                          {erros.find((e) => e.tipo === 'nome' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nome')?.mensagem}/>
+                          )}
+                        </div>
+                        <div className='col-12 col-md-5'>
+                          <Input
+                                value={usuario?.sobrenomeUsu}                      
+                                dica='Digite seu sobrenome'
+                                obrigatorio
+                                name='sobrenome'
+                                onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, sobrenomeUsu: event.target.value})}
+                                cabecalho
+                                cabecalhoTexto='Sobrenome'/>
+                          {erros.find((e) => e.tipo === 'sobrenome' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'sobrenome')?.mensagem}/>
+                          )}
+                        </div>
+                    </div>
+                    <div className="modal-completar-cadastro--nome-cnpj">
+
+                        <div className='col-12 col-md-6'>
+                          <div>
+                            <PatternFormat 
+                                  format="###.###.###-##"
+                                  mask="_"
+                                  value={usuario?.cpfUsu}
+                                  customInput={Input}
+                                  onValueChange={(values) => {setUsuario({...usuario!, cpfUsu:values.value})}}
+                                  dica='Digite seu CPF'
+                                  obrigatorio
+                                  name='cpf'
+                                  cabecalho 
+                                  cabecalhoTexto='CPF'
+                                />  
+                            {erros.find((e) => e.tipo === 'cpf' && e.ativo) && (
+                              <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cpf')?.mensagem}/>
                             )}
+                          </div>
+                        </div>
+                        <div className='col-12 col-md-5'>
+                          <div>
+                            <Input 
+                                  value={usuario?.dtNasUsu}
+                                  dica='Digite sua data de nascimento'
+                                  obrigatorio
+                                  name='dataNascimento'
+                                  onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, dtNasUsu: event.target.value})}
+                                  cabecalho
+                                  cabecalhoTexto='Data de Nascimento'
+                                  type="date"/>
+                            {erros.find((e) => e.tipo === 'dataNascimento' && e.ativo) && (
+                              <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'dataNascimento')?.mensagem}/>
+                            )}
+                          </div>
                       </div>
                     </div>
                     <div className='col-12 col-md-12'>
                       <div>
-                      <PatternFormat 
+                        <PatternFormat 
                           format="(##) #####-####"
                           mask="_"
                           customInput={Input} 
-                          value={usuario?.telEmpresa}           
-                          dica='Digite o telefone de sua empresa'
-                          onValueChange={(values) => {setUsuario({...usuario!, telEmpresa:values.value});}}
+                          value={usuario?.telUsu}           
+                          dica='Digite seu telefone'
+                          onValueChange={(values) => {setUsuario({...usuario!, telUsu:values.value});}}
                           obrigatorio
-                          name='telefoneEmpresa'
+                          name='telefone'
                           cabecalho
-                          cabecalhoTexto='Telefone da Empresa'
+                          cabecalhoTexto='Telefone'
                           type="tel"
-                        />
-                        {erros.find((e) => e.tipo === 'telefoneEmpresa' && e.ativo) && (
-                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefoneEmpresa')?.mensagem}/>
-                        )}
-                      </div>
-                  </div>
-                </div>
-
-                  
-
-              </Modal>
-              :
-              ''
-            }
-    </div> : ''}
-
-{/* pagina prestador */}
-    { isPrestador ? <div className='perfil'>
-        <div className="perfil--titulo-botao">
-          <h1 className='layout-titulo'>Perfil</h1>
-          {
-            tipoUsuario.prestador && tipoUsuario.organizador ?
-            ''
-            :
-            <div className="perfil--botao-notificacao-prestador" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
-              <i className="fa-regular fa-bell"></i>
-            </div>
-
-          }
-      </div>
-      
-          <div className='caixa-perfil'>
-            <div className='formulario-perfil-prestador'>
-              <div className='perfil-foto-nome-email-organizador'>
-                <div className='foto-perfil'> 
-                  {preView ? 
-                    <img className='imagem-perfil' src={preView} alt="Imagem de perfil" />
-                    :
-                    <svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" viewBox="0 0 76 76" fill="none">
-                      <circle cx="38" cy="38" r="37.5" fill="#D9D9D9" stroke="#D9D9D9"/>
-                      <path fillRule="evenodd" clipRule="evenodd" d="M62.1304 66.2249C55.6243 71.6988 47.201 75.0006 37.9999 75.0006C28.7988 75.0006 20.3755 71.6988 13.8695 66.2249C17.1125 59.0364 24.3242 54.0373 32.7038 54.0373H43.2961C51.6756 54.0373 58.8874 59.0364 62.1304 66.2249ZM48.489 44.0988C45.7072 46.8894 41.9341 48.4572 37.9999 48.4572C34.0658 48.4572 30.2927 46.8894 27.5108 44.0988C24.729 41.3082 23.1661 37.5233 23.1661 33.5767C23.1661 29.6302 24.729 25.8453 27.5108 23.0547C30.2927 20.264 34.0658 18.6963 37.9999 18.6963C41.9341 18.6963 45.7072 20.264 48.489 23.0547C51.2709 25.8453 52.8338 29.6302 52.8338 33.5767C52.8338 37.5233 51.2709 41.3082 48.489 44.0988Z" fill="white"/>
-                    </svg>}
-                    <input 
-                      type='file' 
-                      className='cadastro-evento__input_imagem'
-                      accept='image/*'
-                      ref={ inputImagemref }
-                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        if (e.target.files && e.target.files.length > 0 && e.target.files[0]) {
-                          setPreview(URL.createObjectURL(e.target.files[0]))
-                          alterarImagemPerfil(e.target.files[0])
-                        }
-                      }}
-                    />
-                  <div className='nome-email-organizador'>
-                    <h2 className='nome-perfil-organizador'>{usuario?.nomeEmpresa}</h2>
-                    <h2 className='email-perfil-organizador'>{usuario?.emailUsu}</h2>
-                  </div>
-                </div>
-                <div className='botoes-foto-perfil'>
-                  <div className='botao-alterar-foto-perfil'>
-                    <Botao 
-                      tamanho='med' 
-                      texto='Alterar foto' 
-                      funcao={()=>{inputImagemref.current?.click()}}
-                      cor='var(--yellow-700)'
-                    />       
-                  </div>
-                  <div className='botao-remover-foto-perfil'>
-                    <Botao 
-                      tamanho='med' 
-                      texto='Remover foto' 
-                      funcao={()=>{setModalExcluirFoto(true)}}
-                      cor='var(--yellow-700)'
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='caixa-input-perfil-prestador'>
-            <div className='informacoes-pessoais-perfil-organizador'>
-              <p className='texto-informacoes-empresa'>Informações da Empresa</p>
-            </div>
-            <div className='row g-4'>
-              <div className='col-12 col-md-6'>
-                <div>
-                  <Input 
-                    value={usuario?.nomeEmpresa}              
-                    dica='Digite o nome de sua empresa'
-                    obrigatorio
-                    name='nome empresa'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeEmpresa: event.target.value})}
-                    cabecalho
-                    cabecalhoTexto='Nome da Empresa'
-                    disabled={!modoEdicao}
-                  />
-                </div>
-                {erros.find((e) => e.tipo === 'NomeEmpresa' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'NomeEmpresa')?.mensagem}/>
-                  )}
-              </div>
-              <div className='col-12 col-md-6'>
-              <div>
-                  <PatternFormat 
-                    format="##.###.###/####-##"
-                    mask="_"
-                    value={usuario?.cnpjEmpresa}
-                    customInput={Input}
-                    onValueChange={(values) => {setUsuario({...usuario!, cnpjEmpresa:values.value})}}
-                    dica='Digite seu CNPJ'
-                    obrigatorio
-                    name='cnpj'
-                    cabecalho 
-                    cabecalhoTexto='CNPJ'
-                    disabled={!modoEdicao}
-                  />
-                  {erros.find((e) => e.tipo === 'CNPJ' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'CNPJ')?.mensagem}/>
-                  )}
-                </div>
-
-              </div>
-              <div className='col-12 col-md-12'>
-              <div>
-                  <Input
-                    value={usuario?.localizacaoEmpresa}                      
-                    dica='Digite a Localização da sua empresa'
-                    obrigatorio
-                    name='localizacao'
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, localizacaoEmpresa: event.target.value})}
-                    cabecalho
-                    cabecalhoTexto='Localização'
-                    disabled={!modoEdicao}/>
-                </div>
-                {erros.find((e) => e.tipo === 'localizacaoEmpresa' && e.ativo) && (
-                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'localizacaoEmpresa')?.mensagem}/>
-                )}
-              </div>
-          </div>
-        </div>
-
-        <div className='caixa-input-perfil-prestador'>
-          <div className='informacoes-pessoais-perfil-organizador'>
-            <p className='texto-informacoes-empresa'>Contato</p>
-          </div>
-          <div className='row g-4'>
-            <div className='col-12 col-md-6'>
-              <div>
-                <Input  
-                  value={usuario?.emailUsu}                
-                  dica='Digite seu email'
-                  obrigatorio
-                  name='email'
-                  cabecalho
-                  cabecalhoTexto='Email'
-                  autoComplete='email'
-                  disabled
-                />
-              </div>
-            </div>
-            <div className='col-12 col-md-6'>
-              <div>
-                <PatternFormat 
-                  format="(##) #####-####"
-                  mask="_"
-                  customInput={Input} 
-                  value={usuario?.telEmpresa}           
-                  dica='Digite o telefone da sua empresa'
-                  onValueChange={(values) => {setUsuario({...usuario!, telEmpresa:values.value});}}
-                  obrigatorio
-                  name='telefone empresa'
-                  cabecalho
-                  cabecalhoTexto='Telefone da Empresa'
-                  disabled={!modoEdicao}
-                  type="tel"
-                />
-                {erros.find((e) => e.tipo === 'telefoneEmpresa' && e.ativo) && (
-                  <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefoneEmpresa')?.mensagem}/>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {modoEdicao ? 
-          (
-            <motion.div key="modoEdicao" {...transicao} className='perfil-modo-edicao'>
-              <div className='caixa-input-perfil-prestador'>
-                <div className='informacoes-pessoais-perfil-organizador'>
-                  <p className='texto-informacoes-empresa'>Segurança</p>
-                </div>
-                <div className='row g-4'>
-                  <div className='col-12'>
-                    <div>
-                      <Input 
-                        tipo={senhaAtualOculta ? 'password' : 'text'}
-                        dica='Digite sua senha atual'
-                        cabecalho 
-                        cabecalhoTexto='Senha atual' 
-                        name='senha-atual'
-                        value={senhaAtual}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) => setSenhaAtual(event.target.value)}
-                        icone={
-                          senhaAtual !== '' ? 
-                            `fa-solid ${senhaAtualOculta ? 'fa-eye-slash' : 'fa-eye'}` 
-                          : ''
-                        }
-                        funcaoIcone={() => setSenhaAtualOculta(!senhaAtualOculta)}
-                      />
-                    </div>
-                  </div>
-                    <div className='col-12 col-md-6'>
-                      <div>
-                        <Input
-                          tipo={novaSenhaOculta ? 'password' : 'text'}           
-                          dica='Digite sua nova senha'
-                          obrigatorio
-                          name='nova-senha'
-                          value={novaSenha}
-                          onChange={(event: ChangeEvent<HTMLInputElement>) => setNovaSenha(event.target.value)}
-                          cabecalho
-                          cabecalhoTexto='Nova senha'
-                          icone={
-                            novaSenha !== '' ? 
-                              `fa-solid ${novaSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
-                            : ''
-                          }
-                          funcaoIcone={() => setNovaSenhaOculta(!novaSenhaOculta)}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-12 col-md-6'>
-                      <div>
-                        <Input   
-                          tipo={confirmarSenhaOculta ? 'password' : 'text'}                 
-                          dica='Confirme sua nova senha'
-                          obrigatorio
-                          name='Confirme'
-                          value={confirmarSenha}
-                          onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmarSenha(event.target.value)}
-                          cabecalho
-                          cabecalhoTexto='Confirme sua nova senha'
-                          icone={
-                            confirmarSenha !== '' ? 
-                              `fa-solid ${confirmarSenhaOculta ? 'fa-eye-slash' : 'fa-eye'}` 
-                            : ''
-                          }
-                          funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
-                        />
-                      </div>
-                    </div>
-                
-                  {erros.find((e) => e.tipo === 'confirmar-senha' && e.ativo) && (
-                    <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'confirmar-senha')?.mensagem}/>
-                  )}
-              </div>
-            </div>
-            <div className='botoes-alterar-perfil-edicao'>
-              <div className='botao-editar'>
-                <Botao 
-                  tamanho='max' 
-                  funcao={() => {
-                    setModoEdicao(false);
-                    api.get<Usuario>(`/users/get-user`)
-                    .then(response => {
-                      setUsuario(response.data);
-                    })
-                    .catch(error => {
-                      console.error('Erro ao obter usuário', error);
-                    });   
-                    setErros(erros => erros.map(erro => {
-                      erro.ativo = false;
-                      return erro;
-                    }));
-                    setSenhaAtual('');
-                    setNovaSenha('');
-                    setConfirmarSenha('');
-                    setSenhaAtualOculta(true);
-                    setNovaSenhaOculta(true);
-                    setConfirmarSenhaOculta(true);
-                  }} 
-                  texto='Cancelar' 
-                  cor='var(--yellow-700)'
-                />
-              </div>
-              <div className='botao-editar'>
-                <Botao tamanho='max' funcao={editarPerfil} texto='Salvar' cor='var(--yellow-700)' />
-              </div>
-            </div>
-            </motion.div>
-              ) 
-              : 
-              (
-                <motion.div key="foraModoEdicao" {...transicao} className='perfil-fora-modo-edicao'>
-                  <div className='caixa-input-perfil-prestador'>
-                    <div className='informacoes-pessoais-perfil-organizador'>
-                      <p className='texto-informacoes-empresa'>Segurança</p>
-                    </div>
-                    <div>
-                      <Input 
-                        cabecalho 
-                        cabecalhoTexto='Senha atual' 
-                        disabled={true}
-                        dica="••••••••••"
-                        name='senha-atual-desabilitado'
-                      />
-                    </div>
-                </div>
-                <div className='botoes-alterar-perfil'>
-                  <div className='botao-editar'>
-                    <Botao tamanho='max' funcao={() => setModoEdicao(true)} texto='Editar' cor='var(--yellow-700)' />
-                  </div>
-                  <div className='botao-deletar'>
-                    <Botao tamanho='max' funcao={() => setExcluir(true)} texto='Excluir conta' cor='var(--yellow-700)' />
-                  </div>
-                  {excluir ? 
-                    <Modal titulo="Excluir conta" enviaModal={setarExcluir} textoBotao="Excluir" funcaoSalvar={deletarPerfil}> Tem certeza que deseja excluir sua conta? </Modal>
-                  : ""}
-                </div>
-              </motion.div>  
-            )}
-            {
-              modalExcluirFoto ?
-              <Modal titulo="Excluir foto" enviaModal={setModalExcluirFoto} textoBotao="Excluir" funcaoSalvar={()=>{
-                          URL.revokeObjectURL(preView)
-                          setPreview('')
-                          if(inputImagemref.current)
-                            inputImagemref.current.value = ""
-                          alterarImagemPerfil(null)
-                          }}> Tem certeza que deseja excluir sua foto? </Modal>
-              : ''
-            }
-                {
-              modalCompletarCadastro ?
-              <Modal titulo='Completar Cadastro' enviaModal={() => {setModalCompletarCadastro(!modalCompletarCadastro)}} textoBotao="Continuar" funcaoSalvar={continuarCompletaCadastro}>
-                <div className="completar-cadastro--imagem">
-                  <img className='completar-cadastro--imagem--tamanho'src={logoOrganizador} alt="Imagem de completar cadastro" />
-                </div>
-                <div className="completar-cadastro--titulo">
-                  <div className="completar-cadastro-prestador--titulo-texto">
-                    Pronto para organizar seu próprio evento?
-                  </div>
-                  <div className="completar-cadastro--descricao">
-                    Que tal realizar seus próprios eventos? Como um organizador torne essa experiência algo possível.
-                  </div>
-                </div>
-                <div className="completar-cadastro--texto">
-                {
-                  `Ao ativar o perfil de organizador de eventos, você poderá:
-
-                  Gerenciar seus próprios eventos;
-                  Enviar convites e gerenciar sua lista de convidados;
-                  Contratar prestadores de forma rápida e segura diretamente pelo app;
-                  Acompanhar os pedidos feitos;
-                  Centralizar toda a organização em um só lugar.
-
-                  Tudo isso com o mesmo login e sem custos extras. Falta só completar seu cadastro para começar!`
-                }
-                </div>
-              </Modal>
-              :
-              ''
-            }
-            {
-              modalCompletarCadastroDados ?
-              <Modal titulo='Completar Cadastro' funcaoSalvar={completarCadastro} enviaModal={() => {setModalCompletarCadastroDados(false)}} textoBotao="Salvar">
-                <div className='modal-completar-cadastro--texto'>
-                  <div>Para alterar seu tipo de usuário é necessário completar seu cadastro!</div>
-                </div>
-                <div className="modal-completar-cadastro--campos">
-                  <div className="modal-completar-cadastro--nome-cnpj">
-                      <div className='col-12 col-md-6'>
-                        <Input 
-                                value={usuario?.nomeUsu}              
-                                dica='Digite seu nome'
-                                obrigatorio
-                                name='nome'
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, nomeUsu: event.target.value})}
-                                cabecalho
-                                cabecalhoTexto='Nome'
-                        />
-                        {erros.find((e) => e.tipo === 'nome' && e.ativo) && (
-                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'nome')?.mensagem}/>
-                        )}
-                      </div>
-                      <div className='col-12 col-md-5'>
-                        <Input
-                              value={usuario?.sobrenomeUsu}                      
-                              dica='Digite seu sobrenome'
-                              obrigatorio
-                              name='sobrenome'
-                              onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, sobrenomeUsu: event.target.value})}
-                              cabecalho
-                              cabecalhoTexto='Sobrenome'/>
-                        {erros.find((e) => e.tipo === 'sobrenome' && e.ativo) && (
-                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'sobrenome')?.mensagem}/>
-                        )}
-                      </div>
-                  </div>
-                  <div className="modal-completar-cadastro--nome-cnpj">
-
-                      <div className='col-12 col-md-6'>
-                        <div>
-                          <PatternFormat 
-                                format="###.###.###-##"
-                                mask="_"
-                                value={usuario?.cpfUsu}
-                                customInput={Input}
-                                onValueChange={(values) => {setUsuario({...usuario!, cpfUsu:values.value})}}
-                                dica='Digite seu CPF'
-                                obrigatorio
-                                name='cpf'
-                                cabecalho 
-                                cabecalhoTexto='CPF'
-                              />  
-                          {erros.find((e) => e.tipo === 'cpf' && e.ativo) && (
-                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'cpf')?.mensagem}/>
+                          />
+                          {erros.find((e) => e.tipo === 'telefone' && e.ativo) && (
+                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefone')?.mensagem}/>
                           )}
                         </div>
                       </div>
-                      <div className='col-12 col-md-5'>
-                        <div>
-                          <Input 
-                                value={usuario?.dtNasUsu}
-                                dica='Digite sua data de nascimento'
-                                obrigatorio
-                                name='dataNascimento'
-                                onChange={(event: ChangeEvent<HTMLInputElement>) => setUsuario({...usuario!, dtNasUsu: event.target.value})}
-                                cabecalho
-                                cabecalhoTexto='Data de Nascimento'
-                                type="date"/>
-                          {erros.find((e) => e.tipo === 'dataNascimento' && e.ativo) && (
-                            <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'dataNascimento')?.mensagem}/>
-                          )}
-                        </div>
-                    </div>
                   </div>
-                  <div className='col-12 col-md-12'>
-                    <div>
-                      <PatternFormat 
-                        format="(##) #####-####"
-                        mask="_"
-                        customInput={Input} 
-                        value={usuario?.telUsu}           
-                        dica='Digite seu telefone'
-                        onValueChange={(values) => {setUsuario({...usuario!, telUsu:values.value});}}
-                        obrigatorio
-                        name='telefone'
-                        cabecalho
-                        cabecalhoTexto='Telefone'
-                        type="tel"
-                        />
-                        {erros.find((e) => e.tipo === 'telefone' && e.ativo) && (
-                          <ErroCampoForm mensagem={erros.find((e) => e.tipo === 'telefone')?.mensagem}/>
-                        )}
-                      </div>
-                    </div>
-                </div>
 
-                  
+                    
 
-              </Modal>
-              :
-              ''
-            }
-    </div> 
-    : ''
-    }
+                </Modal>
+                :
+                ''
+              }
+      </div> 
+      : ''
+      }
 
-  </div>
+    </div>
+  </>
   )
 }
 

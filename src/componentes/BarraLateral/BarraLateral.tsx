@@ -3,7 +3,7 @@ import './BarraLateral.css'
 import ItemBarraLateral from '../ItemBarraLateral/ItemBarraLateral';
 import { useNavigate } from 'react-router';
 
-const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', corHoverMinimizar = 'var(--purple-700)', children}: any) => {
+const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', corHoverMinimizar = 'var(--purple-700)', corIconeHoverMinimizar='white', children}: any) => {
   const [ minimizado, setMinimizado ] = useState(minimizada);
   const [larguraTela, setLarguraTela] = useState(window.innerWidth);
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', c
         larguraTela > 1024 ?
           <div className='barra-lateral__minimizar'>
             <button 
-              style={{'--cor-minimizar': corHoverMinimizar} as React.CSSProperties} 
+              style={{'--cor-minimizar': corHoverMinimizar, '--cor-icone-minimizar': corIconeHoverMinimizar} as React.CSSProperties} 
               className='barra-lateral__botao-minimizar' 
               onClick={() => {setMinimizado(!minimizado)
                 enviaMinimizada(!minimizado)

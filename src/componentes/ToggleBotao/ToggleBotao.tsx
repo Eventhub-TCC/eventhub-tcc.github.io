@@ -9,7 +9,7 @@ const ToggleBotao = ({ ativo = false, aoAlternar, texto } : any) => {
             onChange={() => aoAlternar()}
         />
         <span className="slider"/>
-        <span className="texto">{texto}</span>  
+        <span className={`botao-toggle__texto ${ativo ? 'botao-toggle__texto--on': 'botao-toggle__texto--off'}`}>{texto}</span>  
     </label>
   );
 }

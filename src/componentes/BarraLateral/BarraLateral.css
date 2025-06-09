@@ -53,6 +53,11 @@
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+    transition: stroke .3s ease-in-out;
+}
+
+.barra-lateral__botao-minimizar:hover svg path{
+    stroke: var(--cor-icone-minimizar);
 }
 
 .barra-lateral__icone-gira{

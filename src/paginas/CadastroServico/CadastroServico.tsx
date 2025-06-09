@@ -12,6 +12,7 @@ import api from "../../axios"
 import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
 import Alerta from "../../componentes/Alerta/Alerta"
 import { useNavigate } from "react-router"
+import { Helmet } from "react-helmet-async"
 
 
 interface tipoServico{
@@ -113,12 +114,13 @@ const CadastroServico = () => {
       campos: [
         <Input
         cabecalho
-        cabecalhoTexto='Nome do Serviço'
+        cabecalhoTexto='Nome do serviço'
         tipo='text'
-        dica='digite um nome para o serviço'
+        dica='Digite um nome para o serviço'
         valor={nomeServico}
         cor='#F3C623'
         onChange={(e: ChangeEvent<HTMLInputElement>)=>{setNomeServico(e.target.value)}}
+        name='nome-servico'
         />,
         <Select
         cabecalho
@@ -129,14 +131,15 @@ const CadastroServico = () => {
         valor={tipoServico}
         required
         onChange={(e: ChangeEvent<HTMLSelectElement>)=>{setTipoServico(e.target.value)}}
+        name='categoria-servico'
         >
           {categoriaServico.map((categoria)=>{
             return <option key={categoria.idTipoServico} value={categoria.idTipoServico}>{categoria.descricaoTipoServico}</option>
           })}
         </Select>,
         <TextArea
-        titulo='Descrição do Serviço'
-        placeholder='Descreva o serviço que você deseja criar'
+        titulo='Descrição do serviço'
+        placeholder='Digite uma descrição para o seu serviço...'
         name='descricao-servico'
         cor='#F3C623'
         valor={descricaoServico}
@@ -180,7 +183,7 @@ const CadastroServico = () => {
         <Select 
         cabecalho
         cabecalhoTexto = 'Unidade de cobrança'
-        textoPadrao = 'Selecione a Unidade'
+        textoPadrao = 'Selecione a unidade'
         cor='#F3C623'
         esconderValorPadrao
         required
@@ -188,9 +191,10 @@ const CadastroServico = () => {
         onChange = {(e: ChangeEvent<HTMLSelectElement>)=>{
             setUnidadeCobranca(Number(e.target.value))
           }}
+        name='unidade-cobranca'
         >
           {unidadeValor.map((unidade)=>{
-            return <option id={unidade.id.toString()} value={unidade.id}>{unidade.nome}</option>
+            return <option id={unidade.id.toString()} key={unidade.id} value={unidade.id}>{unidade.nome}</option>
           })}
         </Select>,
         <NumericFormat
@@ -206,9 +210,10 @@ const CadastroServico = () => {
           setValorServico(values.floatValue || 0);
         }}
         cabecalho
-        cabecalhoTexto='Preço do Serviço (Por Unidade Escolhida)'
-        dica='Digite o valor do Serviço'
+        cabecalhoTexto='Preço do serviço por unidade'
+        dica='Digite o valor do serviço'
         cor='#F3C623'
+        name='valor-servico'
         />,
         <PatternFormat
         format='#########'
@@ -217,8 +222,9 @@ const CadastroServico = () => {
         customInput={Input}
         cabecalho
         cabecalhoTexto='Quantidade mínima'
-        dica='Digite a quantidade mínima do Serviço'
+        dica='Digite a quantidade mínima do serviço'
         cor='#F3C623'
+        name='qnt-minima'
         />,
           <PatternFormat
         format='#########'
@@ -226,9 +232,10 @@ const CadastroServico = () => {
         onValueChange={(values) => {setQntMaxima(Number(values.value))}}
         customInput={Input}
         cabecalho
-        cabecalhoTexto='Quantidade Máxima'
-        dica='Digite a quantidade máxima do Serviço'
+        cabecalhoTexto='Quantidade máxima'
+        dica='Digite a quantidade máxima do serviço'
         cor='#F3C623'
+        name='qnt-maxima'
         />,
          <PatternFormat
         format='#########'
@@ -237,8 +244,9 @@ const CadastroServico = () => {
         customInput={Input}
         cabecalho
         cabecalhoTexto='Quantidade'
-        dica='Digite a quantidade do Serviço'
+        dica='Digite a quantidade do serviço'
         cor='#F3C623'
+        name='qnt'
         />,
           <CheckBox
           ativado={qntFixa}
@@ -250,6 +258,7 @@ const CadastroServico = () => {
               setQntMaxima(qntMinima)
             }
           }}
+          name='qnt-fixa'
           />
 
       ]
@@ -273,14 +282,15 @@ const CadastroServico = () => {
       <div className="d-flex flex-column justify-content-center align-items-center cadastro-servico__etapa-imagem-sem-imagem">
           <div className="cadastro-servico__imagem-info">
             <div><i className="fa-solid fa-image cadastro-servico__imagem-icone"></i></div>
-            <div>Nenhuma imagem selecionada</div>
-            <div>clique no botão abaixo para adicionar</div>
+            <div className="cadastro-servico__imagem-info-titulo">Nenhuma imagem selecionada</div>
+            <div className="cadastro-servico__imagem-info-subtitulo">Clique no botão abaixo para adicionar</div>
           </div>
         <div className="cadastro-servico__imagem-botao">
           <Botao
             texto='Selecionar Imagens'
             funcao={()=>{inputImagemRef.current?.click()}}
             cor='#F3C623'
+            tamanho='min'
           />
         </div>
         {erro.imagemObrigatoria.status ? <ErroCampoForm mensagem={erro.imagemObrigatoria.mensagem} /> : ''}
@@ -289,12 +299,11 @@ const CadastroServico = () => {
     <div className='d-flex row g-4 justify-content-center cadastro-servico__etapa-imagem-com-imagem'>
        {
        imagemPreview.map((preView,index)=>{
-        return <div className="col-12 col-sm-6 cadastro-servico__container-imagem">
+        return <div className="col-12 col-sm-6 cadastro-servico__container-imagem" key={index}>
           <img key={preView} src={preView} alt="imagem do serviço" className="cadastro-servico__imagem-preview"/>
           <button className='cadastro-servico__remover-image' type="button" onClick={()=>{
             inputImagemRef.current!.value = ''
             setImagensServico(imagensServico.filter((_,i)=>i !== index))
-            console.log(imagensServico)
             }}>
             <i className="fa-solid fa-xmark cadastro-servico__remover-image-icone"></i>
           </button>
@@ -391,36 +400,43 @@ const CadastroServico = () => {
   }
 
   return (
-    <div className="cadastro-servico">
-      <h1 className="layout-titulo">Criar serviço</h1>
-      <form onSubmit={onSubimit} className="cadastro-servico__formulario" encType="multipart/form-data">
-        <IndicadorDePassos qntPassos = {qntPassos} passoAtual={passoAtual+1} cor = '#F3C623'/>
-        <Instrucao texto={instrucao[passoAtual].texto} titulo={instrucao[passoAtual].titulo} cor='#FFB22C'/>
-        <div>
-          {etapa[passoAtual]}
-        </div>
-        <div className="d-flex justify-content-center gap-2">
-          {passoAtual !== 0 ? 
+    <>
+      <Helmet>
+        <title>Criar Serviço | EventHub</title>
+      </Helmet>
+      <div className="cadastro-servico">
+        <h1 className="layout-titulo">Criar serviço</h1>
+        <form onSubmit={onSubimit} className="cadastro-servico__formulario" encType="multipart/form-data">
+          <IndicadorDePassos qntPassos = {qntPassos} passoAtual={passoAtual+1} cor = '#F3C623'/>
+          <Instrucao texto={instrucao[passoAtual].texto} titulo={instrucao[passoAtual].titulo} cor='#FFB22C'/>
           <div>
-            <Botao 
-            texto='Anterior'
-            funcao={()=>{setPassoAtual(passoAtual-1)}}
-            cor='#F3C623'
-            />
-          </div> : ''}
-          <div>
-            <Botao 
-            texto={passoAtual+1 < qntPassos ?'Próximo':'Cadastrar'}
-            submit
-            cor='#F3C623'
-            />
+            {etapa[passoAtual]}
           </div>
-        </div>
-      </form>
-      { aviso.limiteImagem.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.limiteImagem.status} status='aviso' texto={aviso.limiteImagem.mensagem}/> </div>: ''}
-      { aviso.valorServico.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.valorServico.status} status='aviso' texto={aviso.valorServico.mensagem}/> </div>: ''}
-      { aviso.qntMinima.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.qntMinima.status} status='aviso' texto={aviso.qntMinima.mensagem}/> </div>: ''}
-    </div>
+          <div className="cadastro-servico__botoes d-flex justify-content-center gap-2">
+            {passoAtual !== 0 ? 
+            <div>
+              <Botao 
+              texto='Anterior'
+              funcao={()=>{setPassoAtual(passoAtual-1)}}
+              cor='#F3C623'
+              tamanho='max'
+              />
+            </div> : ''}
+            <div>
+              <Botao 
+              texto={passoAtual+1 < qntPassos ?'Próximo':'Cadastrar'}
+              submit
+              cor='#F3C623'
+              tamanho='max'
+              />
+            </div>
+          </div>
+        </form>
+        { aviso.limiteImagem.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.limiteImagem.status} status='aviso' texto={aviso.limiteImagem.mensagem}/> </div>: ''}
+        { aviso.valorServico.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.valorServico.status} status='aviso' texto={aviso.valorServico.mensagem}/> </div>: ''}
+        { aviso.qntMinima.status ? <div className="cadastro-servico__alerta"><Alerta ativado={aviso.qntMinima.status} status='aviso' texto={aviso.qntMinima.mensagem}/> </div>: ''}
+      </div>
+    </>
   )
 }
 export default CadastroServico

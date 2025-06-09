@@ -13,6 +13,7 @@ import sweetAlert from 'sweetalert2'
 import Alerta from '../Alerta/Alerta'
 import InputQuantidade from '../InputQuantidade/InputQuantidade'
 import ToolTip from '../ToolTip/ToolTip'
+import TextArea from '../TextArea/TextArea'
 
 interface TipoEvento {
   idTipoEvento: string;
@@ -362,16 +363,16 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                   </div>
                 </div>
                 <div className='descricao-input-evento'>
-                  <div>Descrição do evento(Opcional)</div>
                   <div className='input-tamanho-descricao'>
-                    <Input
-                      value={eventoEditado?.descricaoEvento || ""}
+                    <TextArea
+                      titulo='Descrição do evento (opcional)'
+                      placeholder='Digite uma descrição para o seu evento...'
+                      name='descricao-evento'
+                      valor={eventoEditado?.descricaoEvento || ""}
                       onChange={(e: any) => setEventoEditado((prev: any) =>
                         prev ? { ...prev, descricaoEvento: e.target.value } : null
                       )}
-                      type='text'
-                      dica='Digite uma descrição para o seu evento...'
-                    />
+                      />
                   </div>
                 </div>
                 <div className='imagem-evento'>

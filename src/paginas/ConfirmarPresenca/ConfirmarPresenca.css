@@ -101,6 +101,7 @@
     color: #000;
     font-size: 32px;
     font-weight: 300;
+    margin: 0;
 }
 
 .caixa-texto-evento{
@@ -108,6 +109,7 @@
     font-size: 18px;
     font-weight: 300;
     margin: 0;
+    white-space: pre-line;
 }
 
 .dados-evento{

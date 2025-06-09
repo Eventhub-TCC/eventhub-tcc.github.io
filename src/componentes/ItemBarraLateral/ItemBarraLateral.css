@@ -11,12 +11,19 @@
     gap: .5rem;
     text-decoration: none;
     color: rgba(255, 255, 255, 0.6);
-    transition: color 0.3s ease-out;
 }
 
-.item-barra__link:hover,
-.item-barra__link--ativo{
+.item-barra__link:hover{
     color: white;
+}
+
+.item-barra__link--ativo:hover{
+    color: var(--cor-icone-texto-barra);
+}
+
+
+.item-barra__link--ativo{
+    color: var(--cor-icone-texto-barra);
 }
 
 .item-barra__link--ativo{
@@ -27,7 +34,11 @@
     stroke: white;
     stroke-opacity: 0.6;
     stroke-width: 2;
-    transition: stroke-opacity 0.3s ease-out;
+}
+
+.item-barra__link--ativo svg path,
+.item-barra__link--ativo:hover svg path{
+    stroke: var(--cor-icone-texto-barra);
 }
 
 .item-barra__link--ativo svg path,
@@ -44,6 +55,7 @@
 
 .item-barra__icone{
     font-size: 1.5rem;
+    color: var(--cor-icone-texto-barra);
 }
 
 .item-barra__texto{

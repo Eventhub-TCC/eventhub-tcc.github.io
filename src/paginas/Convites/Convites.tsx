@@ -8,6 +8,7 @@ import api from "../../axios";
 import InputQuantidade from "../../componentes/InputQuantidade/InputQuantidade";
 import CheckBox from "../../componentes/CheckBox/CheckBox";
 import Secao from "../../componentes/Secao/Secao";
+import { Helmet } from "react-helmet-async";
 
 interface Evento {
   idEvento: number;
@@ -196,118 +197,123 @@ const Convites = () => {
   if (!evento) return <p>Carregando evento...</p>;
 
   return (
-    <div className="tela-convites-evento">
-      <div className="informacoes-evento__cabecalho">
-        <CabecalhoEvento
-          idEvento={idEvento}
-          evento={evento}
-          preViewEv={preView}
-          setEvento={setEvento}
-          idUsuario={idUsuario}
-        />
-      </div>
-      <div className="informacoes-evento__container">
-        <Secao titulo='Convites'>
-          <div className="convites">
-            <div className="botoes-convites">
-              <div className="confirmar-presencas">
-                <Botao funcao={abrirModalGerarConvite} texto='Gerar convite' />
+    <>
+      <Helmet>
+        <title>{evento.nomeEvento} | Convites | EventHub</title>
+      </Helmet>
+      <div className="tela-convites-evento">
+        <div className="informacoes-evento__cabecalho">
+          <CabecalhoEvento
+            idEvento={idEvento}
+            evento={evento}
+            preViewEv={preView}
+            setEvento={setEvento}
+            idUsuario={idUsuario}
+          />
+        </div>
+        <div className="informacoes-evento__container">
+          <Secao titulo='Convites'>
+            <div className="convites">
+              <div className="botoes-convites">
+                <div className="confirmar-presencas">
+                  <Botao funcao={abrirModalGerarConvite} texto='Gerar convite' />
+                </div>
               </div>
-            </div>
-            <table className="tabela-convites">
-              <thead>
-                <tr>
-                  <th>Convite</th>
-                  <th>Gerado em</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  convites.map(convite => (
-                    <tr key={convite.idConvite}>
-                      <td><a href={`${window.location.origin}/confirmar-presenca/${convite.idConvite}`} target="_blank" className="link-convite">{convite.idConvite}</a></td>
-                      <td>{convite.dataConvite.slice(0,10).split('-').reverse().join('/')}</td>
-                      <td>
-                        <span className={`status-convidado ${convite.status.toLowerCase()}`}>
-                          <span>{convite.status}</span>
-                        </span>
-                      </td>
-                      <td>
-                        { convite.status === 'Pendente' &&
-                          <div className="excluir-convite" onClick={() => abrirModalApagarConvite(convite.idConvite)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
-                              <path d="M12.3828 2.58853C12.8711 2.12466 12.8711 1.37134 12.3828 0.907471C11.8945 0.443604 11.1016 0.443604 10.6133 0.907471L6.5 4.8188L2.38281 0.911182C1.89453 0.447314 1.10156 0.447314 0.613281 0.911182C0.125 1.37505 0.125 2.12837 0.613281 2.59224L4.73047 6.49985L0.617188 10.4112C0.128906 10.875 0.128906 11.6284 0.617188 12.0922C1.10547 12.5561 1.89844 12.5561 2.38672 12.0922L6.5 8.18091L10.6172 12.0885C11.1055 12.5524 11.8984 12.5524 12.3867 12.0885C12.875 11.6247 12.875 10.8713 12.3867 10.4075L8.26953 6.49985L12.3828 2.58853Z" fill="#CED4DA" />
-                            </svg>
-                          </div>
-                        }
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
-            {
-              modoApagarConvite &&
-              <Modal 
-                titulo='Excluir convite' 
-                textoBotao="Excluir" 
-                funcaoSalvar={() => { 
-                  deletarConvite(idConviteApagado); 
-                  setModoApagarConvite(!modoApagarConvite) 
-                }} 
-                enviaModal={abrirModalApagarConvite}
-              >
-                Tem certeza de que deseja excluir este convite?
-              </Modal>
-            }
-            {
-              abrirGerarConvite ?
-                <Modal 
-                  enviaModal={abrirModalGerarConvite} 
-                  titulo='Gerar convites' 
-                  funcaoCancelar={() => {
-                    setGerarLink(false)
-                    setQtdPadraoEvento(false);
-                  }}
-                  funcaoSalvar={gerarLink ? copiarLink : gerarConvite} 
-                  textoBotao={gerarLink ? 'Copiar Link' : 'Gerar'}
-                  centralizarBotoes
-                > 
+              <table className="tabela-convites">
+                <thead>
+                  <tr>
+                    <th>Convite</th>
+                    <th>Gerado em</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
                   {
-                    gerarLink ?
-                      <p className="gerar-convite__nao-gerado">O convite foi gerado! Copie o link no botão abaixo e compartilhe com o seu convidado.</p>
-                    :
-                    <div className="gerar-convite">
-                      <p className="gerar-convite__texto">Defina a quantidade máxima de acompanhantes para este convite.</p>
-                      <div className="gerar-convite__container-input">
-                        <div className="gerar-convite__input">
-                        <InputQuantidade 
-                          qtdMaxima={99}
-                          qtdAtual={qtdAcompanhantes}
-                          setQtdAtual={setQtdAcompanhantes}
-                          nome='qtd-acompanhantes'
-                        />
-                      </div>
-                      </div>
-                      <div className="gerar-convite__checkbox">
-                        <CheckBox 
-                          name='maximo-acompanhantes'
-                          ativado={qtdPadraoEvento}
-                          funcao={() => setQtdPadraoEvento(!qtdPadraoEvento)}
-                          texto='Definir quantidade como padrão para os próximos convites deste evento'
-                        />
-                      </div>
-                    </div>
+                    convites.map(convite => (
+                      <tr key={convite.idConvite}>
+                        <td><a href={`${window.location.origin}/confirmar-presenca/${convite.idConvite}`} target="_blank" className="link-convite">{convite.idConvite}</a></td>
+                        <td>{convite.dataConvite.slice(0,10).split('-').reverse().join('/')}</td>
+                        <td>
+                          <span className={`status-convidado ${convite.status.toLowerCase()}`}>
+                            <span>{convite.status}</span>
+                          </span>
+                        </td>
+                        <td>
+                          { convite.status === 'Pendente' &&
+                            <div className="excluir-convite" onClick={() => abrirModalApagarConvite(convite.idConvite)}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
+                                <path d="M12.3828 2.58853C12.8711 2.12466 12.8711 1.37134 12.3828 0.907471C11.8945 0.443604 11.1016 0.443604 10.6133 0.907471L6.5 4.8188L2.38281 0.911182C1.89453 0.447314 1.10156 0.447314 0.613281 0.911182C0.125 1.37505 0.125 2.12837 0.613281 2.59224L4.73047 6.49985L0.617188 10.4112C0.128906 10.875 0.128906 11.6284 0.617188 12.0922C1.10547 12.5561 1.89844 12.5561 2.38672 12.0922L6.5 8.18091L10.6172 12.0885C11.1055 12.5524 11.8984 12.5524 12.3867 12.0885C12.875 11.6247 12.875 10.8713 12.3867 10.4075L8.26953 6.49985L12.3828 2.58853Z" fill="#CED4DA" />
+                              </svg>
+                            </div>
+                          }
+                        </td>
+                      </tr>
+                    ))
                   }
+                </tbody>
+              </table>
+              {
+                modoApagarConvite &&
+                <Modal 
+                  titulo='Excluir convite' 
+                  textoBotao="Excluir" 
+                  funcaoSalvar={() => { 
+                    deletarConvite(idConviteApagado); 
+                    setModoApagarConvite(!modoApagarConvite) 
+                  }} 
+                  enviaModal={abrirModalApagarConvite}
+                >
+                  Tem certeza de que deseja excluir este convite?
                 </Modal>
-              :''
-            }
-          </div>
-        </Secao>
+              }
+              {
+                abrirGerarConvite ?
+                  <Modal 
+                    enviaModal={abrirModalGerarConvite} 
+                    titulo='Gerar convites' 
+                    funcaoCancelar={() => {
+                      setGerarLink(false)
+                      setQtdPadraoEvento(false);
+                    }}
+                    funcaoSalvar={gerarLink ? copiarLink : gerarConvite} 
+                    textoBotao={gerarLink ? 'Copiar Link' : 'Gerar'}
+                    centralizarBotoes
+                  > 
+                    {
+                      gerarLink ?
+                        <p className="gerar-convite__nao-gerado">O convite foi gerado! Copie o link no botão abaixo e compartilhe com o seu convidado.</p>
+                      :
+                      <div className="gerar-convite">
+                        <p className="gerar-convite__texto">Defina a quantidade máxima de acompanhantes para este convite.</p>
+                        <div className="gerar-convite__container-input">
+                          <div className="gerar-convite__input">
+                          <InputQuantidade 
+                            qtdMaxima={99}
+                            qtdAtual={qtdAcompanhantes}
+                            setQtdAtual={setQtdAcompanhantes}
+                            nome='qtd-acompanhantes'
+                          />
+                        </div>
+                        </div>
+                        <div className="gerar-convite__checkbox">
+                          <CheckBox 
+                            name='maximo-acompanhantes'
+                            ativado={qtdPadraoEvento}
+                            funcao={() => setQtdPadraoEvento(!qtdPadraoEvento)}
+                            texto='Definir quantidade como padrão para os próximos convites deste evento'
+                          />
+                        </div>
+                      </div>
+                    }
+                  </Modal>
+                :''
+              }
+            </div>
+          </Secao>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

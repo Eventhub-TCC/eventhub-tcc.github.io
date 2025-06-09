@@ -49,13 +49,7 @@
   transform: translateX(16px);
 }
 
-.botao-toggle.on .texto {
-  color: white;
-  font-family: Inter;
-  font-size: 14px;
-}
-
-.texto {
+.botao-toggle__texto {
   color: #b0b0b0;
   font-weight: 600;
   transition: color 0.3s ease;
@@ -63,3 +57,10 @@
   font-size: 14px;
 }
 
+.botao-toggle__texto--on {
+  color: white;
+}
+
+.botao-toggle__texto--off {
+  color: #b0b0b0;
+}
