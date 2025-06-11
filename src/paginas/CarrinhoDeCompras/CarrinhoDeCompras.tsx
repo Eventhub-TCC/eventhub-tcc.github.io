@@ -10,6 +10,7 @@ import { Modal } from "../../componentes/Modal/Modal";
 import Select from "../../componentes/Select/Select";
 import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm";
 import { Helmet } from "react-helmet-async";
+import Seta from "../../componentes/Seta/Seta";
 
 interface ItemCarrinho {
   idServico: string;
@@ -121,6 +122,9 @@ const formatarPreco = (valor: number) => {
         <title>Carrinho de Compras | Marketplace | EventHub</title>
       </Helmet>
       <div className="container-carrinho">
+          <div className='servico-marketplace__seta'>
+              <Seta caminho='/marketplace'/>
+          </div>
         <div className="container-carrinho__titulo">Carrinho de Compras</div>
         {carrinho.length > 0 ? (
           <>

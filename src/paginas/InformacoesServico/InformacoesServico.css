@@ -7,7 +7,7 @@
 
 .informacoes-servico__container{
     display: flex;
-    padding: calc(147px + 32px) 0 32px;
+    padding: calc(200px + 32px) 0 32px;
     flex-direction: column;
     gap: 40px;
 }

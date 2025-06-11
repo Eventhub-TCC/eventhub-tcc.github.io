@@ -13,6 +13,7 @@ import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm"
 import Alerta from "../../componentes/Alerta/Alerta"
 import { useNavigate } from "react-router"
 import { Helmet } from "react-helmet-async"
+import Seta from "../../componentes/Seta/Seta"
 
 
 interface tipoServico{
@@ -405,6 +406,9 @@ const CadastroServico = () => {
         <title>Criar Serviço | EventHub</title>
       </Helmet>
       <div className="cadastro-servico">
+        <div className='cadastro-servico__seta'>
+          <Seta tipo='prestador' caminho='/prestador/meus-servicos'/>
+        </div>
         <h1 className="layout-titulo">Criar serviço</h1>
         <form onSubmit={onSubimit} className="cadastro-servico__formulario" encType="multipart/form-data">
           <IndicadorDePassos qntPassos = {qntPassos} passoAtual={passoAtual+1} cor = '#F3C623'/>

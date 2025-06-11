@@ -13,6 +13,7 @@ import ToggleBotao from '../ToggleBotao/ToggleBotao'
 import InputRadio from '../InputRadio/InputRadio'
 import ToolTip from '../ToolTip/ToolTip'
 import TextArea from '../TextArea/TextArea'
+import Seta from '../Seta/Seta'
 
 
 interface TipoServico {
@@ -270,6 +271,9 @@ const unidadeValor: Unidade[] = [
   return (
     <div className="cabecalho-servicos">
       <div className='container'>
+        <div className='cabecalho-servico__seta'>
+          <Seta tipo='prestador' caminho='/prestador/meus-servicos'/>
+        </div>
         <div className="titulo-infos-eventos">
           <div className="titulo-informacoes">
             <div className="titulo-do-evento">

@@ -11,6 +11,7 @@ import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import { useParams } from 'react-router'
 import { Helmet } from 'react-helmet-async'
 import Alerta from '../../componentes/Alerta/Alerta'
+import Seta from '../../componentes/Seta/Seta'
 
 interface TipoServico {
     idTipoServico: string
@@ -267,6 +268,9 @@ const ServicoMarketplace = () => {
         </Helmet>
         <div className='servico-marketplace'>
             <div>
+            <div className='servico-marketplace__seta'>
+                <Seta caminho='/marketplace'/>
+            </div>
         {compraOk ?
             <div className="servico-marketplace__finalizado">
                 <div>

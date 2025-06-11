@@ -100,7 +100,17 @@
     align-self: stretch;
 }
 
-.sumario-eventos{
+.exibicao-eventos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+    display: block
+}
+
+
+.sumario-eventos {
     color: var(--purple-900);
     font-family: Inter;
     font-size: 24px;
@@ -108,15 +118,27 @@
     font-weight: 400;
     line-height: 24px;
     margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
-.exibicao-eventos{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 32px;
-    align-self: stretch;
-    display: block;
+.sumario-eventos::-webkit-details-marker {
+    display: none;
+}
+
+.exibicao-eventos__seta {
+    transition: transform 0.3s ease;
+}
+
+.exibicao-eventos[open] .exibicao-eventos__seta {
+    transform: rotate(90deg);
+}
+
+.quantidade-eventos {
+  font-size: 14px;
+  vertical-align: top;
 }
 
 .numero-de-eventos{

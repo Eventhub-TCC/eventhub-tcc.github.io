@@ -342,9 +342,10 @@ const obterServicos = async () => {
                   categoriaSelecionada ||
                   unidadeSelecionada ||
                   statusSelecionado) ? (
-                  <details open className="exibicao-eventos">
+                  <details open className="exibicao-servicos">
                     <summary className="sumario-servicos">
-                      Serviços encontrados ({servicosFiltrados.length})
+                      <i className={`fa-solid fa-chevron-right exibicao-servicos__seta`}/>
+                      <span className="exibicao-servicos__titulo">Servicos encontrados <span className="quantidade-servicos">({servicosFiltrados.length})</span></span>
                     </summary>
                     <div className="container">
                       <div className="row g-5">
@@ -375,11 +376,11 @@ const obterServicos = async () => {
                 ) : (
                   <>
                     {servicosClassificados.anunciados.length > 0 && (
-                      <details open className="exibicao-eventos">
-                        <summary className="sumario-servicos">
-                          Serviços anunciados (
-                          {servicosClassificados.anunciados.length})
-                        </summary>
+                    <details open className="exibicao-servicos">
+                      <summary className="sumario-servicos">
+                        <i className={`fa-solid fa-chevron-right exibicao-servicos__seta`}/>
+                        <span className="exibicao-servicos__titulo">Servicos anunciados <span className="quantidade-servicos">({servicosClassificados.anunciados.length})</span></span>
+                      </summary>
                         <div className="container">
                           <div className="row g-5">
                             {servicosClassificados.anunciados.map((servico) => (
@@ -399,11 +400,11 @@ const obterServicos = async () => {
                       </details>
                     )}
                     {servicosClassificados.naoAnunciados.length > 0 && (
-                      <details open className="exibicao-eventos">
-                        <summary className="sumario-servicos">
-                          Serviços não anunciados (
-                          {servicosClassificados.naoAnunciados.length})
-                        </summary>
+                    <details open className="exibicao-servicos">
+                      <summary className="sumario-servicos">
+                        <i className={`fa-solid fa-chevron-right exibicao-servicos__seta`}/>
+                        <span className="exibicao-servicos__titulo">Servicos não anunciados <span className="quantidade-servicos">({servicosClassificados.naoAnunciados.length})</span></span>
+                      </summary>
                         <div className="container">
                           <div className="row g-5">
                             {servicosClassificados.naoAnunciados.map((servico) => (

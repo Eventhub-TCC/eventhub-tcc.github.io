@@ -14,6 +14,7 @@ import api from '../../axios'
 import { useNavigate } from 'react-router'
 import Alerta from '../../componentes/Alerta/Alerta'
 import { Helmet } from 'react-helmet-async'
+import Seta from '../../componentes/Seta/Seta'
 
 
 
@@ -483,6 +484,9 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
         <title>Criar Evento | EventHub</title>
       </Helmet>
       <div className='cadastro-evento'>
+        <div className='cadastro-evento__seta'>
+          <Seta caminho='/organizador/meus-eventos'/>
+        </div>
         <h1 className='layout-titulo'>Criar evento</h1>
         <form onSubmit={passoAtual+1===qntPassos?(e:FormEvent)=>CadastrarEvento(e):avancarPasso} className='cadastro-evento__form' encType="multipart/form-data">
           <IndicadorDePassos passoAtual={passoAtual + 1} qtdPassos={qntPassos}/>

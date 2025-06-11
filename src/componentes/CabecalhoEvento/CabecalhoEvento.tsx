@@ -14,6 +14,7 @@ import Alerta from '../Alerta/Alerta'
 import InputQuantidade from '../InputQuantidade/InputQuantidade'
 import ToolTip from '../ToolTip/ToolTip'
 import TextArea from '../TextArea/TextArea'
+import Seta from '../Seta/Seta'
 
 interface TipoEvento {
   idTipoEvento: string;
@@ -246,6 +247,9 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
   return (
     <div className="cabecalho-eventos">
       <div className='container'>
+        <div className='cabecalho-evento__seta'>
+          <Seta caminho='/organizador/meus-eventos'/>
+        </div>
         <div className="titulo-infos-eventos">
           <div className="titulo-informacoes">
             <div className="titulo-do-evento">

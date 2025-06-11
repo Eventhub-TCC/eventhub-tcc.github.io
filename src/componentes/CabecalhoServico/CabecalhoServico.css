@@ -425,6 +425,10 @@
     z-index: 1;
 }
 
+.cabecalho-servico__seta{
+    margin-bottom:16px;
+}
+
 @media screen and (max-width: 700px){
     .informacoes-evento{
         flex-direction: column;

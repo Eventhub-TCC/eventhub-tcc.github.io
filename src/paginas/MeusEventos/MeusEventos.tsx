@@ -440,7 +440,8 @@ const MeusEventos = () => {
                   statusSelecionado) ? (
                   <details open className="exibicao-eventos">
                     <summary className="sumario-eventos">
-                      Eventos encontrados ({eventosFiltrados.length})
+                      <i className={`fa-solid fa-chevron-right exibicao-eventos__seta`}/>
+                      <span className="exibicao-eventos__titulo">Eventos encontrados <span className="quantidade-eventos">({eventosFiltrados.length})</span></span>
                     </summary>
                     <div className="container">
                       <div className="row g-5">
@@ -477,11 +478,11 @@ const MeusEventos = () => {
                 ) : (
                   <>
                     {eventosClassificados.emAndamento.length > 0 && (
-                      <details open className="exibicao-eventos">
-                        <summary className="sumario-eventos">
-                          Eventos em andamento (
-                          {eventosClassificados.emAndamento.length})
-                        </summary>
+                    <details open className="exibicao-eventos">
+                      <summary className="sumario-eventos">
+                        <i className={`fa-solid fa-chevron-right exibicao-eventos__seta`}/>
+                        <span className="exibicao-eventos__titulo">Eventos em andamento <span className="quantidade-eventos">({eventosClassificados.emAndamento.length})</span></span>
+                      </summary>
                         <div className="container">
                           <div className="row g-5">
                             {eventosClassificados.emAndamento.map((evento) => (
@@ -509,8 +510,8 @@ const MeusEventos = () => {
                     {eventosClassificados.confirmados.length > 0 && (
                       <details open className="exibicao-eventos">
                         <summary className="sumario-eventos">
-                          Próximos eventos (
-                          {eventosClassificados.confirmados.length})
+                          <i className={`fa-solid fa-chevron-right exibicao-eventos__seta`}/>
+                          <span className="exibicao-eventos__titulo">Próximos Eventos <span className="quantidade-eventos">({eventosClassificados.confirmados.length})</span></span>
                         </summary>
                         <div className="container">
                           <div className="row g-5">
@@ -539,8 +540,8 @@ const MeusEventos = () => {
                     {eventosClassificados.concluidos.length > 0 && (
                       <details open className="exibicao-eventos">
                         <summary className="sumario-eventos">
-                          Eventos finalizados (
-                          {eventosClassificados.concluidos.length})
+                          <i className={`fa-solid fa-chevron-right exibicao-eventos__seta`}/>
+                          <span className="exibicao-eventos__titulo">Eventos Concluidos <span className="quantidade-eventos">({eventosClassificados.concluidos.length})</span></span>
                         </summary>
                         <div className="container">
                           <div className="row g-5">
