@@ -1,14 +1,19 @@
+import { Helmet } from 'react-helmet-async'
 import CabecalhoUsuario from '../../componentes/CabecalhoUsuario/CabecalhoUsuario'
 import './PoliticasTermos.css'
 
 const PoliticasTermos = () => {
   return (
+    <>
+        <Helmet>
+          <title>Políticas e Termos | EventHub</title>
+        </Helmet>
     <div className='politicas-termos__pagina'>
         <div>
             <CabecalhoUsuario/>
             <div className="politicas-termos__topo">
                 <div className="politicas-termos">
-                    POLITICAS E TERMOS DA PLATAFORMA
+                    POLÍTICAS E TERMOS DA PLATAFORMA
                 </div>
             </div>
         </div>
@@ -97,6 +102,7 @@ const PoliticasTermos = () => {
             </div>
         </div>
     </div>
+    </>
   )
 }
 
