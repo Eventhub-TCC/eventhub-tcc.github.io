@@ -12,6 +12,7 @@ import Instrucoes from "../../componentes/Instrucao/Instrucao"
 import api from "../../axios"
 import ToolTip from "../../componentes/ToolTip/ToolTip"
 import { Helmet } from "react-helmet-async"
+import CheckBox from "../../componentes/CheckBox/CheckBox"
 
 interface Usuarios{
     organizador: boolean;
@@ -53,6 +54,8 @@ const CadastroUsuario = () => {
 
     const [ passoAtual, setPassoAtual ] = useState(0);
     const [ qtdPassos, setQtdPassos ] = useState(0);
+    const [ termosAceitos, setTermosAceitos] = useState(false);
+    const [ lido, setLido] = useState(false)
 
     const [ erros, setErros ] = useState<Erro[]>([
         {ativo: false, tipo: 'funcao', mensagem: 'Selecione pelo menos uma função'},
@@ -61,7 +64,9 @@ const CadastroUsuario = () => {
         {ativo: false, tipo: 'cnpj', mensagem: 'CNPJ inválido'},
         {ativo: false, tipo: 'email', mensagem: 'E-mail inválido'},
         {ativo: false, tipo: 'telefone-pessoal', mensagem: 'Telefone inválido'},
-        {ativo: false, tipo: 'telefone-empresa', mensagem: 'Telefone inválido'}
+        {ativo: false, tipo: 'telefone-empresa', mensagem: 'Telefone inválido'},
+        {ativo: false, tipo: 'termos-nao-lidos', mensagem:'Leia os termos e políticas antes de confirmar'},
+        {ativo: false, tipo: 'termos-e-politicas', mensagem: 'É necessário estar de acordo com os termos e políticas da plataforma'}
     ]);
 
     const [ carregando, setCarregando ] = useState(false);
@@ -480,7 +485,53 @@ const CadastroUsuario = () => {
                         : ''
                     }
                     funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
-                />
+                />,
+                <div onClick={() => {
+                    lido ? 
+                     setErros(erros=> erros.map(erro => {
+                        if(erro.tipo === 'termos-nao-lidos'){
+                            erro.ativo = false;
+                        } 
+                        return erro;
+                     }))
+                     
+                    :
+                     setErros(erros => erros.map(erro => {
+                        if(erro.tipo === 'termos-nao-lidos'){
+                            erro.ativo = true;
+                        }
+                        return erro; 
+                    }))
+                }}>
+                    <CheckBox
+                    ativado={termosAceitos}
+                    name='termos-e-politicas'
+                    texto='Li e estou de acordo com as '
+                    funcao={()=>{
+                        setTermosAceitos(!termosAceitos)
+                        setErros(erros => erros.map(erro => {
+                            if(erro.tipo === 'termos-e-politicas'){
+                                erro.ativo = false;
+                            }
+                            return erro;
+                        }));
+                    }}
+                    disabled = {!lido}
+                    >
+                    <a onClick={() => setLido(true)} style={{color:'var(--purple-700)'}} href="/politicas-e-termos" target="_blank">politicas e termos da plataforma
+                    </a>
+                    </CheckBox>
+                        {
+                            erros.find(({tipo}) => tipo === 'termos-nao-lidos')?.ativo && !lido ?
+                            <ErroCampoForm mensagem={erros.find(({tipo}) => tipo === 'termos-nao-lidos')?.mensagem}/>
+                            : ''
+                        }
+                        {
+                            erros.find(({tipo}) => tipo === 'termos-e-politicas')?.ativo ?
+                            <ErroCampoForm mensagem={erros.find(({tipo}) => tipo === 'termos-e-politicas')?.mensagem}/>
+                            : ''
+                        }
+                </div>
             ]
         }
     ]
@@ -584,6 +635,15 @@ const CadastroUsuario = () => {
 
     const cadastrarUsuario = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if(!termosAceitos){
+            setErros(erros => erros.map(erro=> {
+                if(erro.tipo === 'termos-e-politicas'){
+                    erro.ativo = true;
+                }
+                return erro;
+            }))
+            return;
+        }
         if(senha !== confirmarSenha){
             setErros(erros => erros.map(erro => {
                 if(erro.tipo === 'confirmar-senha'){
