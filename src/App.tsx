@@ -25,6 +25,7 @@ import Marketplace from './paginas/Marketplace/Marketplace'
 import InformacoesPedido from './paginas/InformacoesPedido/InformacoesPedido'
 import ServicoMarketplace from './paginas/ServicoMarketplace/ServicoMarketplace'
 import PoliticasTermos from './paginas/PoliticasTermos/PoliticasTermos'
+import FAQ from './paginas/FAQ/FAQ'
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
             <Route path='*' element={<Erro404 />}/>
           </Route>
           <Route path='politicas-e-termos' element={<PoliticasTermos/>}/>
+          <Route path='FAQ' element={<FAQ/>}/>
           <Route element={<ProtecaoDeRota />}>
             <Route path='organizador' element={<OrganizadorLayout />}>
               <Route path='criar-evento' element={<CadastroEvento />}/>

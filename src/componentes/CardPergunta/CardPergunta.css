@@ -1,0 +1,36 @@
+.card-pergunta__container {
+  border: 2px solid var(--purple-700);
+  border-radius: 5px;
+  padding: 12px 8px;
+  cursor: pointer;
+  width: 90%;
+}
+
+.card-pergunta__topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-pergunta__texto {
+  font-size: 22px;
+  color: var(--purple-800);
+  margin: 0;
+}
+
+.card-pergunta__icone {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.card-pergunta__icone.rotacionado {
+  transform: rotate(90deg);
+}
+
+.card-pergunta__resposta {
+  padding-top: 10px;
+  color: #333;
+  font-size: 15px;
+  text-align: justify;
+}

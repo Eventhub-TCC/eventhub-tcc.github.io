@@ -1,11 +1,8 @@
 .politicas-termos__pagina{
-    margin-top: 32px;
     gap:64px;
     display:flex;
     flex-direction: column;
     margin-bottom: 32px;
-    text-align: center;
-    justify-content: center;
 }
 
 .politicas-termos__topo {
@@ -112,4 +109,21 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+    text-align: left;
 }
+
+@media screen and (max-width: 1200px){
+    .politicas-termos{
+        margin-left: 0px;
+        padding: 12px;
+    }
+    .politicas-termos__topo{
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+    .politicas-termos__container{
+        width: 90%;
+    }
+
+}    
