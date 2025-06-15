@@ -76,4 +76,8 @@
   .layout-titulo{
     font-size: 2rem;
   }
+
+  .layout-info-prestador{
+    margin-left: 0px;
+  }
 }

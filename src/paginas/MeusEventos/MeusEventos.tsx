@@ -303,7 +303,7 @@ const MeusEventos = () => {
               />
             </div>
           </div>
-            <div className={`conteudo-principal-meus-eventos__filtros ${mostrarFiltros ? 'conteudo-principal-meus-eventos__filtros--mostrar' : ''}`}>
+            <div className={`conteudo-principal-meus-eventos__filtros ${mostrarFiltros ? 'conteudo-principal-meus-eventos__filtros--mostrar' : 'oculto'}`}>
               <div className="conteudo-principal-meus-eventos__filtros__selects">
                 <Select
                   textoPadrao="Categoria"

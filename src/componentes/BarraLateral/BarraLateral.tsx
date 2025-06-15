@@ -1,11 +1,16 @@
 import { useState, Children, cloneElement, useEffect } from 'react'
 import './BarraLateral.css'
 import ItemBarraLateral from '../ItemBarraLateral/ItemBarraLateral';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { jwtDecode } from 'jwt-decode';
 
 const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', corHoverMinimizar = 'var(--purple-700)', corIconeHoverMinimizar='white', children}: any) => {
   const [ minimizado, setMinimizado ] = useState(minimizada);
   const [larguraTela, setLarguraTela] = useState(window.innerWidth);
+  const [tipoUsuario, setTipoUsuario] = useState({
+    organizador: false,
+    prestador: false,
+    });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,12 +25,30 @@ const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', c
     setMinimizado(minimizada);
   }, [minimizada]);
 
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      const tokenDecodificado:any = jwtDecode(token!);
+      if (tokenDecodificado?.tipo?.includes("organizador")) {
+        setTipoUsuario(prev => ({ ...prev, organizador: true }));
+      }
+          
+      if (tokenDecodificado?.tipo?.includes("prestador")) {
+        setTipoUsuario(prev => ({ ...prev, prestador: true }));
+      }
+    }, []);
+
   const minimizarMobile = () => {
     if (larguraTela <= 1024) {
       setMinimizado(!minimizado);
       enviaMinimizada(!minimizado);
     }
   }
+  
+  const location = useLocation();
+
+  const pathParts = location.pathname.split('/');
+
+  const tipo = pathParts[1]; // 'organizador' | 'prestador' | 'marketplace'
   
   return (
     <aside style={{'--cor-barra-lateral': cor} as React.CSSProperties} className={`barra-lateral ${minimizado ? 'barra-lateral--minimizada' : ''}`}>
@@ -50,12 +73,15 @@ const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', c
             </button>
           </div>
         :
-        <div onClick={() => {
-          navigate('/login'); 
-          localStorage.removeItem("token");
-        }}>
-          <ItemBarraLateral texto="Sair" caminho="/login" icone="fa-solid fa-arrow-right-from-bracket" />
-        </div>
+        <>
+          { tipoUsuario.organizador && tipoUsuario.prestador ? <ItemBarraLateral icone="fa fa-refresh" texto='Alterar Função' caminho={tipo === 'organizador' || tipo === 'marketplace' ? '/prestador/meus-servicos' : '/organizador/meus-eventos'}/> : '' }
+          <div onClick={() => {
+            navigate('/login'); 
+            localStorage.removeItem("token");
+          }}>
+            <ItemBarraLateral texto="Sair" caminho="/login" icone="fa-solid fa-arrow-right-from-bracket" />
+          </div>
+        </>
       }
     </aside>
   )

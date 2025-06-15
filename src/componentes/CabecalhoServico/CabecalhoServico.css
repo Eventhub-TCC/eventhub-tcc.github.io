@@ -471,4 +471,13 @@
         scrollbar-width: thin;
         scrollbar-color: var(--purple-700) #f0f0f0;
     }
+
+    .modal-anunciar-servico{
+        width: 90%;
+        align-items: center;
+    }
+
+    .modal-anunciar-servico__input-data input{
+        width: 100%;
+    }
 }
