@@ -28,6 +28,7 @@ const ServicoMarketplace = () => {
     const [quantidade, setQuantidade] = useState(0)
     const [valorTotal, setValorTotal] = useState(0)
     const [evento, setEvento] = useState('')
+    const [valorPromo, setValorPromo] = useState(0)
 
     const [qntMinima, setQntMinima] = useState(0)
     const [qntMaxima, setQntMaxima] = useState(0)
@@ -61,9 +62,10 @@ const ServicoMarketplace = () => {
             setUnidade(servico.unidadeCobranca)
             setDescricao(servico.descricaoServico)
             setQuantidade(servico.qntMinima)
-            setValorTotal(servico.valorServico * servico.qntMinima)
+            setValorTotal(servico.valorPromoServico?servico.valorPromoServico * servico.qntMinima:servico.valorServico * servico.qntMinima)
             setQntMinima(servico.qntMinima)
             setQntMaxima(servico.qntMaxima)
+            setValorPromo(servico.valorPromoServico)
 
             const prestador = await (await api.get(`users/get-user/${servico.idUsuario}`)).data
             setNomePrestador(prestador.nomeEmpresa)
@@ -81,7 +83,7 @@ const ServicoMarketplace = () => {
     },[])
 
     useEffect(() => {
-        setValorTotal(valor * quantidade)
+        setValorTotal((valorPromo||valor) * quantidade)
     }, [valor, quantidade])
 
     const unidadeValor = [
@@ -205,9 +207,10 @@ const ServicoMarketplace = () => {
         idServico: idServico,
         nomeItem: nomeServico,
         valorUnitario: valor,
+        valorPromo: valorPromo,
         quantidade: quantidade,
         instrucoes: instrucao,
-        imagem: imagens[0] 
+        imagem: imagens[0]
     }
 
     const carrinho = localStorage.getItem('carrinho')
@@ -234,7 +237,7 @@ const ServicoMarketplace = () => {
             const itens = [{
                 idServico:idServico,
                 nomeItem: nomeServico,
-                valorUnitario: valor,
+                valorUnitario: valorPromo || valor,
                 quantidade: quantidade,
                 instrucao: instrucao,
                 imagem: imagens[0] 
@@ -277,13 +280,22 @@ const ServicoMarketplace = () => {
             </div>
             <div className='servico-marketplace__compra-info'>
                 <div className='servico-marketplace__compra-info-titulo'>Informações de compra</div>
-                <div className='d-flex flex-column gap-2'>
-                    <div className='servico-marketplace__compra-info-texto'>Preço</div>
-                    <div className='d-flex align-items-baseline'>
-                        <div className='servico-marketplace__compra-info-preco'>{formatarPreco(valor)}</div>
-                        <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
+                    <div className="d-flex gap-5">
+                        <div className='d-flex flex-column gap-2'>
+                            <div className={'servico-marketplace__compra-info-texto'}>Preço</div>
+                            <div className='d-flex align-items-baseline'>
+                                <div className={`servico-marketplace__compra-info-preco ${valorPromo?'servico-marketplace__preço-antigo':''}`}>{formatarPreco(valor)}</div>
+                                <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
+                            </div>
+                        </div>
+                        {valorPromo ? <div className='d-flex flex-column gap-2'>
+                            <div className='servico-marketplace__compra-info-texto'>Preço promocional</div>
+                            <div className='d-flex align-items-baseline'>
+                                <div className='servico-marketplace__compra-info-preco'>{formatarPreco(valorPromo)}</div>
+                                <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
+                            </div>
+                        </div>:''}
                     </div>
-                </div>
                 <div className='d-flex gap-5'>
                     <div className='d-flex row flex-column gap-3 col-6'>
                         <div className='servico-marketplace__compra-info-texto'>quantidade</div>

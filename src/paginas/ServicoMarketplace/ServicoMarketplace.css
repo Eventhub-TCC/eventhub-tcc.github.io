@@ -86,3 +86,10 @@
     object-fit: cover;
     border-radius: 16px;
 }
+
+.servico-marketplace__preço-antigo{
+
+    color: #6C757D;
+    text-decoration: line-through;
+    
+}

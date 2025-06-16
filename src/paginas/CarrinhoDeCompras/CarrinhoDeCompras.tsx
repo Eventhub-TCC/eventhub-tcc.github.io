@@ -4,7 +4,7 @@ import FeedbackFormulario from "../../componentes/FeedbackFormulario/FeedbackFor
 import Checkbox from "../../componentes/CheckBox/CheckBox";
 import TextArea from "../../componentes/TextArea/TextArea";
 import Botao from "../../componentes/Botao/Botao";
-import { a, u } from "framer-motion/client";
+import { a, u, use } from "framer-motion/client";
 import api from "../../axios";
 import { Modal } from "../../componentes/Modal/Modal";
 import Select from "../../componentes/Select/Select";
@@ -17,6 +17,7 @@ interface ItemCarrinho {
   quantidade: number;
   instrucoes: string;
   imagem?: string;
+  valorPromo?: number| null;
 }
 
 const CarrinhoDeCompras = () => {
@@ -50,6 +51,28 @@ const [exibirInstrucoes, setExibirInstrucoes] = useState(() =>
         }
     } 
     buscarEventos()
+    },[])
+
+    useEffect(() => {
+      const buscarServicosCarrinho = async()=>{
+        try{
+          const carrinho = localStorage.getItem("carrinho");
+          if (carrinho) {
+            const carrinhoDesconto =await Promise.all (JSON.parse(carrinho).map(async(item: ItemCarrinho) => {
+              const servico = (await api.get(`users/erro/services/${item.idServico}`)).data;
+              if (servico){
+                item.valorPromo = servico.valorPromoServico;
+                return item
+              }
+            }))
+            setCarrinho(carrinhoDesconto.filter((item: ItemCarrinho) => item !== undefined));
+          }
+        }
+        catch (error) {
+          console.error("Erro ao carregar o carrinho:", error);
+        }
+      }
+      buscarServicosCarrinho();
     },[])
 
 
@@ -96,7 +119,7 @@ const formatarPreco = (valor: number) => {
       const itens = carrinho.map((item) => ({
         idServico: item.idServico,
         nomeItem: item.nomeItem,
-        valorUnitario: item.valorUnitario,
+        valorUnitario: item.valorPromo || item.valorUnitario,
         quantidade: item.quantidade,
         instrucao: item.instrucoes,
         imagem: item.imagem,
@@ -238,26 +261,30 @@ const formatarPreco = (valor: number) => {
                     </div>
                     <div className="container-carrinho-item-info__produto-preco-total-desconto">
                       <div className="container-carrinho-item-info__produto-desconto-preco-sem-desconto">
-                        <div className="container-carrinho-item-info__produto-desconto">
-                          {"-" +
-                            (
-                              Math.floor(
-                                ((item.valorUnitario - item.valorUnitario) /
-                                  item.valorUnitario) *
-                                  100 *
-                                  100
-                              ) % 100
-                            )
-                              .toString()
-                              .padStart(2, "0")}
-                          %
-                        </div>
-                        <div className="container-carrinho-item-info__produto-preco-sem-desconto">
-                          {formatarPreco(item.valorUnitario*item.quantidade)}
-                        </div>
+                        {item.valorPromo?
+                        <>
+                          <div className="container-carrinho-item-info__produto-desconto">
+                            {"-" +
+                              (
+                                item.valorPromo
+                                  ? (
+                                      ((item.valorUnitario - item.valorPromo) /
+                                        item.valorUnitario) *
+                                      100
+                                    ).toFixed(0)
+                                  : 0
+                              )
+                                .toString()
+                                .padStart(2, "0")}
+                            %
+                          </div>
+                          <div className="container-carrinho-item-info__produto-preco-sem-desconto">
+                            {formatarPreco(item.valorUnitario*item.quantidade)}
+                          </div>
+                        </>:''}
                       </div>
                       <div className="container-carrinho-item-info__produto-preco-total-valor">
-                        {formatarPreco(item.valorUnitario*item.quantidade)}
+                        {formatarPreco(item.valorPromo? item.valorPromo * item.quantidade:item.valorUnitario*item.quantidade)}
                       </div>
                     </div>
                   </div>
@@ -336,7 +363,7 @@ const formatarPreco = (valor: number) => {
               {carrinho
                 .reduce(
                   (total, item) =>
-                    total + item.valorUnitario! * item.quantidade,
+                    total + (item.valorPromo||item.valorUnitario) * item.quantidade,
                   0
                 )
                 .toLocaleString("pt-BR", {
