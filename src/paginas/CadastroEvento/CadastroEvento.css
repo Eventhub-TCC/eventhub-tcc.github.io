@@ -71,6 +71,10 @@
     object-fit: cover;
 }
 
+.cadastro-evento__seta{
+    margin-bottom:16px;
+}
+
 @media screen and (max-width: 1024px){
     .cadastro-evento__alerta{
         transform: translateX(-50%);

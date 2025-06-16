@@ -219,7 +219,6 @@
 }
 
 .input-tamanho-descricao{
-    height: 151px;
     width: 813px;
 }
 
@@ -426,6 +425,10 @@
     z-index: 1;
 }
 
+.cabecalho-servico__seta{
+    margin-bottom:16px;
+}
+
 @media screen and (max-width: 700px){
     .informacoes-evento{
         flex-direction: column;
@@ -467,5 +470,14 @@
         scroll-behavior: smooth; 
         scrollbar-width: thin;
         scrollbar-color: var(--purple-700) #f0f0f0;
+    }
+
+    .modal-anunciar-servico{
+        width: 90%;
+        align-items: center;
+    }
+
+    .modal-anunciar-servico__input-data input{
+        width: 100%;
     }
 }

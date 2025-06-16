@@ -193,7 +193,6 @@
 }
 
 .input-tamanho-descricao{
-    height: 151px;
     width: 813px;
 }
 
@@ -431,6 +430,10 @@
     right: 32px;
     width: 560px;
     z-index: 1;
+}
+
+.cabecalho-evento__seta{
+    margin-bottom:16px;
 }
 
 @media screen and (max-width: 700px){

@@ -13,8 +13,11 @@
 }
 
 .perfil--botao-notificacao{
+  width: 52px;
+  height: 52px;
   display: flex;
   padding: 12px;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 92px;
@@ -25,8 +28,11 @@
 }
 
 .perfil--botao-notificacao-prestador{
+    width: 52px;
+  height: 52px;
     display: flex;
   padding: 12px;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 92px;
@@ -34,6 +40,11 @@
   background: var(--purple-800);
   color: white;
   cursor: pointer;
+}
+
+.perfil--botao-notificacao i, 
+.perfil--botao-notificacao-prestador i{
+  font-size: 23px;
 }
 
 .caixa-perfil{

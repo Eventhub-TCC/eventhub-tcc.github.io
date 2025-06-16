@@ -61,6 +61,7 @@
     font-size: 1.125rem;
     font-weight: 300;
     text-align: center;
+    white-space: pre-line;
 }
 
 .feedback-form__titulo--padrao{

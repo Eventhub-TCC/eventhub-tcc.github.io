@@ -13,6 +13,8 @@ import { PatternFormat } from "react-number-format"
 import api from '../../axios'
 import { useNavigate } from 'react-router'
 import Alerta from '../../componentes/Alerta/Alerta'
+import { Helmet } from 'react-helmet-async'
+import Seta from '../../componentes/Seta/Seta'
 
 
 
@@ -108,7 +110,6 @@ const CadastroEvento = () => {
   },[localEvento])
 
   useEffect(() => {
-    console.log(avisos.horaInicioInvalida)
       setTimeout(() => {
         Object.entries(avisos).forEach(([key, value]) => {
           if (value === true) {
@@ -478,58 +479,66 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
       setPassoAtual(passoAtual + 1)
   }
   return (
-    <div className='cadastro-evento'>
-      <h1 className='layout-titulo'>Criar evento</h1>
-      <form onSubmit={passoAtual+1===qntPassos?(e:FormEvent)=>CadastrarEvento(e):avancarPasso} className='cadastro-evento__form' encType="multipart/form-data">
-        <IndicadorDePassos passoAtual={passoAtual + 1} qtdPassos={qntPassos}/>
-        <Instrucao titulo={instrucoes[passoAtual].titulo} texto={instrucoes[passoAtual].texto}/>
-        <div>
-          {etapas[passoAtual]}
+    <>
+      <Helmet>
+        <title>Criar Evento | EventHub</title>
+      </Helmet>
+      <div className='cadastro-evento'>
+        <div className='cadastro-evento__seta'>
+          <Seta caminho='/organizador/meus-eventos'/>
         </div>
-        <div className='cadastro-evento__botoes'>
-          
-          {passoAtual!==0 ?
-            <div className='cadastro-evento__botao-padrao'> 
-              <Botao tamanho='max' funcao={()=>setPassoAtual(passoAtual-1)} texto='Anterior'/>
-            </div>:''
-          }
-          
-          <div className='cadastro-evento__botao-padrao'>
-            {passoAtual+1<qntPassos? botaoProximo:botaoCadastrar}
+        <h1 className='layout-titulo'>Criar evento</h1>
+        <form onSubmit={passoAtual+1===qntPassos?(e:FormEvent)=>CadastrarEvento(e):avancarPasso} className='cadastro-evento__form' encType="multipart/form-data">
+          <IndicadorDePassos passoAtual={passoAtual + 1} qtdPassos={qntPassos}/>
+          <Instrucao titulo={instrucoes[passoAtual].titulo} texto={instrucoes[passoAtual].texto}/>
+          <div>
+            {etapas[passoAtual]}
           </div>
-        </div>
-      </form>
-      {
-        avisos.horaInicioInvalida &&
-        <div className='cadastro-evento__alerta'>
-          <Alerta texto="A hora de início do evento não pode ser no passado. Por favor, escolha um horário futuro." status="aviso" ativado={true}/>
-        </div>
-      }
-      {  
-        avisos.erros &&
-        <div className='cadastro-evento__alerta'>
-          <Alerta texto="Ocorreu algum erro durante o cadastro. Por favor confira os campos." status="erro" ativado={true}/>
-        </div>
-      }
-      {
-        avisos.erroConexao &&
-        <div className='cadastro-evento__alerta'>
-          <Alerta texto="Ocorreu um erro interno. Tente novamente mais tarde." status="erro" ativado={true}/>
-        </div>
-      }
-      {
-        avisos.cepInvalido &&
-        <div className='cadastro-evento__alerta'>
-          <Alerta texto="O CEP informado não é válido." status="erro" ativado={true}/>
-        </div>
-      }
-      {
-        avisos.cepNaoEncontrado &&
-        <div className='cadastro-evento__alerta'>
-          <Alerta texto="O CEP informado não foi encontrado." status="aviso" ativado={true}/>
-        </div>
-      }
-    </div>
+          <div className='cadastro-evento__botoes'>
+            
+            {passoAtual!==0 ?
+              <div className='cadastro-evento__botao-padrao'> 
+                <Botao tamanho='max' funcao={()=>setPassoAtual(passoAtual-1)} texto='Anterior'/>
+              </div>:''
+            }
+            
+            <div className='cadastro-evento__botao-padrao'>
+              {passoAtual+1<qntPassos? botaoProximo:botaoCadastrar}
+            </div>
+          </div>
+        </form>
+        {
+          avisos.horaInicioInvalida &&
+          <div className='cadastro-evento__alerta'>
+            <Alerta texto="A hora de início do evento não pode ser no passado. Por favor, escolha um horário futuro." status="aviso" ativado={true}/>
+          </div>
+        }
+        {  
+          avisos.erros &&
+          <div className='cadastro-evento__alerta'>
+            <Alerta texto="Ocorreu algum erro durante o cadastro. Por favor confira os campos." status="erro" ativado={true}/>
+          </div>
+        }
+        {
+          avisos.erroConexao &&
+          <div className='cadastro-evento__alerta'>
+            <Alerta texto="Ocorreu um erro interno. Tente novamente mais tarde." status="erro" ativado={true}/>
+          </div>
+        }
+        {
+          avisos.cepInvalido &&
+          <div className='cadastro-evento__alerta'>
+            <Alerta texto="O CEP informado não é válido." status="erro" ativado={true}/>
+          </div>
+        }
+        {
+          avisos.cepNaoEncontrado &&
+          <div className='cadastro-evento__alerta'>
+            <Alerta texto="O CEP informado não foi encontrado." status="aviso" ativado={true}/>
+          </div>
+        }
+      </div>
+    </>
   )
 }
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import api from '../../axios';
 import CabecalhoServico from '../../componentes/CabecalhoServico/CabecalhoServico';
 import Secao from '../../componentes/Secao/Secao';
+import { Helmet } from 'react-helmet-async';
 
 interface Servico{
     idServico: number;
@@ -44,7 +45,6 @@ const InformacoesServico = () => {
                 setIdUsuario(res.data.idUsuario);
                 api.get(`/users/${idUsuario}/services/${idServico}`)
                     .then((res) => {
-                        console.log(res.data);
                         setServico(res.data);
                         const imagens = [res.data.imagem1, res.data.imagem2, res.data.imagem3, res.data.imagem4, res.data.imagem5, res.data.imagem6];
                         setPreview(imagens.map((imagem) => imagem !== null ? `http://localhost:3000/files/${imagem}` : null));
@@ -73,81 +73,86 @@ const InformacoesServico = () => {
     }
 
     return (
-        <div>
-            <div className='informacoes-servico__cabecalho'>
-                <CabecalhoServico
-                    idServico={idServico} 
-                    servico={servico}
-                    preViewSv={preView}
-                    setServico={setServico}
-                    idUsuario={idUsuario}
-                    setPreviewSv={setPreview}
-                />
+        <>
+            <Helmet>
+                <title>{servico.nomeServico} | Informações Gerais | EventHub</title>
+            </Helmet>
+            <div>
+                <div className='informacoes-servico__cabecalho'>
+                    <CabecalhoServico
+                        idServico={idServico} 
+                        servico={servico}
+                        preViewSv={preView}
+                        setServico={setServico}
+                        idUsuario={idUsuario}
+                        setPreviewSv={setPreview}
+                    />
+                </div>
+                <div className='informacoes-servico__container'>
+                    <Secao titulo='Detalhes do serviço' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
+                        <div className='informacoes-servico__detalhes'>
+                            <div className='row g-4'>
+                                <div className='col-12'>
+                                    <p className='informacoes-servico__titulo-detalhes'>Categoria</p>
+                                    <p className='informacoes-servico__texto-detalhes'>{servico.tipoServico.descricaoTipoServico}</p>
+                                </div>
+                            </div>
+                            <div className='row g-4'>
+                                <div className='col-12'>
+                                    <p className='informacoes-servico__titulo-detalhes'>Descrição</p>
+                                    <p className={`informacoes-servico__texto-detalhes`}>
+                                        {servico.descricaoServico}
+                                    </p>
+                                </div>        
+                            </div>
+                        </div>
+                    </Secao>
+                    <Secao titulo='Valor e condições de contratação' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
+                        <div className='informacoes-servico__detalhes'>
+                            <div className='row g-4'>
+                                <div className='col-12 col-sm-6'>
+                                    <p className='informacoes-servico__titulo-detalhes'>Valor</p>
+                                    <p className='informacoes-servico__texto-detalhes'>{formatarValor(servico.valorServico)}</p>
+                                </div>
+                                <div className='col-12 col-sm-6'>
+                                    <p className='informacoes-servico__titulo-detalhes'>Unidade de cobrança</p>
+                                    <p className={`informacoes-servico__texto-detalhes`}>
+                                        {servico.unidadeCobranca}
+                                    </p>
+                                </div>    
+                            </div>
+                            <div className='row g-4'>
+                                <div className='col-12 col-sm-6'>
+                                    <p className='informacoes-servico__titulo-detalhes'>Quantidade mínima</p>
+                                    <p className='informacoes-servico__texto-detalhes'>{servico.qntMinima}</p>
+                                </div>
+                                <div className='col-12 col-sm-6'>
+                                    <p className='informacoes-servico__titulo-detalhes'>Quantidade máxima</p>
+                                    <p className={`informacoes-servico__texto-detalhes`}>
+                                        {servico.qntMaxima}
+                                    </p>
+                                </div>  
+                            </div>
+                        </div>
+                    </Secao>
+                    <Secao titulo='Imagens do serviço' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
+                        <div className='row g-4 informacoes-servico__imagens'>
+                            {
+                                preView.map((imagem: string, index: number) => {
+                                    if (imagem !== null) {
+                                        return (
+                                            <div key={index} className='col-12 col-md-6 col-lg-4'>
+                                                <img src={imagem} alt="Imagem do serviço" className='informacoes-servico__imagem'/>
+                                            </div>
+                                        )
+                                    }
+                                })
+                            }
+                        </div>
+                    </Secao>
+                </div>
             </div>
-            <div className='informacoes-servico__container'>
-                <Secao titulo='Detalhes do serviço' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
-                    <div className='informacoes-servico__detalhes'>
-                        <div className='row g-4'>
-                            <div className='col-12'>
-                                <p className='informacoes-servico__titulo-detalhes'>Categoria</p>
-                                <p className='informacoes-servico__texto-detalhes'>{servico.tipoServico.descricaoTipoServico}</p>
-                            </div>
-                        </div>
-                        <div className='row g-4'>
-                            <div className='col-12'>
-                                <p className='informacoes-servico__titulo-detalhes'>Descrição</p>
-                                <p className={`informacoes-servico__texto-detalhes`}>
-                                    {servico.descricaoServico}
-                                </p>
-                            </div>        
-                        </div>
-                    </div>
-                </Secao>
-                <Secao titulo='Valor e condições de contratação' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
-                    <div className='informacoes-servico__detalhes'>
-                        <div className='row g-4'>
-                            <div className='col-12 col-sm-6'>
-                                <p className='informacoes-servico__titulo-detalhes'>Valor</p>
-                                <p className='informacoes-servico__texto-detalhes'>{formatarValor(servico.valorServico)}</p>
-                            </div>
-                            <div className='col-12 col-sm-6'>
-                                <p className='informacoes-servico__titulo-detalhes'>Unidade de cobrança</p>
-                                <p className={`informacoes-servico__texto-detalhes`}>
-                                    {servico.unidadeCobranca}
-                                </p>
-                            </div>    
-                        </div>
-                        <div className='row g-4'>
-                            <div className='col-12 col-sm-6'>
-                                <p className='informacoes-servico__titulo-detalhes'>Quantidade mínima</p>
-                                <p className='informacoes-servico__texto-detalhes'>{servico.qntMinima}</p>
-                            </div>
-                            <div className='col-12 col-sm-6'>
-                                <p className='informacoes-servico__titulo-detalhes'>Quantidade máxima</p>
-                                <p className={`informacoes-servico__texto-detalhes`}>
-                                    {servico.qntMaxima}
-                                </p>
-                            </div>  
-                        </div>
-                    </div>
-                </Secao>
-                <Secao titulo='Imagens do serviço' corBorda='var(--yellow-700)' corTitulo='var(--yellow-800)'>
-                    <div className='row g-4 informacoes-servico__imagens'>
-                        {
-                            preView.map((imagem: string, index: number) => {
-                                if (imagem !== null) {
-                                    return (
-                                        <div key={index} className='col-12 col-md-6 col-lg-4'>
-                                            <img src={imagem} alt="Imagem do serviço" className='informacoes-servico__imagem'/>
-                                        </div>
-                                    )
-                                }
-                            })
-                        }
-                    </div>
-                </Secao>
-            </div>
-        </div>
+        </>
     )
 }
 

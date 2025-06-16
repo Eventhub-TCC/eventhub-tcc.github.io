@@ -101,6 +101,7 @@
     color: #000;
     font-size: 32px;
     font-weight: 300;
+    margin: 0;
 }
 
 .caixa-texto-evento{
@@ -108,6 +109,7 @@
     font-size: 18px;
     font-weight: 300;
     margin: 0;
+    white-space: pre-line;
 }
 
 .dados-evento{
@@ -148,6 +150,8 @@
     border-top: 8px solid var(--purple-700);
     background: #FFF;
     box-shadow: 0px 2px 4px 0px rgba(140, 93, 255, 0.25);
+    position: relative;
+    z-index: 2;
 }
 
 .titulo-dados{
@@ -183,15 +187,6 @@
     flex-direction: column;
     gap: 8px;
     width: 100%;
-}
-
-.convite-usado__alerta{
-    position: fixed;
-    margin-top: 16px;
-    top: 5%;
-    right: 32px;
-    width: 560px;
-    z-index: 2;
 }
 
 .confirmar-presenca__acompanhantes{

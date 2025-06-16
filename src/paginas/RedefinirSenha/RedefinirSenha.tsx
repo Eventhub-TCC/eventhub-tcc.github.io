@@ -8,6 +8,7 @@ import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFor
 import { useSearchParams } from 'react-router';
 import Erro404 from '../Erro404/Erro404';
 import api from '../../axios';
+import { Helmet } from 'react-helmet-async';
 
 const RedefinirSenha = () => {
     const [senha, setSenha] = useState('');
@@ -65,6 +66,9 @@ const RedefinirSenha = () => {
 
     return (
         <>
+            <Helmet>
+                <title>Redefinir Senha | EventHub</title>
+            </Helmet>
             {
                 tokenValido === null ?
                     <div className='redefinir-senha__carregando-tela'>

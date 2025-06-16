@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './TabelaPedido.css';
 import { NavLink } from 'react-router';
 

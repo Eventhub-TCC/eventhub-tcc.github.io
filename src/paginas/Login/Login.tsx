@@ -9,6 +9,7 @@ import Alerta from '../../componentes/Alerta/Alerta'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
 import api from '../../axios'
 import { jwtDecode } from 'jwt-decode';
+import { Helmet } from 'react-helmet-async'
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
@@ -74,71 +75,76 @@ const Login = () => {
   }, []);
 
   return (
-    <Formulario onSubmit={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)} titulo='Login'>
-      <div className='Conteudo'>
-        <div className='Inputs'>
-          <Input 
-            name='email'
-            autoComplete='email'
-            cabecalho={true}
-            cabecalhoTexto='Email'
-            dica='Digite seu e-mail' 
-            tipo='email' 
-            onChange={(event:ChangeEvent<HTMLInputElement>) => {
-              setEmail(event.target.value)
-              setErros({...erros, emailSenha: false});
-            }}>
-          </Input>
+    <>
+      <Helmet>
+          <title>Login | EventHub</title>
+      </Helmet>
+      <Formulario onSubmit={(event: FormEvent<HTMLFormElement>) => logar(event, email, senha)} titulo='Login'>
+        <div className='Conteudo'>
+          <div className='Inputs'>
             <Input 
-              name='senha'
+              name='email'
+              autoComplete='email'
               cabecalho={true}
-              cabecalhoTexto='Senha'
-              dica='Digite sua senha' tipo={senhaOculta ? 'password' : 'text'} 
+              cabecalhoTexto='Email'
+              dica='Digite seu e-mail' 
+              tipo='email' 
               onChange={(event:ChangeEvent<HTMLInputElement>) => {
-                setSenha(event.target.value);
+                setEmail(event.target.value)
                 setErros({...erros, emailSenha: false});
-              }}
-              icone={senha.length ?`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}` : '' } 
-              funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
-            />
+              }}>
+            </Input>
+              <Input 
+                name='senha'
+                cabecalho={true}
+                cabecalhoTexto='Senha'
+                dica='Digite sua senha' tipo={senhaOculta ? 'password' : 'text'} 
+                onChange={(event:ChangeEvent<HTMLInputElement>) => {
+                  setSenha(event.target.value);
+                  setErros({...erros, emailSenha: false});
+                }}
+                icone={senha.length ?`fa-solid ${senhaOculta ? 'fa-eye-slash' : 'fa-eye'}` : '' } 
+                funcaoIcone={() => setSenhaOculta(!senhaOculta)} 
+              />
+          </div>
+          <div className='Opcoes'> 
+            <CheckBox
+              name='lembrar'
+              checked={senhaOculta} 
+              funcao={() => setLembrar(!lembrar)} 
+              texto='Lembrar-me'></CheckBox>
+            <Link className='links' to='/esqueci-senha'>Esqueceu a senha?</Link>
+          </div>
+          {
+            erros.emailSenha &&
+            <ErroCampoForm mensagem='E-mail ou senha inválidos'/>
+          }
         </div>
-        <div className='Opcoes'> 
-          <CheckBox
-            name='lembrar'
-            checked={senhaOculta} 
-            funcao={() => setLembrar(!lembrar)} 
-            texto='Lembrar-me'></CheckBox>
-          <Link className='links' to='/esqueci-senha'>Esqueceu a senha?</Link>
+        <div className="Botoes">
+          <div className="Botao">
+            <Botao 
+              tamanho='max'
+              texto={
+                carregando ? 
+                  <div className="spinner-border spinner-border-sm" role="status">
+                      <span className="visually-hidden">Carregando...</span>
+                  </div>
+                : 'Entrar'
+              }
+              submit></Botao>
+          </div>
+          <div>
+            <span className='texto'>Não possui uma conta? <Link className='links' to='/cadastro'>Cadastre-se</Link></span>
+          </div>
         </div>
         {
-          erros.emailSenha &&
-          <ErroCampoForm mensagem='E-mail ou senha inválidos'/>
+          erros.conexao &&
+          <div className='login__alerta'>
+            <Alerta texto="Ocorreu um erro interno. Tente novamente mais tarde." status="erro" ativado={true}/>
+          </div>
         }
-      </div>
-      <div className="Botoes">
-        <div className="Botao">
-          <Botao 
-            tamanho='max'
-            texto={
-              carregando ? 
-                <div className="spinner-border spinner-border-sm" role="status">
-                    <span className="visually-hidden">Carregando...</span>
-                </div>
-              : 'Entrar'
-            }
-            submit></Botao>
-        </div>
-        <div>
-          <span className='texto'>Não possui uma conta? <Link className='links' to='/cadastro'>Cadastre-se</Link></span>
-        </div>
-      </div>
-      {
-        erros.conexao &&
-        <div className='login__alerta'>
-          <Alerta texto="Ocorreu um erro interno. Tente novamente mais tarde." status="erro" ativado={true}/>
-        </div>
-      }
-    </Formulario>
+      </Formulario>
+    </>
   )
 }
 

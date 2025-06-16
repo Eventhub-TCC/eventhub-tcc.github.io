@@ -21,6 +21,20 @@
     align-items: center;
 }
 
+.cadastro-servico__imagem-info-titulo{
+    color: #424242;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.cadastro-servico__imagem-info-subtitulo{
+    color: #898989;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+}
+
 .cadastro-servico__imagem-icone{
     font-size: 75px;
     color: rgba(0, 0, 0, 0.250);
@@ -111,6 +125,15 @@
     font-size: 20px;
     color: #F3C623;
 }
+
+.cadastro-servico__formulario .label_checkbox{
+    font-weight: 300;
+}
+
+.cadastro-servico__botoes div{
+    width: 150px;
+}
+
 .cadastro-servico__alerta{
     position: fixed;
     top: 10%;
@@ -119,11 +142,21 @@
     z-index: 1;
 }
 
+.cadastro-servico__seta{
+    margin-bottom:16px;
+}
+
 @media screen and (max-width: 1024px){
     .cadastro-servico__alerta{
         transform: translateX(-50%);
         left: 50%;
        width: 100%;
        padding: 0 32px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .cadastro-servico__botoes div{
+        width: 100%;
     }
 }

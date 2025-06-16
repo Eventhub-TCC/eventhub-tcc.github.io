@@ -1,3 +1,48 @@
+.exibicao-servicos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    align-self: stretch;
+    display: block
+}
+
+
+.sumario-servicos {
+    color: var(--yellow-700);
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.sumario-servicos::-webkit-details-marker {
+    display: none;
+}
+
+.exibicao-servicos {
+    transition: transform 0.3s ease;
+}
+
+.exibicao-servicos__seta {
+    transition: transform 0.3s ease;
+}
+
+.exibicao-servicos[open] .exibicao-servicos__seta {
+    transform: rotate(90deg);
+}
+
+.quantidade-servicos {
+  font-size: 14px;
+  vertical-align: top;
+}
+
 .conteudo-principal-meus-servicos{
     display: flex;
     flex-direction: column;
@@ -93,4 +138,12 @@
     background-repeat: no-repeat;
     width: 500px;
     height: 500px;
+}
+
+.conteudo-principal-meus-servicos__limpar-filtros{
+    color: var(--yellow-700);
+    font-size: 14px;
+    font-weight: 300;
+    text-decoration-line: underline;
+    cursor: pointer;
 }

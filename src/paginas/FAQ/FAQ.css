@@ -1,0 +1,41 @@
+.FAQ__topo {
+  background-image: url('src/assets/imagem-termos.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 203px;
+  display: flex;
+  align-items: center;
+}
+
+.FAQ__titulo-pagina{
+    color: #FFF;
+    text-align: justify;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-left: 128px;
+}
+
+.FAQ__conteudo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 42px;
+    padding: 12px;
+}
+
+
+@media screen and (max-width: 700px){
+.FAQ__topo{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+  .FAQ__titulo-pagina{
+    margin-left: 0;
+  }
+}    

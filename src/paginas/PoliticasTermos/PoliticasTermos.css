@@ -1,0 +1,130 @@
+.politicas-termos__pagina{
+    gap:64px;
+    display:flex;
+    flex-direction: column;
+    margin-bottom: 32px;
+}
+
+.politicas-termos__topo {
+  background-image: url('src/assets/imagem-termos.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 203px;
+  display: flex;
+  align-items: center;
+}
+
+.politicas-termos{
+    color: #FFF;
+    text-align: justify;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-left: 128px;
+}
+
+.politicas-termos__container{
+    display: flex;
+    padding: 48px 40px;
+    width: 1184px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 42px;
+    border-radius: 32px;
+    border: 2px solid var(--purple-700);
+    background: #FFF;
+    box-shadow: 0px 0px 15px 4px rgba(140, 93, 255, 0.40);
+}
+
+.politicas-termos__conteudo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 42px;
+}
+
+.politicas-termos__cabecalho{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+}
+
+.politicas-termos__atualizacoes{
+    color: var(--purple-900);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.politicas-termos__titulo{
+    color: #000;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.politicas-termos__topicos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+}
+
+.politicas-termos__textos {
+  color: #3A3A3A;
+  text-align: justify;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  white-space: pre-line;
+}
+
+.politicas-termos__topico{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+}
+
+.politicas-termos__topico-titulo{
+    color: var(--purple-800);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    text-align: left;
+}
+
+@media screen and (max-width: 1200px){
+    .politicas-termos{
+        margin-left: 0px;
+        padding: 12px;
+    }
+    .politicas-termos__topo{
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+    .politicas-termos__container{
+        width: 90%;
+        padding: 12px 4px;
+    }
+
+}    
