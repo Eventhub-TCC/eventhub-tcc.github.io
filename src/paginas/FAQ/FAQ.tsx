@@ -55,7 +55,7 @@ const FAQ = () => {
                     />
 
                     <CardPergunta 
-                    pergunta="Como faço para completar meu cadastro para exercer ambas as funções na plataforma (após já ter me cadastrado)?" 
+                    pergunta="Como faço para completar meu cadastro para exercer ambas as funções na plataforma?" 
                     resposta='No EventHub, na página "Meu Perfil", é possível visualizar uma notificação (ícone de sino com fundo amarelo ou roxo, dependendo da sua função). Ao clicar nesse botão, um modal de complementação de cadastro será exibido. Após preencher os dados faltantes, sua conta estará habilitada para atuar tanto como organizador quanto como prestador de serviços na plataforma.' 
                     />
 

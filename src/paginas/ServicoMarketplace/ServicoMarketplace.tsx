@@ -8,10 +8,11 @@ import TextArea from '../../componentes/TextArea/TextArea'
 import InputQuantidade from '../../componentes/InputQuantidade/InputQuantidade'
 import Select from '../../componentes/Select/Select'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
-import { useParams } from 'react-router'
+import { data, useParams } from 'react-router'
 import { Helmet } from 'react-helmet-async'
 import Alerta from '../../componentes/Alerta/Alerta'
 import Seta from '../../componentes/Seta/Seta'
+import Input from '../../componentes/Input/Input'
 
 interface TipoServico {
     idTipoServico: string
@@ -31,8 +32,6 @@ const ServicoMarketplace = () => {
     const [quantidade, setQuantidade] = useState(0)
     const [valorTotal, setValorTotal] = useState(0)
     const [evento, setEvento] = useState('')
-    const [valorPromo, setValorPromo] = useState(0)
-
     const [qntMinima, setQntMinima] = useState(0)
     const [qntMaxima, setQntMaxima] = useState(0)
     const [nomePrestador, setNomePrestador] = useState('')
@@ -43,49 +42,69 @@ const ServicoMarketplace = () => {
     const [eventos, setEventos] = useState<any[]>([])
     const [compraOk, setCompraOk] = useState(false)
     const [carrinhoOk, setCarrinhoOk] = useState(false)
+    const [localEntrega, setLocalEntrega] = useState('')
+    const [dataEntrega, setDataEntrega] = useState<Date | null>(new Date())
+    const [valorPromo, setValorPromo] = useState(0)
 
     const [erro, setErro] = useState({
-        evento: {
+        evento:{
             status: false,
             mensagem: 'Selecione um evento para finalizar a compra.'
+         },
+        localEntrega: {
+            status: false,
+            mensagem: 'Digite o local de entrega.'
+        },
+        dataEntrega: {
+            status: false,
+            mensagem: 'Insira a data de entrega.'
         }
     })
 
     const idServico = useParams().idServico || '';
+    const hoje = new Date();
 
-
+    
 
 
     useEffect(() => {
-        const buscarServico = async () => {
-            try {
-                const servico = await (await api.get(`users/erro/services/${idServico}`)).data
-                setNomeServico(servico.nomeServico)
-                setTipoServico({ ...servico.tipoServico })
-                setImagens([servico.imagem1, servico.imagem2, servico.imagem3, servico.imagem4, servico.imagem5, servico.imagem6].filter((img) => img !== null))
-                setValor(servico.valorServico)
-                setUnidade(servico.unidadeCobranca)
-                setDescricao(servico.descricaoServico)
-                setQuantidade(servico.qntMinima)
-                setValorTotal(servico.valorPromoServico ? servico.valorPromoServico * servico.qntMinima : servico.valorServico * servico.qntMinima)
-                setQntMinima(servico.qntMinima)
-                setQntMaxima(servico.qntMaxima)
-                setValorPromo(servico.valorPromoServico)
+        const buscarServico = async() =>{
+        try{
+            const servico = await (await api.get(`users/erro/services/${idServico}`)).data
+            setNomeServico(servico.nomeServico)
+            setTipoServico({...servico.tipoServico})
+            setImagens([servico.imagem1,servico.imagem2,servico.imagem3,servico.imagem4,servico.imagem5,servico.imagem6].filter((img) => img !== null))
+            setValor(servico.valorServico)
+            setUnidade(servico.unidadeCobranca)
+            setDescricao(servico.descricaoServico)
+            setQuantidade(servico.qntMinima)
+            setValorTotal(servico.valorServico * servico.qntMinima)
+            setQntMinima(servico.qntMinima)
+            setQntMaxima(servico.qntMaxima)
+	        setValorPromo(servico.valorPromoServico)
 
-                const prestador = await (await api.get(`users/get-user/${servico.idUsuario}`)).data
-                setNomePrestador(prestador.nomeEmpresa)
+            const prestador = await (await api.get(`users/get-user/${servico.idUsuario}`)).data
+            setNomePrestador(prestador.nomeEmpresa)
 
-                const eventoslista = (await api.get(`users/events`)).data
-                setEventos(eventoslista.map((evento: any) => { return { id: evento.idEvento, nome: evento.nomeEvento } }))
+            const eventoslista = (await api.get(`users/events`)).data
+            setEventos(eventoslista.map((evento: any) => {
+                return {
+                    id: evento.idEvento,
+                    nome: evento.nomeEvento,
+                    data: evento.dataEvento,
+                    local: evento.enderecoLocal ? evento.enderecoLocal + ' Nº ' + evento.numeroLocal : ''
+                };
+            }));
 
-
-            }
-            catch (error) {
-                console.error("Erro ao buscar serviço:", error)
-            }
         }
-        buscarServico()
-    }, [])
+        catch(error){
+            console.error("Erro ao buscar serviço:", error)
+        }
+    } 
+    buscarServico()
+    },[])
+
+
 
     useEffect(() => {
         setValorTotal((valorPromo || valor) * quantidade)
@@ -152,55 +171,112 @@ const ServicoMarketplace = () => {
                 </div>
             </Modal>,
         finalizarCompra:
-            <Modal
-                titulo='Finalizar Compra'
-                textoBotao='Finalizar'
-                enviaModal={() => { setModalFinalizar(false) }}
-                funcaoSalvar={() => { finalizarCompra() }}
-            >
+        <Modal
+        titulo='Finalizar Compra'
+        textoBotao='Finalizar'
+        enviaModal={()=>{setModalFinalizar(false)}}
+        funcaoSalvar={()=>{finalizarCompra()}}
+        >
+            <div style={{gap: '1rem'}} className='d-flex flex-column'>
+                <p>Selecione o evento relacionado a essa compra.</p>
                 <div>
-                    <p>Selecione o evento relacionado a essa compra.</p>
+
                     <Select
-                        cabecalho
-                        cabecalhoTexto='Evento'
-                        textoPadrao='Selecione um evento'
-                        esconderValorPadrao
-                        valor={evento}
-                        funcao={(e: ChangeEvent<HTMLSelectElement>) => {
-                            setEvento(e.target.value)
-                            if (erro.evento.status === true) {
-                                setErro(prevState => ({ ...prevState, evento: { ...prevState.evento, status: false } }))
-                            }
-                        }
-                        }
+                    cabecalho
+                    cabecalhoTexto='Evento'
+                    textoPadrao='Selecione um evento'
+                    esconderValorPadrao
+                    valor={evento}
+                    funcao={(e: ChangeEvent<HTMLSelectElement>) => {
+                        setEvento(e.target.value)
+                        setLocalEntrega(eventos.find((ev) => ev.id == e.target.value)?.local || '')
+                        const eventoSelecionado = eventos.find((ev) => ev.id == e.target.value);
+                        const data = eventoSelecionado?.data;
+                        setDataEntrega(data ? new Date(data) : null);
+                        if(erro.evento.status === true){
+                            setErro(prevState => ({ ...prevState, evento: {...prevState.evento, status:false} }))
+                        }}
+                    }
                     >
-                        {eventos.map((evento) => {
-                            return (
-                                <option key={evento.id} value={evento.id}>
-                                    {evento.nome}
-                                </option>
-                            )
-                        })}
+                    { eventos.map((evento) => {
+                        return (
+                            <option key={evento.id} value={evento.id}>
+                                {evento.nome}
+                            </option>
+                        )
+                    })}   
                     </Select>
-                    {erro.evento.status ? <ErroCampoForm mensagem={erro.evento.mensagem} /> : ''}
-                    <CheckBox
-                        texto='Incluir instrução para o Prestador de serviços'
-                        funcao={() => { setInstrucaoModal(!instrucaoModal); }}
-                        ativado={instrucaoModal}
+                    {erro.evento.status ? <ErroCampoForm mensagem={erro.evento.mensagem}/> : ''}
+                </div>
+                <div>
+
+                    <Input
+                        cabecalho
+                        cabecalhoTexto='Local de entrega'
+                        type='text'
+                        titulo='Local de entrega'
+                        placeholder='Digite o local de entrega'
+                        valor={localEntrega}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {setLocalEntrega(e.target.value)
+                        if(erro.localEntrega.status === true){
+                            setErro(prevState => ({ ...prevState, localEntrega: {...prevState.localEntrega, status:false} }))
+                        }
+                        }}
+                    />
+                    {erro.localEntrega.status ? <ErroCampoForm mensagem={erro.localEntrega.mensagem}/> : ''}
+                </div>
+                <div>
+
+                    <Input
+                        cabecalho
+                        cabecalhoTexto='Data de entrega'
+                        type='date'
+                        titulo='Data de entrega'
+                        placeholder='Digite a data de entrega'
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        const valor = e.target.value;
+
+                        if (!valor) {
+                            setDataEntrega(null);
+                            return;
+                        }
+                        if (erro.dataEntrega.status === true) {
+                            setErro(prevState => ({ ...prevState, dataEntrega: { ...prevState.dataEntrega, status: false } }))
+                        }
+                        const dataSelecionada = new Date(valor);
+                        if (dataSelecionada < hoje) {
+                            setDataEntrega(hoje);
+                        } else {
+                            setDataEntrega(dataSelecionada);
+                        }
+                        }}
+                        valor={
+                        dataEntrega instanceof Date && !isNaN(dataEntrega.getTime())
+                            ? dataEntrega.toISOString().split('T')[0]
+                            : ''
+                        }
+                        min={hoje.toISOString().split('T')[0]}
                     />
                 </div>
-                {instrucaoModal ?
-                    <div>
-                        <TextArea
-                            titulo='Instrução (opcional)'
-                            placeholder='Digite as instruções...'
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => { setInstrucao(e.target.value) }}
-                            valor={instrucao}
-                            maximo={500}
-                            contador
-                        />
-                    </div> : ''}
-            </Modal>
+                {erro.dataEntrega.status ? <ErroCampoForm mensagem={erro.dataEntrega.mensagem}/> : ''}
+                <CheckBox
+                    texto='Incluir instrução para o Prestador de serviços'
+                    funcao={() => {setInstrucaoModal(!instrucaoModal);}}
+                    ativado ={instrucaoModal}
+                    />
+                </div>
+                {instrucaoModal?
+                <div>
+                <TextArea
+                    titulo='Instrução (opcional)'
+                    placeholder='Digite as instruções...'
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {setInstrucao(e.target.value)}} 
+                    valor={instrucao}
+                    maximo={500}
+                    contador
+                />
+                </div>:''}
+        </Modal>
     }
 
 
@@ -242,6 +318,14 @@ const ServicoMarketplace = () => {
             setErro(prevState => ({ ...prevState, evento: { ...prevState.evento, status: true } }))
             return
         }
+        if (localEntrega === '') {
+            setErro(prevState => ({ ...prevState, localEntrega: { ...prevState.localEntrega, status: true } }))
+            return
+        }
+        if (dataEntrega === null || dataEntrega === undefined || isNaN(dataEntrega.getTime())) {
+            setErro(prevState => ({ ...prevState, dataEntrega: { ...prevState.dataEntrega, status: true } }))
+            return
+        }
 
         try {
 
@@ -255,6 +339,8 @@ const ServicoMarketplace = () => {
             }]
             await api.post('users/pedidos', {
                 idEvento: evento,
+                localEntrega: localEntrega,
+                dataEntrega: dataEntrega,
                 itens: itens
             })
             console.log("Compra finalizada com sucesso")

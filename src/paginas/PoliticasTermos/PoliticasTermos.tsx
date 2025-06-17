@@ -40,13 +40,13 @@ const PoliticasTermos = () => {
                     <div className="politicas-termos__topico">
                         <div className="politicas-termos__topico-titulo">2. Uso e Compartilhamento:</div>
                         <div className="politicas-termos__textos">
-                            Os dados fornecidos poderão ser acessados apenas pelos administradores da plataforma e pelos organizadores dos eventos nos quais você participar. Nenhum dado será comercializado ou compartilhado com terceiros sem seu consentimento.
+                            Os dados fornecidos poderão ser acessados apenas pelos administradores da plataforma. Nenhum dado será comercializado ou compartilhado com terceiros.
                         </div>
                     </div>
                     <div className="politicas-termos__topico">
                         <div className="politicas-termos__topico-titulo">3. Segurança da Informação:</div>
                         <div className="politicas-termos__textos">
-                            As senhas serão protegidas por meio de criptografia, autenticação segura e acesso restrito a usuários autorizados.                </div>
+                            As senhas serão protegidas por meio de criptografia e autenticação segura.                </div>
                     </div>
                     <div className="politicas-termos__topico">
                         <div className="politicas-termos__topico-titulo">4. Sigilo e Confidencialidade:</div>
@@ -56,7 +56,7 @@ const PoliticasTermos = () => {
                     <div className="politicas-termos__topico">
                         <div className="politicas-termos__topico-titulo">5. Direito de Revogação:</div>
                         <div className="politicas-termos__textos">
-                            Você pode, a qualquer momento, solicitar a exclusão de seus dados da plataforma ou revogar este consentimento, bastando entrar em contato com o suporte técnico da EventHub.                </div>
+                            Você pode, a qualquer momento, solicitar a exclusão física de seus dados da plataforma ou revogar este consentimento, bastando entrar em contato com o suporte técnico da EventHub.                </div>
                     </div>
                 </div>
             </div>
@@ -81,22 +81,17 @@ const PoliticasTermos = () => {
                     <div className="politicas-termos__topico">
                         <div className="politicas-termos__topico-titulo">2. Uso dos Dados:</div>
                         <div className="politicas-termos__textos">
-                            Seus dados são utilizados exclusivamente para a operação do sistema, envio de comunicações, confirmação de participação em eventos e geração de relatórios. Não comercializamos nem repassamos seus dados a terceiros.                    </div>
+                            Seus dados são utilizados única e exclusivamente para a operação do sistema, envio de comunicações, confirmação de participação em eventos e geração de relatórios.                    </div>
                     </div>
                     <div className="politicas-termos__topico">
                         <div className="politicas-termos__topico-titulo">3. Armazenamento e Segurança:</div>
                         <div className="politicas-termos__textos">
-                            Utilizamos autenticação por token (JWT) e boas práticas de segurança para proteger suas informações. O acesso aos dados é restrito a usuários autorizados.                </div>
+                            Utilizamos métodos seguros de autenticação para garantir que apenas pessoas autorizadas tenham acesso às informações. Suas dados estão protegidos com práticas modernas de segurança digital, preservando sua privacidade e confidencialidade.                </div>
                     </div>
                     <div className="politicas-termos__topico">
-                        <div className="politicas-termos__topico-titulo">4. Direitos do Usuário:</div>
+                        <div className="politicas-termos__topico-titulo">4. Alterações:</div>
                         <div className="politicas-termos__textos">
-                            Você pode solicitar a exclusão física dos seus dados ou revogar o consentimento a qualquer momento, entrando em contato com o nosso suporte.                </div>
-                    </div>
-                    <div className="politicas-termos__topico">
-                        <div className="politicas-termos__topico-titulo">5. Alterações:</div>
-                        <div className="politicas-termos__textos">
-                            Esta política pode ser atualizada periodicamente. A versão mais recente estará sempre disponível na plataforma.                </div>
+                            Esta política poderá ser atualizada periodicamente para refletir alterações em nossas práticas ou em conformidade com requisitos legais. Quando modificações relevantes forem realizadas, o usuário será notificado por e-mail, e a versão mais recente estará sempre disponível na plataforma para consulta.               </div>
                     </div>
                 </div>
             </div>
