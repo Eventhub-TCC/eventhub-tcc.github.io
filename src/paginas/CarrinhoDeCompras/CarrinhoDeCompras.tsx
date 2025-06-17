@@ -10,6 +10,7 @@ import Select from "../../componentes/Select/Select";
 import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm";
 import { Helmet } from "react-helmet-async";
 import Seta from "../../componentes/Seta/Seta";
+import Input from "../../componentes/Input/Input";
 
 interface ItemCarrinho {
   idServico: string;
@@ -31,11 +32,16 @@ const [exibirInstrucoes, setExibirInstrucoes] = useState(() =>
 );
   const [evento, setEvento] = useState("");
   const [modalFinalizar, setModalFinalizar] = useState(false);
-  const [eventos, setEventos] = useState<{ id: string; nome: string }[]>([]);
+  const [eventos, setEventos] = useState<{ id: string; nome: string; data: string; local: string }[]>([]);
   const [erro, setErro] = useState({
   evento: { status: false, mensagem: "Selecione um evento" },
+  localEntrega: { status: false, mensagem: "Digite o local de entrega" },
+  dataEntrega: { status: false, mensagem: "Selecione uma data de entrega" },
   });
   const [pedidoFinalizado, setPedidoFinalizado] = useState(false);
+  const [localEntrega, setLocalEntrega] = useState('')
+  const [dataEntrega, setDataEntrega] = useState<Date | null>(new Date())
+  const hoje = new Date();
     
 
 
@@ -45,7 +51,7 @@ const [exibirInstrucoes, setExibirInstrucoes] = useState(() =>
         const buscarEventos = async() =>{
         try{
             const eventoslista = (await api.get(`users/events`)).data
-            setEventos(eventoslista.map((evento:any)=>{return{id:evento.idEvento, nome:evento.nomeEvento}}))
+            setEventos(eventoslista.map((evento:any)=>{return{id:evento.idEvento, nome:evento.nomeEvento, data:evento.dataEvento, local: evento.enderecoLocal ? evento.enderecoLocal + ' Nº ' + evento.numeroLocal : ''}}))
         }
         catch(error){
             console.error("Erro ao buscar eventos:", error)
@@ -115,6 +121,14 @@ const formatarPreco = (valor: number) => {
       }));
       return;
     }
+      if (localEntrega === '') {
+        setErro(prevState => ({ ...prevState, localEntrega: { ...prevState.localEntrega, status: true } }))
+        return
+    }
+    if (dataEntrega === null || dataEntrega === undefined || isNaN(dataEntrega.getTime())) {
+        setErro(prevState => ({ ...prevState, dataEntrega: { ...prevState.dataEntrega, status: true } }))
+        return
+    }
 
     try {
       const itens = carrinho.map((item) => ({
@@ -127,6 +141,8 @@ const formatarPreco = (valor: number) => {
       }));
       await api.post("users/pedidos", {
         idEvento: evento,
+        localEntrega: localEntrega,
+        dataEntrega: dataEntrega,
         itens: itens,
       });
       console.log("Compra finalizada com sucesso");
@@ -401,48 +417,95 @@ const formatarPreco = (valor: number) => {
           </div>
              {modalFinalizar ? (
                 <Modal
-                titulo="Finalizar Compra"
-                textoBotao="Finalizar"
-                enviaModal={() => {
-                    setModalFinalizar(false);
-                }}
-                funcaoSalvar={() => {
-                    finalizarPedido();
-                }}
-                >
-                <div>
-                    <p>Selecione o evento relacionado a essa compra.</p>
-                    <Select
-                    cabecalho
-                    cabecalhoTexto="Evento"
-                    textoPadrao="Selecione um evento"
-                    esconderValorPadrao
-                    valor={evento}
-                    funcao={(e: ChangeEvent<HTMLSelectElement>) => {
-                        setEvento(e.target.value);
-                        if (erro.evento.status === true) {
-                        setErro((prevState) => ({
-                            ...prevState,
-                            evento: { ...prevState.evento, status: false },
-                        }));
-                        }
-                    }}
-                    >
-                    {eventos.map((evento) => {
-                        return (
-                        <option key={evento.id} value={evento.id}>
-                            {evento.nome}
-                        </option>
-                        );
-                    })}
-                    </Select>
-                    {erro.evento.status ? (
-                    <ErroCampoForm mensagem={erro.evento.mensagem} />
-                    ) : (
-                      ""
-                      )}
-                  </div>
-                  </Modal>
+                        titulo='Finalizar Compra'
+                        textoBotao='Finalizar'
+                        enviaModal={()=>{setModalFinalizar(false)}}
+                        funcaoSalvar={()=>{finalizarPedido()}}
+                        >
+                            <div style={{gap: '1rem'}} className='d-flex flex-column'>
+                                <p>Selecione o evento relacionado a essa compra.</p>
+                                <div>
+
+                                    <Select
+                                    cabecalho
+                                    cabecalhoTexto='Evento'
+                                    textoPadrao='Selecione um evento'
+                                    esconderValorPadrao
+                                    valor={evento}
+                                    funcao={(e: ChangeEvent<HTMLSelectElement>) => {
+                                        setEvento(e.target.value)
+                                        setLocalEntrega(eventos.find((ev) => ev.id == e.target.value)?.local || '')
+                                        const eventoSelecionado = eventos.find((ev) => ev.id == e.target.value);
+                                        const data = eventoSelecionado?.data;
+                                        setDataEntrega(data ? new Date(data) : null);
+                                        if(erro.evento.status === true){
+                                            setErro(prevState => ({ ...prevState, evento: {...prevState.evento, status:false} }))
+                                        }}
+                                    }
+                                    >
+                                    { eventos.map((evento) => {
+                                        return (
+                                            <option key={evento.id} value={evento.id}>
+                                                {evento.nome}
+                                            </option>
+                                        )
+                                    })}   
+                                    </Select>
+                                    {erro.evento.status ? <ErroCampoForm mensagem={erro.evento.mensagem}/> : ''}
+                                </div>
+                                <div>
+
+                                    <Input
+                                        cabecalho
+                                        cabecalhoTexto='Local de entrega'
+                                        type='text'
+                                        titulo='Local de entrega'
+                                        placeholder='Digite o local de entrega'
+                                        valor={localEntrega}
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => {setLocalEntrega(e.target.value)
+                                        if(erro.localEntrega.status === true){
+                                            setErro(prevState => ({ ...prevState, localEntrega: {...prevState.localEntrega, status:false} }))
+                                        }
+                                        }}
+                                    />
+                                    {erro.localEntrega.status ? <ErroCampoForm mensagem={erro.localEntrega.mensagem}/> : ''}
+                                </div>
+                                <div>
+
+                                    <Input
+                                        cabecalho
+                                        cabecalhoTexto='Data de entrega'
+                                        type='date'
+                                        titulo='Data de entrega'
+                                        placeholder='Digite a data de entrega'
+                                        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                                        const valor = e.target.value;
+
+                                        if (!valor) {
+                                            setDataEntrega(null);
+                                            return;
+                                        }
+                                        if (erro.dataEntrega.status === true) {
+                                            setErro(prevState => ({ ...prevState, dataEntrega: { ...prevState.dataEntrega, status: false } }))
+                                        }
+                                        const dataSelecionada = new Date(valor);
+                                        if (dataSelecionada < hoje) {
+                                            setDataEntrega(hoje);
+                                        } else {
+                                            setDataEntrega(dataSelecionada);
+                                        }
+                                        }}
+                                        valor={
+                                        dataEntrega instanceof Date && !isNaN(dataEntrega.getTime())
+                                            ? dataEntrega.toISOString().split('T')[0]
+                                            : ''
+                                        }
+                                        min={hoje.toISOString().split('T')[0]}
+                                    />
+                                </div>
+                                {erro.dataEntrega.status ? <ErroCampoForm mensagem={erro.dataEntrega.mensagem}/> : ''}
+                                </div>
+                        </Modal>
             ) : (
               ""
             )}
