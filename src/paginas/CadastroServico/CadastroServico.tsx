@@ -344,7 +344,9 @@ const CadastroServico = () => {
                 placeholder='Digite o endereço do local' 
                 tipo='text' 
                 valor={localizacaoServico.endereco} 
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {}} 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setLocalizacaoServico({...localizacaoServico, endereco: e.target.value });
+                }} 
                 disabled={travado} 
                 name='endereco'
                 cor='#F3C623'
