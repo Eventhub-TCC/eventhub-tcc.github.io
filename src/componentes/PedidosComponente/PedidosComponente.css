@@ -1,0 +1,112 @@
+.pedidos-componente__container{
+    display: flex;
+    width: 90%;
+    padding: 16px 24px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    background: #FFF;
+}
+
+.pedidos-componente__container:hover{
+    background: var(--Neutral-100, #F8F9FA);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    transform: translateY(-3px);
+
+}
+
+.pedidos-componente__cliente{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.pedidos-componente__cliente-nome-pedido {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.pedidos-componente__cliente-nome{
+    color: var(--yellow-700);
+    text-align: justify;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.pedidos-componente__cliente-pedido{
+    color: var(--Neutral-600, #6C757D);
+    text-align: justify;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.pedidos-componente__cliente-evento{
+    color: var(--yellow-900, #FA812F);
+    text-align: justify;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.pedidos-componente__cliente-data-itens{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.pedidos-componente__cliente-data{
+    color: var(--Neutral-600, #6C757D);
+    text-align: justify;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.pedidos-componente__cliente-itens{
+    color: var(--Neutral-600, #6C757D);
+    text-align: justify;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.pedidos-componente__infos{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+}
+
+.pedidos-componente__infos-valor{
+    color: #000;
+    text-align: justify;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.pedidos-componente__barra{
+    width: 2px;
+    align-self: stretch;
+    background: var(--Neutral-400, #CED4DA);
+}

@@ -1,0 +1,24 @@
+.pedidos-prestador__titulo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 42px;
+    align-self: stretch;
+}
+
+.pedidos-prestador__titulo-texto {
+    color: #2F2F2F;
+    font-family: Inter;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.pedidos-prestador{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+}
