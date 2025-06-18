@@ -61,8 +61,12 @@
     transition: margin-left .3s ease-out;
   }
 
-  .layout-info-minimizada {
-    margin-left: 0;
+  .layout-info-minimizada{
+    margin-left: 0px;
+  }
+
+  .layout-info-prestador{
+    margin-left: 0px;
   }
 }
 
@@ -77,7 +81,4 @@
     font-size: 2rem;
   }
 
-  .layout-info-prestador{
-    margin-left: 0px;
-  }
 }

@@ -16,24 +16,12 @@ interface Pedido {
     quantidadeItens: number;
 }
 
-interface PedidoPrestador {
-    Servico: {
-        nomeServico: string;
-    }
-    idPedido: number;
-    codigoUsu: string;
-    dataPedido: Date;
-    valorTotal: number;
-    quantidadeItens: number;
-}
 
-const Pedidos = ({ tipo }: any) => {
+const Pedidos = () => {
     const [pedidos, setPedidos] = useState<Pedido[]>([]);
     const [pedidosPorEvento, setPedidosPorEvento] = useState<{ [evento: string]: Pedido[] }>({});
-    const [pedidosPorServico, setPedidosPorServico] = useState<{ [servico: string]: PedidoPrestador[] }>({});
 
   const obterPedidos = async () => {
-    if (tipo === 'organizador') {
       try {
         const response = await api.get(`/users/listar-pedidos`);
         const pedidos = response.data;
@@ -52,29 +40,6 @@ const Pedidos = ({ tipo }: any) => {
       } catch (error) {
         console.error('Erro ao obter pedidos', error);
       }
-    } 
-    else if (tipo === 'prestador') {
-      try {
-        console.log('Obtendo pedidos do prestador');
-        const response = await api.get(`/users/listar-pedidos-prestador`);
-        const servicos = response.data;
-        console.log('Serviços obtidos:', servicos);
-
-        const agrupados = servicos.reduce((pedidosOrdenados: { [servico: string]: PedidoPrestador[] }, pedido: PedidoPrestador) => {
-          const nomeServico = pedido.Servico.nomeServico;
-          if (!pedidosOrdenados[nomeServico]) {
-            pedidosOrdenados[nomeServico] = [];
-          }
-          pedidosOrdenados[nomeServico].push(pedido);
-          return pedidosOrdenados;
-        }
-        , {});
-        setPedidosPorServico(agrupados);
-        console.log('Pedidos agrupados por serviço:', pedidosPorServico);
-      } catch (error) {
-        console.error('Erro ao obter pedidos', error);
-      }
-    }
   };
 
   useEffect(() => {
