@@ -1,0 +1,87 @@
+.quickguide-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.quickguide-container {
+  position: relative;
+  background: white;
+  width: 80%;
+  max-width: 900px;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.quickguide-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 6px 0;
+  color: white;
+}
+
+.quickguide-banner-text {
+  font-weight: bold;
+}
+
+.quickguide-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.quickguide-content img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 1rem;
+  border-radius: 6px;
+}
+
+.quickguide-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.quickguide-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid;
+  background: transparent;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.quickguide-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quickguide-indicadores {
+  display: flex;
+  gap: 6px;
+}
+
+.quickguide-bolinha {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.quickguide-bolinha.ativa {
+  background: var(--yellow-700)
+}
