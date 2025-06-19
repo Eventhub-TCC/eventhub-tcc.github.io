@@ -6,6 +6,7 @@
     align-items: center;
     border-radius: 8px;
     background: #FFF;
+    text-decoration: none;
 }
 
 .pedidos-componente__container:hover{
