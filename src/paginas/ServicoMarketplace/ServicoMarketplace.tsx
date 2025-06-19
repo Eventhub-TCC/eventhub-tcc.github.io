@@ -45,6 +45,15 @@ const ServicoMarketplace = () => {
     const [localEntrega, setLocalEntrega] = useState('')
     const [dataEntrega, setDataEntrega] = useState<Date | null>(new Date())
     const [valorPromo, setValorPromo] = useState(0)
+    const [CEP, setCEP] = useState('')
+    const [numero, setNumero] = useState('')
+    const [bairro, setBairro] = useState('')
+    const [cidade, setCidade] = useState('')
+    const [complemento, setComplemento] = useState('')
+    const [estado, setEstado] = useState('')
+    const [endereco, setEndereco] = useState('')
+    const [modalAtualizarEvento, setModalAtualizarEvento] = useState(false)
+    const [eventoOk, setEventoOk] = useState(false)
 
     const [erro, setErro] = useState({
         evento:{
@@ -82,6 +91,13 @@ const ServicoMarketplace = () => {
             setQntMinima(servico.qntMinima)
             setQntMaxima(servico.qntMaxima)
 	        setValorPromo(servico.valorPromoServico)
+            setCEP(servico.cep)
+            setNumero(servico.numero)
+            setBairro(servico.bairro)
+            setCidade(servico.cidade)
+            setComplemento(servico.complemento)
+            setEstado(servico.estado)
+            setEndereco(servico.endereco)
 
             const prestador = await (await api.get(`users/get-user/${servico.idUsuario}`)).data
             setNomePrestador(prestador.nomeEmpresa)
@@ -189,7 +205,12 @@ const ServicoMarketplace = () => {
                     valor={evento}
                     funcao={(e: ChangeEvent<HTMLSelectElement>) => {
                         setEvento(e.target.value)
-                        setLocalEntrega(eventos.find((ev) => ev.id == e.target.value)?.local || '')
+                        if (tipoServico.descricaoTipoServico === 'Locação de Espaço') {
+                            setLocalEntrega(`${endereco} Nº ${numero}, ${bairro}, ${cidade} - ${estado}, CEP: ${CEP}`);
+                        }
+                        else {
+                            setLocalEntrega(eventos.find((ev) => ev.id == e.target.value)?.local || '')
+                        }
                         const eventoSelecionado = eventos.find((ev) => ev.id == e.target.value);
                         const data = eventoSelecionado?.data;
                         setDataEntrega(data ? new Date(data) : null);
@@ -209,20 +230,26 @@ const ServicoMarketplace = () => {
                     {erro.evento.status ? <ErroCampoForm mensagem={erro.evento.mensagem}/> : ''}
                 </div>
                 <div>
+                    {
+                        tipoServico.descricaoTipoServico === 'Locação de Espaço' ?
+                        ''
+                        :
 
-                    <Input
-                        cabecalho
-                        cabecalhoTexto='Local de entrega'
-                        type='text'
-                        titulo='Local de entrega'
-                        placeholder='Digite o local de entrega'
-                        valor={localEntrega}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => {setLocalEntrega(e.target.value)
-                        if(erro.localEntrega.status === true){
-                            setErro(prevState => ({ ...prevState, localEntrega: {...prevState.localEntrega, status:false} }))
-                        }
-                        }}
-                    />
+                        <Input
+                            cabecalho
+                            cabecalhoTexto='Local de entrega'
+                            type='text'
+                            titulo='Local de entrega'
+                            placeholder='Digite o local de entrega'
+                            valor={localEntrega}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {setLocalEntrega(e.target.value)
+                            if(erro.localEntrega.status === true){
+                                setErro(prevState => ({ ...prevState, localEntrega: {...prevState.localEntrega, status:false} }))
+                            }
+                            }}
+                            />
+                    }
+                    
                     {erro.localEntrega.status ? <ErroCampoForm mensagem={erro.localEntrega.mensagem}/> : ''}
                 </div>
                 <div>
@@ -276,6 +303,17 @@ const ServicoMarketplace = () => {
                     contador
                 />
                 </div>:''}
+        </Modal>,
+        atualizarEvento:
+        <Modal
+            titulo='Atualizar Evento'
+            textoBotao='Atualizar'
+            enviaModal={() => { setModalAtualizarEvento(false) }}
+            funcaoSalvar={() => { atualizarEvento() }}
+        >
+            <div className='d-flex flex-column gap-3'>
+                <p>Você finalizou uma compra de um serviço de locação de espaço. Gostaria de atualizar o endereço do seu evento?</p>
+            </div>
         </Modal>
     }
 
@@ -292,7 +330,15 @@ const ServicoMarketplace = () => {
             valorPromo: valorPromo,
             quantidade: quantidade,
             instrucoes: instrucao,
-            imagem: imagens[0]
+            imagem: imagens[0],
+            tipoServico: tipoServico.descricaoTipoServico,
+            CEP: CEP,
+            numero: numero,
+            bairro: bairro,
+            UF: cidade,
+            estado: estado,
+            complemento: complemento,
+            endereco: endereco
         }
 
         const carrinho = localStorage.getItem('carrinho')
@@ -312,6 +358,36 @@ const ServicoMarketplace = () => {
         }
             , 10000)
     }
+
+    const atualizarEvento = async () => {
+        try {
+            const eventoSelecionado = eventos.find((ev) => ev.id == evento);
+            if (!eventoSelecionado) {
+                console.error("Evento não encontrado");
+                return;
+            }
+
+            await api.put(`users/events/${evento}`, {
+                enderecoLocal: endereco,
+                numeroLocal: numero,
+                bairroLocal: bairro,
+                cidadeLocal: cidade,
+                ufLocal: estado,
+                cepLocal: CEP,
+                complementoLocal: complemento 
+            });
+            console.log("Evento atualizado com sucesso");
+            setModalAtualizarEvento(false);
+            setEventoOk(true);
+            setTimeout(() => {
+                setEventoOk(false);
+            }, 10000);
+        }
+        catch (error) {
+            console.error("Erro ao atualizar evento:", error);
+        }
+    }
+
 
     const finalizarCompra = async () => {
         if (evento === '') {
@@ -346,6 +422,10 @@ const ServicoMarketplace = () => {
             console.log("Compra finalizada com sucesso")
             setModalFinalizar(false)
             setCompraOk(true);
+            if (tipoServico.descricaoTipoServico === 'Locação de Espaço') {
+                setModalAtualizarEvento(true);
+            }
+                
         }
         catch (error) {
             console.error("Erro ao finalizar compra:", error)
@@ -491,6 +571,12 @@ const ServicoMarketplace = () => {
                         </div>
 
            }
+                        </div>
+                        {modalAtualizarEvento ? modals.atualizarEvento : ''}
+                        <div className='comprar-servico__alertas'>
+                            {eventoOk && (
+                                            <Alerta texto="Evento atualizado com sucesso!" status="sucesso" ativado={true} />
+                            )}
                         </div>
                 </div>
             </>
