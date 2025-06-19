@@ -83,5 +83,5 @@
 }
 
 .quickguide-bolinha.ativa {
-  background: var(--yellow-700)
+  background: var(--corQuickGuideBolinhaAtiva)
 }

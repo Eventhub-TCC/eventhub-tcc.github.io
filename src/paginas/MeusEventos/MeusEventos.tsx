@@ -59,8 +59,7 @@ const MeusEventos = () => {
   const [statusSelecionado, setStatusSelecionado] = useState("");
   const [eventosFiltrados, setEventosFiltrados] = useState<Evento[]>([]);
   const [buscaEvento, setBuscaEvento] = useState("");
-  const [exibirGuia, setExibirGuia] = useState(true);
-
+  const [exibirGuia, setExibirGuia] = useState(false);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
   const formatarDados = {
@@ -170,6 +169,7 @@ const MeusEventos = () => {
       setEventos(response.data);
     } catch (error) {
       console.error("Erro ao obter eventos", error);
+      setExibirGuia(true);
     }
   };
 
@@ -624,7 +624,7 @@ const MeusEventos = () => {
                     },
                     {
                     titulo: "Gerando Convites",
-                    detalhe: "Após criar seu evento, vá para aba 'Convites' e clique em 'Gerar Convite' para gerar um convite que você poderá enviar a um convidado seu, não esqueça de definir o número de acompanhantes que este convite irá aceitar!",
+                    detalhe: "Após criar seu evento, vá para aba 'Convites' e clique em 'Gerar Convite' após gerar um convite que você poderá enviar a um convidado seu, não esqueça de definir o número de acompanhantes que este convite irá aceitar!",
                     imagem: "/QuickGuide/convidar.png"
                     },
                     {

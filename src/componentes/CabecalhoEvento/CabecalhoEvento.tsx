@@ -12,7 +12,6 @@ import { PatternFormat } from 'react-number-format';
 import sweetAlert from 'sweetalert2'
 import Alerta from '../Alerta/Alerta'
 import InputQuantidade from '../InputQuantidade/InputQuantidade'
-import ToolTip from '../ToolTip/ToolTip'
 import TextArea from '../TextArea/TextArea'
 import Seta from '../Seta/Seta'
 
@@ -598,7 +597,6 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
           <div className='modal-configuracoes-evento'>
             <div className='modal-configuracoes-evento__organizador'>
               <label htmlFor="qtd-acompanhantes" className='label-input-acompanhantes'>Máximo padrão de acompanhantes por convite</label>
-              <ToolTip mensagem="Define o número máximo de acompanhantes que um convidado poderá levar ao preencher seu convite. Esse valor será aplicado como padrão, mas poderá ser ajustado individualmente para convites específicos, se necessário."></ToolTip>
             </div>
             <div className='d-flex align-itens-center'>
               <div className='cabecalho-evento__input-acompanhantes'>

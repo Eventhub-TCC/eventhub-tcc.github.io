@@ -44,6 +44,7 @@ const QuickGuide = ({ passos, corPrincipal = 'var(--purple-800)', onClose }: any
               <span
                 key={i}
                 className={`quickguide-bolinha ${i === index ? 'ativa' : ''}`}
+                style={{ '--corQuickGuideBolinhaAtiva': corPrincipal } as React.CSSProperties}
               />
             ))}
           </div>

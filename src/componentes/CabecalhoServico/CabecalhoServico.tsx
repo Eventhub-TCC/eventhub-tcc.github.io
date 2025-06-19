@@ -11,7 +11,6 @@ import sweetAlert from 'sweetalert2'
 import Alerta from '../Alerta/Alerta'
 import ToggleBotao from '../ToggleBotao/ToggleBotao'    
 import InputRadio from '../InputRadio/InputRadio'
-import ToolTip from '../ToolTip/ToolTip'
 import TextArea from '../TextArea/TextArea'
 import Seta from '../Seta/Seta'
 import { PatternFormat } from 'react-number-format';
@@ -424,7 +423,6 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
           <div className='modal-anunciar-servico__duracao'>
             <div className='modal-anunciar-servico__titulo-duracao'>
               Duração
-              <ToolTip prestador mensagem='Você pode desativar este anúncio manualmente a qualquer momento. Caso defina uma data de término, o anúncio será encerrado automaticamente ao início desse dia, sem necessidade de ação manual.'/>
             </div>
             <div className='teste'>
               <InputRadio

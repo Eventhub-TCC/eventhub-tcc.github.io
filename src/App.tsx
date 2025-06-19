@@ -27,6 +27,7 @@ import ServicoMarketplace from './paginas/ServicoMarketplace/ServicoMarketplace'
 import PoliticasTermos from './paginas/PoliticasTermos/PoliticasTermos'
 import FAQ from './paginas/FAQ/FAQ'
 import PedidosPrestador from './paginas/PedidosPrestador/PedidosPrestador'
+import InformacoesPedidoPrestador from './paginas/InformacoesPedidoPrestador/InformacoesPedidoPrestador'
 
 const App = () => {
   return (
@@ -64,6 +65,7 @@ const App = () => {
               <Route path='criar-servico' element={<CadastroServico />}/>
               <Route path='meus-servicos/:idServico/informacoes-meus-servicos' element={<InformacoesServico />}/>
               <Route path='pedidos' element={<PedidosPrestador/>}/>
+              <Route path='pedidos/:idPedido/informacoes-pedido' element={<InformacoesPedidoPrestador />}/>
             </Route>
           </Route>
           <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>
