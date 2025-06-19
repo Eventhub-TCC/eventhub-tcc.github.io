@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap');
+
+.home__cabecalho{
+    padding: .5rem 0;
+    background-color: var(--yellow-700);
+}
+
+.home__cabecalho-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home__cabecalho-link{
+    display: inline-block;
+}
+
+.home__cabecalho-container-logo{
+    max-width: 10.9375rem;
+}
+
+.home__cabecalho-logo{
+    width: 100%;
+}
+
+.home__cabecalho-secoes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.home__cabecalho-secoes a{
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.home__cabecalho-botoes{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__banner{
+    background-color: var(--purple-800);
+    padding: 3.125rem 0 0;
+    position: relative;
+}
+
+.home__banner-divisor-cabecalho{
+    background: url(../../assets/divisor-amarelo-home.svg);
+    background-size: contain;
+    height: 3.125rem;
+    width: 100%;
+    position: absolute;
+}
+
+.home__banner-divisor-cabecalho--cima{
+    top: 0;
+}
+
+.home__banner-divisor-cabecalho--baixo{
+    bottom: 0;
+    transform: rotate(180deg);
+}
+
+.home__banner-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home__banner-container-info{
+    max-width: 31.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.home__banner-titulo{
+    color: #FFF;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    font-family: "Baloo 2";
+    font-size: 4rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 4.5rem;
+    margin: 0;
+}
+
+.home__banner-descricao{
+    color: #FFF;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.home__banner-botao{
+    max-width: 10.375rem;
+}
+
+.home__banner-imagem{
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+
+.home__banner-divisor-amarelo{
+    height: 5rem;
+    align-self: stretch;
+    background: var(--yellow-700);
+}
+
+.home__oquee{
+    padding: 11.125rem 0;
+    position: relative;
+}
+
+.home__oquee-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6.25rem;
+}
+
+.home__oquee-titulo{
+    color: black;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.home__oquee-container-texto{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 9rem;
+}
+
+.home__oquee-logo{
+    width: 22.9375rem;
+}
+
+.home__oquee-texto{
+    color: #262626;
+    text-align: justify;
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.home__como-usar{
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.home__como-usar-titulo{
+    z-index: 2;
+    position: absolute;
+    top: 8rem;
+    color: #FFF;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.home__como-usar-organizador,
+.home__como-usar-prestador{
+    padding: 14.6875rem 8rem 8rem;
+    width: 100%;
+    display: flex;
+}
+
+.home__como-usar-organizador{
+    justify-content: flex-end;
+    background-color: var(--purple-800);
+}
+
+.home__como-usar-prestador{
+    background-color: var(--yellow-800);
+    justify-content: flex-start;
+}
+
+.home__como-usar-overlay{
+    position: relative;
+}
+
+.home__como-usar-organizador::before,
+.home__como-usar-prestador::before,
+.home__como-usar-overlay::after,
+.home__como-usar-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.home__como-usar-organizador::before {
+    background: url(../../assets/fundo-home-como-usar-organizador.png);
+    opacity: 0.2;
+    background-size: 50%;
+}
+
+.home__como-usar-prestador::before {
+    background: url(../../assets/fundo-home-como-usar-prestador.png);
+    opacity: 0.2;
+    background-size: 50%;
+}
+
+.home__como-usar-overlay::before {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.home__como-usar-overlay::after {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.home__como-usar-overlay > *{
+    position: relative;
+    z-index: 2;
+}
+
+.home__como-usar-card{
+    max-width: 29rem;
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.home__como-usar-card--organizador{
+    background-color: var(--purple-800);
+}
+
+.home__como-usar-card--prestador{
+    background-color: var(--yellow-800);
+}
+
+.home__como-usar-card-titulo{
+    color: white;
+    text-align: center;
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 2.25;
+    margin: 0;
+}
+
+.home__como-usar-container-texto{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.home__como-usar-card-texto{
+    color: #FFF;
+    text-align: justify;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.home__como-usar-frase-container{
+    padding: 0 2rem;
+    display: flex;
+    gap: .5rem;
+}
+
+.home__como-usar-frase-detalhe{
+    width: 6px;
+    height: auto;
+    display: block;
+}
+
+.home__como-usar-frase-detalhe--organizador{
+    background: var(--purple-900);
+}
+
+.home__como-usar-frase-detalhe--prestador{
+    background: var(--yellow-900);
+}
+
+.home__como-usar-frase{
+    color: #FFF;
+    text-align: justify;
+    font-size: .875rem;
+    font-style: italic;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+@media screen and (max-width: 700px){
+    .home__cabecalho-container-logo{
+        max-width: 9.0625rem;
+    }
+}

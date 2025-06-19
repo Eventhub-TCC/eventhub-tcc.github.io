@@ -176,9 +176,9 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
   }
 
   useEffect(() => {
-    if(servicoEditado.cep.length===8) 
+    if(servicoEditado.cep?.length===8) 
       buscarCep(servicoEditado.cep)
-    if(servicoEditado.cep.length===0) 
+    if(servicoEditado.cep?.length===0) 
       setErroCepInvalido(false)
     else
       setTravado(false)

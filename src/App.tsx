@@ -27,12 +27,14 @@ import ServicoMarketplace from './paginas/ServicoMarketplace/ServicoMarketplace'
 import PoliticasTermos from './paginas/PoliticasTermos/PoliticasTermos'
 import FAQ from './paginas/FAQ/FAQ'
 import PedidosPrestador from './paginas/PedidosPrestador/PedidosPrestador'
+import Home from './paginas/Home/Home'
 
 const App = () => {
   return (
     <HelmetProvider>
       <BrowserRouter>
         <Routes>
+          <Route index element={<Home />} />
           <Route element={<UsuarioLayout />}>
             <Route path='login' element={<Login />}/>
             <Route path='cadastro' element={<CadastroUsuario />}/>
