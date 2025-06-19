@@ -8,6 +8,7 @@ import api from "../../axios";
 import Input from "../../componentes/Input/Input";
 import Botao from "../../componentes/Botao/Botao";
 import { Helmet } from "react-helmet-async";
+import QuickGuide from "../../componentes/QuickGuide/QuickGuide";
 
 interface Evento {
   idEvento: number;
@@ -58,7 +59,7 @@ const MeusEventos = () => {
   const [statusSelecionado, setStatusSelecionado] = useState("");
   const [eventosFiltrados, setEventosFiltrados] = useState<Evento[]>([]);
   const [buscaEvento, setBuscaEvento] = useState("");
-
+  const [exibirGuia, setExibirGuia] = useState(false);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
   const formatarDados = {
@@ -168,6 +169,7 @@ const MeusEventos = () => {
       setEventos(response.data);
     } catch (error) {
       console.error("Erro ao obter eventos", error);
+      setExibirGuia(true);
     }
   };
 
@@ -607,6 +609,48 @@ const MeusEventos = () => {
                   fill="#8C5DFF"
                 />
               </FeedbackFormulario>
+                {exibirGuia && (
+                <QuickGuide
+                    passos={[
+                    {
+                        titulo: "Bem-vindo ao EventHub!",
+                        detalhe: "Aqui você pode contratar serviços e organizar seu evento de forma prática.",
+                        imagem: "/QuickGuide/bemvindo.png",
+                    },
+                    {
+                        titulo: "Criar um novo evento",
+                        detalhe: "Clique em 'Eventos' na barra lateral e depois em 'Criar Evento' para começar.",
+                        imagem:  "/QuickGuide/criar-evento.png",
+                    },
+                    {
+                    titulo: "Gerando Convites",
+                    detalhe: "Após criar seu evento, vá para aba 'Convites' e clique em 'Gerar Convite' após gerar um convite que você poderá enviar a um convidado seu, não esqueça de definir o número de acompanhantes que este convite irá aceitar!",
+                    imagem: "/QuickGuide/convidar.png"
+                    },
+                    {
+                    titulo:"Confirmando as Presenças",
+                    detalhe: "Quando seus convidados preencherem os convites enviados, você deverá acessar o seu evento, e na aba 'Convidados' clicar em 'Confirmar Presenças', assim, serão exibidos os dados dos convites preenchidos, sinta-se livre para aceitar e recusar quem desejar. Você poderá baixar a lista de convidados clicando em 'Imprimir Lista'! ",
+                    imagem: "/QuickGuide/convidados.png"
+                    },
+                    {
+                        titulo: "Encontrar serviços e produtos",
+                        detalhe: "Após preparar seu evento e aceitar seus convidados, vá para o MarketPlace e escolha os melhores serviços e produtos disponíveis.",
+                        imagem: "/QuickGuide/MarketPlace.png",
+                    },
+                    {
+                        titulo: "Contrate serviços e produtos",
+                        detalhe: "Encontrado serviços e produtos que atendam sua necessidade, você pode contratar individualmente ou montar um carrinho e contratar vários serviços e produtos de uma vez.",
+                        imagem: "/QuickGuide/Comprando.png",
+                    },
+                    {
+                        titulo: "Acompanhe seus pedidos",
+                        detalhe: "Você pode acompanhar os pedidos de cada evento na aba 'Pedidos'.",
+                        imagem: "/QuickGuide/Pedidos.png",
+                    }
+                    ]}
+                    onClose={() => setExibirGuia(false)}
+                    />
+                    )}
             </div>
           )}
         </div>

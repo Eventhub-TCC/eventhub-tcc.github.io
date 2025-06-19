@@ -13,6 +13,14 @@ import Seta from "../../componentes/Seta/Seta";
 import Input from "../../componentes/Input/Input";
 
 interface ItemCarrinho {
+  CEP?: string;
+  bairro?: string;
+  cidade?: string;
+  complemento?: string;
+  estado?: string;
+  endereco?: string;
+  numero?: string;
+  tipoServico?: string;
   idServico: string;
   nomeItem: string;
   valorUnitario: number;
@@ -42,6 +50,16 @@ const [exibirInstrucoes, setExibirInstrucoes] = useState(() =>
   const [localEntrega, setLocalEntrega] = useState('')
   const [dataEntrega, setDataEntrega] = useState<Date | null>(new Date())
   const hoje = new Date();
+  const [CEP, setCEP] = useState('')
+  const [numero, setNumero] = useState('')
+  const [bairro, setBairro] = useState('')
+  const [cidade, setCidade] = useState('')
+  const [complemento, setComplemento] = useState('')
+  const [estado, setEstado] = useState('')
+  const [endereco, setEndereco] = useState('')
+  const [modalAtualizarEvento, setModalAtualizarEvento] = useState(false)
+  const [eventoOk, setEventoOk] = useState(false)
+  const [locacaoDeEspaco, setLocacaoDeEspaco] = useState(false);
     
 
 
@@ -67,6 +85,17 @@ const [exibirInstrucoes, setExibirInstrucoes] = useState(() =>
           if (carrinho) {
             const carrinhoDesconto =await Promise.all (JSON.parse(carrinho).map(async(item: ItemCarrinho) => {
               const servico = (await api.get(`users/erro/services/${item.idServico}`)).data;
+              console.log(item);
+              if (item.tipoServico === 'Locação de Espaço') {
+                setBairro(item.bairro || '' );
+                setCidade(item.cidade || '' );
+                setComplemento(item.complemento || '' );
+                setEstado(item.estado || '' );
+                setEndereco(item.endereco || '' );
+                setCEP(item.CEP || '' );
+                setNumero(item.numero || '' );
+                setLocacaoDeEspaco(true);
+              }
               if (servico){
                 item.valorPromo = servico.valorPromoServico;
                 return item
@@ -147,12 +176,45 @@ const formatarPreco = (valor: number) => {
       });
       console.log("Compra finalizada com sucesso");
       setModalFinalizar(false);
-    limparCarrinho();
-    setPedidoFinalizado(true);
+      limparCarrinho();
+      setPedidoFinalizado(true);
+      console.log(locacaoDeEspaco)
+      if (locacaoDeEspaco) {
+        setModalAtualizarEvento(true);
+      }
     } catch (error) {
       console.error("Erro ao finalizar compra:", error);
     }
   };
+
+  const atualizarEvento = async () => {
+    try {
+        const eventoSelecionado = eventos.find((ev) => ev.id == evento);
+        if (!eventoSelecionado) {
+            console.error("Evento não encontrado");
+            return;
+        }
+
+        await api.put(`users/events/${evento}`, {
+            enderecoLocal: endereco,
+            numeroLocal: numero,
+            bairroLocal: bairro,
+            cidadeLocal: cidade,
+            ufLocal: estado,
+            cepLocal: CEP,
+            complementoLocal: complemento 
+        });
+        console.log("Evento atualizado com sucesso");
+        setModalAtualizarEvento(false);
+        setEventoOk(true);
+        setTimeout(() => {
+            setEventoOk(false);
+        }, 10000);
+        }
+        catch (error) {
+            console.error("Erro ao atualizar evento:", error);
+        }
+    }
 
   return (
     <>
@@ -555,7 +617,20 @@ const formatarPreco = (valor: number) => {
             </div>
         </div>
 
-
+      {
+        modalAtualizarEvento ? (
+          <Modal
+            titulo='Atualizar Evento'
+            textoBotao='Atualizar'
+            enviaModal={() => { setModalAtualizarEvento(false) }}
+            funcaoSalvar={() => { atualizarEvento() }}
+        >
+            <div className='d-flex flex-column gap-3'>
+                <p>Você finalizou uma compra de um serviço de locação de espaço. Gostaria de atualizar o endereço do seu evento?</p>
+            </div>
+        </Modal>
+        ) : ''
+      }
           
 
         </div>
