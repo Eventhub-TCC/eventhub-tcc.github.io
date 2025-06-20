@@ -434,6 +434,14 @@
         flex-direction: column;
         gap: 12px;
     }
+
+    .modal-anunciar-servico {
+        max-width: 100%;
+    }
+
+    .modal-anunciar-servico__input-data{
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 575px){
@@ -456,6 +464,10 @@
     .aba-evento{
         font-size: 14px;
     }
+
+    .modal-anunciar-servico__input-data input{
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 380px){
@@ -475,9 +487,5 @@
     .modal-anunciar-servico{
         width: 90%;
         align-items: center;
-    }
-
-    .modal-anunciar-servico__input-data input{
-        width: 100%;
     }
 }

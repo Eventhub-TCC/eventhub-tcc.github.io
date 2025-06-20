@@ -369,6 +369,11 @@
   .botoes-alterar-perfil-edicao{
     justify-content: center;
   }
+
+  .modal-completar-cadastro--nome-cnpj{
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 @media screen and (max-width: 500px){
@@ -394,4 +399,6 @@
   .botoes-alterar-perfil-edicao{
     gap: 1rem;
   }
+
+
 }

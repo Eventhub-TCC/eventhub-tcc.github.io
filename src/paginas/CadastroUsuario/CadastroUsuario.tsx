@@ -1,5 +1,5 @@
 import "./CadastroUsuario.css"
-import { ChangeEvent, FormEvent, ReactElement, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactElement, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import Botao from '../../componentes/Botao/Botao'
 import Formulario from '../../componentes/Formulario/Formulario'
@@ -56,6 +56,14 @@ const CadastroUsuario = () => {
     const [ qtdPassos, setQtdPassos ] = useState(0);
     const [ termosAceitos, setTermosAceitos] = useState(false);
     const [ lido, setLido] = useState(false)
+    const [ mobile, setMobile] = useState(false)
+
+      useEffect(() => {
+        const verificarMobile = () => {
+        setMobile(window.innerWidth <= 768); // ou 600, 1024 etc.
+        };
+        verificarMobile()
+      }, []);
 
     const [ erros, setErros ] = useState<Erro[]>([
         {ativo: false, tipo: 'funcao', mensagem: 'Selecione pelo menos uma função'},
@@ -735,7 +743,7 @@ const CadastroUsuario = () => {
                                         <span>Organizar eventos</span>
                                         {!organizador &&
                                             <div className="cadastro-usuario__tooltip">
-                                                <ToolTip mensagem='Você deseja organizar festas, shows, casamentos ou outros eventos? Essa opção de cadastro vai permitir que você crie e gerencie seus eventos aqui, distribua convites, gere listas de presenças e conecte-se em um marketplace com os melhores prestadores de serviços e fornecedores!'/>
+                                                <ToolTip direcao={mobile ? 'esquerda' : 'cima'} mensagem='Você deseja organizar festas, shows, casamentos ou outros eventos? Essa opção de cadastro vai permitir que você crie e gerencie seus eventos aqui, distribua convites, gere listas de presenças e conecte-se em um marketplace com os melhores prestadores de serviços e fornecedores!'/>
                                             </div>
                                         }
                                     </div>
@@ -754,7 +762,7 @@ const CadastroUsuario = () => {
                                         <span>Prestar serviços</span>
                                         {!prestador &&
                                             <div className="cadastro-usuario__tooltip">
-                                                <ToolTip mensagem='Você deseja oferecer serviços ou produtos para eventos, como por exemplo, buffet, som, decoração, fotografia ou entrega de doces, salgados ou outros produtos? Essa opção de cadastro vai permitir que você anuncie seus serviços ou produtos para ser encontrado por organizadores que precisam do seu trabalho!'/>
+                                                <ToolTip direcao={mobile ? 'esquerda' : 'cima'} mensagem='Você deseja oferecer serviços ou produtos para eventos, como por exemplo, buffet, som, decoração, fotografia ou entrega de doces, salgados ou outros produtos? Essa opção de cadastro vai permitir que você anuncie seus serviços ou produtos para ser encontrado por organizadores que precisam do seu trabalho!'/>
                                             </div>
                                         }
                                     </div>
