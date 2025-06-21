@@ -5,14 +5,25 @@
     background-color: var(--yellow-700);
 }
 
+.home__cabecalho-scroll{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background-color: var(--purple-700);
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.40);
+}
+
 .home__cabecalho-container{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.home__cabecalho-link{
-    display: inline-block;
+.home__cabecalho-botao{
+    border: none;
+    background-color: transparent;
 }
 
 .home__cabecalho-container-logo{
@@ -30,10 +41,26 @@
     gap: 1.5rem;
 }
 
-.home__cabecalho-secoes a{
+.home__cabecalho-secoes button{
     color: white;
     text-decoration: none;
+    font-size: 1rem;
     font-weight: 600;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+.home__cabecalho-secoes button:hover{
+    text-decoration: underline;
+    text-decoration-color: var(--purple-700);
+    text-decoration-style: wavy;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+.home__cabecalho-scroll .home__cabecalho-secoes button:hover{
+    text-decoration-color: var(--yellow-700);
 }
 
 .home__cabecalho-botoes{
@@ -41,6 +68,15 @@
     gap: 1rem;
     justify-content: center;
     align-items: center;
+}
+
+.home__cabecalho-scroll .home__cabecalho-botoes button{
+    border: 1px solid white;
+    transition: border 0.1s;
+}
+
+.home__cabecalho-scroll .home__cabecalho-botoes button:hover{
+    border: 1px solid var(--purple-700);
 }
 
 .home__banner{
@@ -52,6 +88,7 @@
 .home__banner-divisor-cabecalho{
     background: url(../../assets/divisor-amarelo-home.svg);
     background-size: contain;
+    background-position: center;
     height: 3.125rem;
     width: 100%;
     position: absolute;
@@ -118,7 +155,7 @@
 }
 
 .home__oquee{
-    padding: 11.125rem 0;
+    padding: 11.125rem 0 14.625rem;
     position: relative;
 }
 
@@ -166,6 +203,38 @@
     justify-content: center;
 }
 
+.home__como-usar-divisor{
+    background-repeat: repeat-x;
+    background-size: contain;
+    height: 3.125rem;
+    position: absolute;
+    width: 50%;
+}
+
+.home__como-usar-divisor--baixo{
+    bottom: 0;
+}
+
+.home__como-usar-divisor--cima{
+    top: 0;
+    transform: rotate(180deg);
+}
+
+.home__como-usar-divisor--baixo.home__como-usar-divisor--organizador,
+.home__como-usar-divisor--cima.home__como-usar-divisor--prestador{
+    background-position: right;
+}
+
+.home__como-usar-divisor--organizador{
+    background: url(../../assets/divisor-roxo-como-usar-home.svg);
+    left: 0;
+}
+
+.home__como-usar-divisor--prestador{
+    background: url(../../assets/divisor-amarelo-como-usar-home.svg);
+    right: 0;
+}
+
 .home__como-usar-titulo{
     z-index: 2;
     position: absolute;
@@ -190,7 +259,7 @@
 }
 
 .home__como-usar-prestador{
-    background-color: var(--yellow-800);
+    background-color: var(--yellow-700);
     justify-content: flex-start;
 }
 
@@ -211,20 +280,15 @@
 }
 
 .home__como-usar-organizador::before {
-    background: url(../../assets/fundo-home-como-usar-organizador.png);
+    background: rgba(0, 0, 0, 0.5) url(../../assets/fundo-home-como-usar-organizador.png);
     opacity: 0.2;
     background-size: 50%;
 }
 
 .home__como-usar-prestador::before {
-    background: url(../../assets/fundo-home-como-usar-prestador.png);
+    background: rgba(0, 0, 0, 0.5) url(../../assets/fundo-home-como-usar-prestador.png);
     opacity: 0.2;
     background-size: 50%;
-}
-
-.home__como-usar-overlay::before {
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1;
 }
 
 .home__como-usar-overlay::after {
@@ -278,6 +342,7 @@
     color: #FFF;
     text-align: justify;
     font-style: normal;
+    font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
     margin: 0;
@@ -311,6 +376,343 @@
     font-weight: 600;
     line-height: normal;
     margin: 0;
+}
+
+.home__funcionalidades{
+    position: relative;
+}
+
+.home__funcionalidades-organizador{
+    padding: 8rem 0 2rem;
+    background: url(../../assets/fundo-home-funcionalidades-organizador.png);
+    background-size: 20%;
+    background-position: center;
+}
+
+.home__funcionalidades-prestador{
+    padding: 6.25rem 0 7.56rem;
+    background: url(../../assets/fundo-home-funcionalidades-prestador.png);
+    background-size: 20%;
+    background-position: bottom;
+    position: relative;
+}
+
+.home__funcionalidades-titulo{
+    color: #FFF;
+    text-align: center;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 6.25rem;
+}
+
+.home__funcionalidades-container{
+    display: flex;
+    flex-direction: column;
+    gap: 6.25rem;
+}
+
+.home__funcionalidades-container-cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__funcionalidades-card{
+    max-width: 22.625rem;
+    border-radius: 1rem;
+    border-width: 3px;
+    border-style: solid;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.3);
+    padding: 2rem 1rem;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+}
+
+.home__funcionalidades-card--organizador{
+    border-color: var(--purple-900);
+    background-color: var(--purple-800);
+}
+
+.home__funcionalidades-card--prestador{
+    border-color: var(--yellow-900);
+    background-color: var(--yellow-800);
+}
+
+.home__funcionalidades-card-titulo{
+    color: #FFF;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.home__funcionalidades-card-texto{
+    color: #FFF;
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.home__funcionalidades-divisor{
+    background: url(../../assets/divisor-funcionalidades-home.svg);
+    background-repeat: repeat-x;
+    background-size: contain;
+    background-position: bottom;
+    height: 107.04px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.home__chamada{
+    padding: 11.125rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.home__chamada-divisor{
+    background: url(../../assets/divisor-funcionalidades-baixo-home.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.home__chamada-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.home__chamada-titulo{
+    color: black;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.home__chamada-texto{
+    max-width: 46.3rem;
+    color: black;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.home__chamada-botao{
+    max-width: 10.375rem;
+}
+
+.home__rodape-divisor{
+    background: url(../../assets/divisor-rodape-home.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    transform: scaleX(1.5);
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.home__rodape-infos{
+    background-color: var(--purple-700);
+    padding: 3rem 0;
+}
+
+.home__rodape-infos-container{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.home__rodape-logo-links{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home__rodape-logo{
+    max-width: 16.125rem;
+}
+
+.home__rodape-logo img{
+    width: 100%;
+    display: block;
+}
+
+.home__rodape-links ul{
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.home__rodape-links ul li{
+    list-style-type: none;
+    color: white;
+}
+
+.home__rodape-links ul li:not(:first-child)::before {
+    content: "•";
+    color: white;
+    display: inline-block;
+    width: 1rem;
+    margin: 0 0.5em;
+    text-align: center;
+}
+
+.home__rodape-links ul li a{
+    color: white;
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-underline-position: from-font;
+    transition: text-decoration 0.3s ease-in-out;
+}
+
+.home__rodape-links ul li a:hover{
+    text-decoration-color: transparent;
+}
+
+.home__rodape-container-feito{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.home__rodape-feito-divisor{
+    width: 100%;
+    height: 1px;
+    background-color: white;
+    display: block;
+}
+
+.home__rodape-feito{
+    color: white;
+    text-align: center;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.home__rodape-feito-coracao{
+    color: #F43737;
+}
+
+.home__rodape-autores{
+    margin: 0 auto;
+}
+
+.home__rodape-autores ul{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 24px 0;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.home__rodape-autores ul li{
+    list-style-type: none;
+    color: white;
+    position: relative;
+    padding-left: 4rem;
+}
+
+.home__rodape-autores ul li:first-child{
+    padding-left: 0;
+}
+
+.home__rodape-autores ul li:not(:first-child)::before {
+    content: "•";
+    color: white;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    margin: 0 1.5rem;
+    text-align: center;
+}
+
+.home__rodape-autor-nome{
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.home__rodape-autores-links{
+    margin-top: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.home__rodape-autores-links a{
+    transition: transform 0.3s ease-in-out;
+}
+
+.home__rodape-autores-links a:hover{
+    transform: scale(1.1);
+}
+
+.home__rodape-autores-links a i{
+    font-size: 26px;
+    color: white;
+}
+
+.home__rodape-copy{
+    background-color: var(--purple-800);
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+.home__rodape-copy-texto{
+    margin: 0;
+    color: #FFF;
+    text-align: center;
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+@media screen and (min-width: 990px) and (max-width: 1400px){
+    .home__rodape-autores ul{
+        max-width: 900px;
+    }
+
+    .home__rodape-autores ul li:nth-child(4){
+        padding-left: 0;
+    }
+
+    .home__rodape-autores ul li:nth-child(4):before {
+        content: "";
+    }
 }
 
 @media screen and (max-width: 700px){
