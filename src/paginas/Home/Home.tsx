@@ -12,7 +12,11 @@ import { useEffect, useRef, useState } from 'react';
 
 const Home = () => {
     const [cabecalhoFixo, setCabecalhoFixo] = useState(false);
+    const [menuAberto, setMenuAberto] = useState(false);
+    const [corBarraNavegador, setCorBarraNavegador] = useState('#F3C623');
+    const [alturaCabecalho, setAlturaCabecalho] = useState(0);
     const navigate = useNavigate();
+    const cabecalhoRef = useRef<HTMLDivElement>(null);
     const secoesRef: any = {
         inicio: useRef<HTMLElement>(null),
         oqueE: useRef<HTMLElement>(null),
@@ -21,18 +25,37 @@ const Home = () => {
     }
 
     useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+            setAlturaCabecalho(cabecalhoRef.current!.offsetHeight);
+        });
+
+        if (cabecalhoRef.current) {
+            resizeObserver.observe(cabecalhoRef.current);
+        }
+
         const scroll = () => {
             if (secoesRef.oqueE.current) {
                 const top = secoesRef.oqueE.current.getBoundingClientRect().top;
-                setCabecalhoFixo(top <= 0.5);
+                if(top <= 0.5) {
+                    setCabecalhoFixo(true);
+                    setCorBarraNavegador('#8C5DFF');
+                }
+                else {
+                    setCabecalhoFixo(false);
+                    setCorBarraNavegador('#F3C623');
+                }
             }
         };
 
         window.addEventListener("scroll", scroll);
-        return () => window.removeEventListener("scroll", scroll);
+        return () => {
+            window.removeEventListener("scroll", scroll);
+            resizeObserver.disconnect();
+        }
     }, []);
 
     const rolarParaSecao = (secao: string) => {
+        setMenuAberto(false);
         secoesRef[secao]?.current?.scrollIntoView({ behavior: "smooth" });
     }
 
@@ -40,9 +63,12 @@ const Home = () => {
         <>
             <Helmet>
                 <title>EventHub - Transforme seus eventos em experiências inesquecíveis!</title>
+                <meta name="theme-color" content={corBarraNavegador} />
+                <meta name="apple-mobile-web-app-status-bar-style" content={corBarraNavegador} />
+                <meta name="msapplication-navbutton-color" content={corBarraNavegador} />
             </Helmet>
-            {cabecalhoFixo && <div style={{ height: 88.41 }} ref={secoesRef.inicio}></div>} 
-            <header className={`home__cabecalho ${cabecalhoFixo ? 'home__cabecalho-scroll' : ''}`} ref={secoesRef.inicio}>
+            {cabecalhoFixo && <div style={{ height: alturaCabecalho }} ref={secoesRef.inicio}></div>} 
+            <header className={`home__cabecalho ${cabecalhoFixo ? 'home__cabecalho-scroll' : ''}`} ref={cabecalhoRef}>
                 <div className='container'>
                     <div className='home__cabecalho-container'>
                         <button className='home__cabecalho-botao' type='button' onClick={() => rolarParaSecao('inicio')}>
@@ -50,25 +76,46 @@ const Home = () => {
                                 <img src={logo} alt="Logotipo do EventHub" className='home__cabecalho-logo'/>
                             </div>
                         </button>
-                        <div className='home__cabecalho-secoes'>
+                        <div className={`home__cabecalho-secoes ${!menuAberto ? 'home__cabecalho-secoes--mobile-fechado' : ''}`}>
                             <button type='button' onClick={() => rolarParaSecao('inicio')}>Início</button>
                             <button type='button' onClick={() => rolarParaSecao('oqueE')}>O que é?</button>
                             <button type='button' onClick={() => rolarParaSecao('comoUsar')}>Como usar?</button>
                             <button type='button' onClick={() => rolarParaSecao('funcionalidades')}>Funcionalidades</button>
+                            <div className='home__cabecalho-botoes-acoes-mobile'>
+                                <div>
+                                    <Botao
+                                        texto="Criar conta"
+                                        funcao={() => navigate('/cadastro')}
+                                    />
+                                </div>
+                                <div>
+                                    <Botao
+                                        texto="Entrar"
+                                        funcao={() => navigate('/login')}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div className='home__cabecalho-botoes'>
-                            <div>
-                                <Botao
-                                    texto="Criar conta"
-                                    funcao={() => navigate('/cadastro')}
-                                />
+                            <div className="home__cabecalho-botoes-acoes-pc">
+                                <div>
+                                    <Botao
+                                        texto="Criar conta"
+                                        funcao={() => navigate('/cadastro')}
+                                    />
+                                </div>
+                                <div>
+                                    <Botao
+                                        texto="Entrar"
+                                        funcao={() => navigate('/login')}
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <Botao
-                                    texto="Entrar"
-                                    funcao={() => navigate('/login')}
-                                />
-                            </div>
+                            <button type='button' className={`home__cabecalho-menu-mobile ${menuAberto ? 'home__cabecalho-menu-mobile--ativo' : ''}`} onClick={() => setMenuAberto(!menuAberto)}>
+                                <div className='home__cabecalho-menu-linha1'></div>
+                                <div className='home__cabecalho-menu-linha2'></div>
+                                <div className='home__cabecalho-menu-linha3'></div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -92,7 +139,7 @@ const Home = () => {
                                     />
                                 </div>
                             </div>
-                            <div>
+                            <div className='home__banner-container-imagem'>
                                 <img src={banner} alt="Organizadora de eventos e prestador de serviços conversando em frente à uma mesa com um bolo de aniversário" className='home__banner-imagem'/>
                             </div>
                         </div>
@@ -106,8 +153,10 @@ const Home = () => {
                         <div className='home__oquee-container'>
                             <h2 className='home__oquee-titulo'>O que é o EventHub?</h2>
                             <div className='home__oquee-container-texto'>
-                                <img src={logoOrganizador} alt="Logotipo do EventHub roxo" className='home__oquee-logo'/>
-                                <div>
+                                <div className='home__oquee-container-logo'>
+                                    <img src={logoOrganizador} alt="Logotipo do EventHub roxo" className='home__oquee-logo'/>
+                                </div>
+                                <div className='home__oquee-textos'>
                                     <p className='home__oquee-texto'>
                                         O EventHub é uma plataforma criada para facilitar a vida de quem deseja organizar momentos especiais com amigos e família.
                                     </p>
@@ -123,7 +172,7 @@ const Home = () => {
                                 </div>
                             </div>
                             <div className='home__oquee-container-texto'>
-                                <div>
+                                <div className='home__oquee-textos'>
                                     <p className='home__oquee-texto'>
                                         Além disso, o EventHub também conecta prestadores de serviço — como quem faz doces, tira fotos, aluga equipamentos ou decora festas — com quem está organizando. Tudo em um único lugar, de forma integrada.
                                     </p>
@@ -131,64 +180,82 @@ const Home = () => {
                                         Nosso propósito é unir pessoas, ideias e serviços em torno de experiências que realmente importam. Seja para celebrar ou apenas reunir quem você gosta, o EventHub está aqui para ajudar.
                                     </p>
                                 </div>
-                                <img src={logoPrestador} alt="Logotipo do EventHub amarelo" className='home__oquee-logo'/>
+                                <div className='home__oquee-container-logo'>
+                                    <img src={logoPrestador} alt="Logotipo do EventHub amarelo" className='home__oquee-logo'/>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <div className='home__como-usar-divisor home__como-usar-divisor--organizador home__como-usar-divisor--baixo'></div>
-                        <div className='home__como-usar-divisor home__como-usar-divisor--prestador home__como-usar-divisor--baixo'></div>
+                        <div className='home__como-usar-divisor--pc'>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--organizador home__como-usar-divisor--baixo'></div>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--prestador home__como-usar-divisor--baixo'></div>
+                        </div>
+                        <div className='home__como-usar-divisor--mobile'>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--organizador home__como-usar-divisor--baixo'></div>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--organizador home__como-usar-divisor--baixo'></div>
+                        </div>
                     </div>
                 </section>
                 <section className='home__como-usar' ref={secoesRef.comoUsar}>
                     <h2 className='home__como-usar-titulo'>Como usar a plataforma?</h2>
                     <div className='home__como-usar-organizador home__como-usar-overlay'>
-                        <div className='home__como-usar-card home__como-usar-card--organizador'>
-                            <img src={desenhoOrganizador} alt="Desenho de uma mulher organizadora de eventos" />
-                            <h3 className='home__como-usar-card-titulo'>Organizador de eventos</h3>
-                            <div className='home__como-usar-container-texto'>
-                                <p className='home__como-usar-card-texto'>
-                                    Você não precisa ser um profissional para organizar uma festa.
-                                </p>
-                                <p className='home__como-usar-card-texto'>
-                                    Se vai fazer um aniversário, um chá de bebê, um churrasco ou qualquer comemoração, você já é um organizador!
-                                </p>
-                                <p className='home__como-usar-card-texto'>
-                                    No EventHub, qualquer pessoa pode criar seu evento, enviar convites, acompanhar os confirmados e contratar serviços com facilidade.
-                                </p>
-                            </div>
-                            <div className='home__como-usar-frase-container'>
-                                <span className='home__como-usar-frase-detalhe home__como-usar-frase-detalhe--organizador'></span>
-                                <p className='home__como-usar-frase'>É simples, acessível e feito para todos.</p>
+                        <div className="home__como-usar-container">
+                            <div className='home__como-usar-card home__como-usar-card--organizador'>
+                                <img src={desenhoOrganizador} alt="Desenho de uma mulher organizadora de eventos" />
+                                <h3 className='home__como-usar-card-titulo'>Organizador de eventos</h3>
+                                <div className='home__como-usar-container-texto'>
+                                    <p className='home__como-usar-card-texto'>
+                                        Você não precisa ser um profissional para organizar uma festa.
+                                    </p>
+                                    <p className='home__como-usar-card-texto'>
+                                        Se vai fazer um aniversário, um chá de bebê, um churrasco ou qualquer comemoração, você já é um organizador!
+                                    </p>
+                                    <p className='home__como-usar-card-texto'>
+                                        No EventHub, qualquer pessoa pode criar seu evento, enviar convites, acompanhar os confirmados e contratar serviços com facilidade.
+                                    </p>
+                                </div>
+                                <div className='home__como-usar-frase-container'>
+                                    <span className='home__como-usar-frase-detalhe home__como-usar-frase-detalhe--organizador'></span>
+                                    <p className='home__como-usar-frase'>É simples, acessível e feito para todos.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className='home__como-usar-prestador home__como-usar-overlay'>
-                        <div className='home__como-usar-card home__como-usar-card--prestador'>
-                            <img src={desenhoPrestador} alt="Desenho de uma mulher organizadora de eventos" />
-                            <h3 className='home__como-usar-card-titulo'>Prestador de serviços</h3>
-                            <div className='home__como-usar-container-texto'>
-                                <p className='home__como-usar-card-texto'>
-                                    Você faz doces, tira fotos, aluga itens para festa, decora, cozinha ou ajuda de alguma forma em eventos?
-                                </p>
-                                <p className='home__como-usar-card-texto'>
-                                    Então você pode ser um prestador de serviços no EventHub!
-                                </p>
-                                <p className='home__como-usar-card-texto'>
-                                    Anuncie o que você oferece e seja encontrado por organizadores que precisam exatamente disso.
-                                </p>
-                            </div>
-                            <div className='home__como-usar-frase-container'>
-                                <span className='home__como-usar-frase-detalhe home__como-usar-frase-detalhe--prestador'></span>
-                                <p className='home__como-usar-frase'>Não importa o tamanho do serviço, o que importa é fazer parte.</p>
+                        <div className="home__como-usar-container">
+                            <div className='home__como-usar-card home__como-usar-card--prestador'>
+                                <img src={desenhoPrestador} alt="Desenho de uma mulher organizadora de eventos" />
+                                <h3 className='home__como-usar-card-titulo'>Prestador de serviços</h3>
+                                <div className='home__como-usar-container-texto'>
+                                    <p className='home__como-usar-card-texto'>
+                                        Você faz doces, tira fotos, aluga itens para festa, decora, cozinha ou ajuda de alguma forma em eventos?
+                                    </p>
+                                    <p className='home__como-usar-card-texto'>
+                                        Então você pode ser um prestador de serviços no EventHub!
+                                    </p>
+                                    <p className='home__como-usar-card-texto'>
+                                        Anuncie o que você oferece e seja encontrado por organizadores que precisam exatamente disso.
+                                    </p>
+                                </div>
+                                <div className='home__como-usar-frase-container'>
+                                    <span className='home__como-usar-frase-detalhe home__como-usar-frase-detalhe--prestador'></span>
+                                    <p className='home__como-usar-frase'>Não importa o tamanho do serviço, o que importa é fazer parte.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
                 <section className='home__funcionalidades' ref={secoesRef.funcionalidades}>
                     <div>
-                        <div className='home__como-usar-divisor home__como-usar-divisor--organizador home__como-usar-divisor--cima'></div>
-                        <div className='home__como-usar-divisor home__como-usar-divisor--prestador home__como-usar-divisor--cima'></div>
+                        <div className='home__como-usar-divisor--pc'>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--organizador home__como-usar-divisor--cima'></div>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--prestador home__como-usar-divisor--cima'></div>
+                        </div>
+                        <div className='home__como-usar-divisor--mobile'>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--prestador home__como-usar-divisor--cima'></div>
+                            <div className='home__como-usar-divisor home__como-usar-divisor--prestador home__como-usar-divisor--cima'></div>
+                        </div>
                     </div>
                     <div className="home__funcionalidades-organizador">
                         <div className="container">
@@ -369,9 +436,6 @@ const Home = () => {
                                         <div>
                                             <span className='home__rodape-autor-nome'>Matheus Alves de Paula</span>
                                             <div className='home__rodape-autores-links'>
-                                                <a href="#" target='_blank' title='LinkedIn do Matheus Alves'>
-                                                    <i className="fa-brands fa-linkedin"></i>
-                                                </a>
                                                 <a href="https://github.com/mapa-mundo" target='_blank' title='GitHub do Matheus Alves'>
                                                     <i className="fa-brands fa-github"></i>
                                                 </a>
@@ -395,7 +459,7 @@ const Home = () => {
                                         <div>
                                             <span className='home__rodape-autor-nome'>Vinícius Camargo Giacomelli</span>
                                             <div className='home__rodape-autores-links'>
-                                                <a href="#" target='_blank' title='LinkedIn do Vinícius Camargo'>
+                                                <a href="https://www.linkedin.com/in/vinicius-giacomelli-56580832a" target='_blank' title='LinkedIn do Vinícius Camargo'>
                                                     <i className="fa-brands fa-linkedin"></i>
                                                 </a>
                                                 <a href="https://github.com/Sdxvi" target='_blank' title='GitHub do Vinícius Camargo'>
@@ -408,7 +472,7 @@ const Home = () => {
                                         <div>
                                             <span className='home__rodape-autor-nome'>Vitória Helen Veloso</span>
                                             <div className='home__rodape-autores-links'>
-                                                <a href="#" target='_blank' title='LinkedIn da Vitória Helen'>
+                                                <a href="https://www.linkedin.com/in/vitoria-helen-94a18024a" target='_blank' title='LinkedIn da Vitória Helen'>
                                                     <i className="fa-brands fa-linkedin"></i>
                                                 </a>
                                                 <a href="https://github.com/vitoriahelen-git" target='_blank' title='GitHub da Vitória Helen'>

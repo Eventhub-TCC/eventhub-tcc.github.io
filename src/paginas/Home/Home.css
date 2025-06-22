@@ -3,6 +3,7 @@
 .home__cabecalho{
     padding: .5rem 0;
     background-color: var(--yellow-700);
+    position: relative;
 }
 
 .home__cabecalho-scroll{
@@ -41,7 +42,7 @@
     gap: 1.5rem;
 }
 
-.home__cabecalho-secoes button{
+.home__cabecalho-secoes > button{
     color: white;
     text-decoration: none;
     font-size: 1rem;
@@ -51,7 +52,7 @@
     padding: 0;
 }
 
-.home__cabecalho-secoes button:hover{
+.home__cabecalho-secoes > button:hover{
     text-decoration: underline;
     text-decoration-color: var(--purple-700);
     text-decoration-style: wavy;
@@ -59,7 +60,7 @@
     text-underline-offset: 4px;
 }
 
-.home__cabecalho-scroll .home__cabecalho-secoes button:hover{
+.home__cabecalho-scroll .home__cabecalho-secoes > button:hover{
     text-decoration-color: var(--yellow-700);
 }
 
@@ -70,14 +71,43 @@
     align-items: center;
 }
 
-.home__cabecalho-scroll .home__cabecalho-botoes button{
+.home__cabecalho-botoes-acoes-pc{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__cabecalho-scroll .home__cabecalho-botoes div button,
+.home__cabecalho-scroll .home__cabecalho-secoes div button{
     border: 1px solid white;
     transition: border 0.1s;
 }
 
-.home__cabecalho-scroll .home__cabecalho-botoes button:hover{
+.home__cabecalho-scroll .home__cabecalho-botoes div button:hover{
     border: 1px solid var(--purple-700);
 }
+
+.home__cabecalho-botoes-acoes-mobile{
+    display: none;
+}
+
+.home__cabecalho-menu-mobile{
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    display: none;
+    padding: 0;
+}
+
+.home__cabecalho-menu-mobile div{
+    background-color: white;
+    width: 20px;
+    height: 2px;
+    margin: 4px;
+    transition: 0.3s ease-in;
+}
+
 
 .home__banner{
     background-color: var(--purple-800);
@@ -89,7 +119,7 @@
     background: url(../../assets/divisor-amarelo-home.svg);
     background-size: contain;
     background-position: center;
-    height: 3.125rem;
+    height: 50px;
     width: 100%;
     position: absolute;
 }
@@ -107,6 +137,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 }
 
 .home__banner-container-info{
@@ -142,10 +173,13 @@
     max-width: 10.375rem;
 }
 
+.home__banner-container-imagem{
+    max-width: 650px;
+}
+
 .home__banner-imagem{
     width: 100%;
     height: auto;
-    max-width: 100%;
 }
 
 .home__banner-divisor-amarelo{
@@ -176,14 +210,29 @@
 }
 
 .home__oquee-container-texto{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 9rem;
+    gap: 3rem;
+}
+
+.home__oquee-container-logo{
+    max-width: 22.9375rem;
+    flex-shrink: 0;
 }
 
 .home__oquee-logo{
-    width: 22.9375rem;
+    width: 100%;
+    display: block;
+}
+
+.home__oquee-textos{
+    max-width: 41.93rem;
+}
+
+.home__oquee-textos .home__oquee-texto:last-child{
+    margin-bottom: 0;
 }
 
 .home__oquee-texto{
@@ -203,10 +252,14 @@
     justify-content: center;
 }
 
+.home__como-usar-divisor--mobile{
+    display: none;
+}
+
 .home__como-usar-divisor{
     background-repeat: repeat-x;
     background-size: contain;
-    height: 3.125rem;
+    height: 50px;
     position: absolute;
     width: 50%;
 }
@@ -244,11 +297,13 @@
     font-style: normal;
     font-weight: 700;
     line-height: 1.5;
+    width: 100%;
+    text-align: center;
 }
 
 .home__como-usar-organizador,
 .home__como-usar-prestador{
-    padding: 14.6875rem 8rem 8rem;
+    padding: 14.6875rem 0 8rem;
     width: 100%;
     display: flex;
 }
@@ -301,9 +356,26 @@
     z-index: 2;
 }
 
+.home__como-usar-container{
+    width: 660px;
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home__como-usar-organizador .home__como-usar-container{
+    margin: 0 0 0 auto;
+}
+
+.home__como-usar-prestador .home__como-usar-container{
+    margin: 0 auto 0 0;
+}
+
 .home__como-usar-card{
     max-width: 29rem;
     padding: 3rem 2rem;
+    margin: 0 1rem;
     border-radius: 2rem;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.20);
     display: flex;
@@ -397,6 +469,10 @@
     position: relative;
 }
 
+.home__funcionalidades .container {
+  overflow-x: hidden;
+}
+
 .home__funcionalidades-titulo{
     color: #FFF;
     text-align: center;
@@ -464,10 +540,9 @@
     background: url(../../assets/divisor-funcionalidades-home.svg);
     background-repeat: repeat-x;
     background-size: contain;
-    background-position: bottom;
     height: 107.04px;
     position: absolute;
-    top: 0;
+    top: -1px;
     width: 100%;
 }
 
@@ -659,6 +734,7 @@
 }
 
 .home__rodape-autor-nome{
+    display: block;
     text-align: center;
     font-size: 1rem;
     font-weight: 400;
@@ -715,8 +791,353 @@
     }
 }
 
+@media screen and (max-width: 1399px){
+    .home__como-usar-container{
+        width: 570px;
+    }
+}
+
+@media screen and (max-width: 1199px){
+    .home__banner-container-info{
+        max-width: 25rem;
+        gap: 1rem;
+    }
+
+    .home__banner-titulo{
+        color: #FFF;
+        font-size: 2.7rem;
+        line-height: 1.3;
+    }
+
+    .home__banner-descricao{
+        font-size: 1rem;
+    }
+
+    .home__como-usar-container{
+        width: 480px;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .home__cabecalho-secoes{
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .home__cabecalho .home__cabecalho-secoes{
+        background-color: var(--yellow-700);
+    }
+
+    .home__cabecalho-scroll .home__cabecalho-secoes{
+        background-color: var(--purple-700);
+    }
+
+    .home__cabecalho-secoes--mobile-fechado{
+        display: none;
+    }
+
+    .home__cabecalho-secoes > button{
+        padding: 1rem 0;
+        width: 100%;
+        text-align: center;
+        border-top: 1px solid white;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .home__cabecalho-secoes > button:last-of-type{
+        border-bottom: 1px solid white;
+    }
+
+    .home__cabecalho-secoes > button:hover{
+        text-decoration: none;
+    }
+
+    .home__cabecalho .home__cabecalho-secoes > button:hover{
+        background-color: var(--yellow-800);
+    }
+
+    .home__cabecalho-scroll .home__cabecalho-secoes > button:hover{
+        background-color: var(--purple-800);
+    }
+
+    .home__cabecalho-menu-mobile{
+        display: block;
+    }
+
+    .home__cabecalho-menu-mobile--ativo .home__cabecalho-menu-linha1{
+        transform: rotate(-45deg) translate(-4px, 4px);
+    }
+
+    .home__cabecalho-menu-mobile--ativo .home__cabecalho-menu-linha2{
+        opacity: 0;
+    }
+
+    .home__cabecalho-menu-mobile--ativo .home__cabecalho-menu-linha3{
+        transform: rotate(45deg) translate(-4px, -5px);
+    }
+
+    .home__banner{
+        padding: 6rem 0 0;
+    }
+
+    .home__banner-divisor-cabecalho{
+        background-size: cover;
+        height: 55px;
+    }
+
+    .home__banner-container-info{
+        max-width: 100%;
+        align-items: center;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .home__banner-titulo{
+        font-size: 3rem;
+    }
+
+    .home__banner-container{
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .home__banner-container-imagem{
+        max-width: 450px;
+    }
+
+    .home__oquee-container{
+        gap: 3rem;
+    }
+
+    .home__oquee-container-texto{
+        flex-direction: column;
+    }
+
+    .home__oquee-container-texto:first-of-type{
+        flex-direction: column-reverse;
+    }
+
+    .home__como-usar{
+        flex-direction: column;
+    }
+
+    .home__como-usar-divisor--pc{
+        display: none;
+    }
+
+    .home__como-usar-divisor--mobile{
+        display: block;
+    }
+
+    .home__como-usar-divisor--mobile .home__como-usar-divisor--organizador:nth-child(2){
+        left: auto;
+        right: 0;
+        background-position: left;
+    }
+
+    .home__como-usar-divisor--mobile .home__como-usar-divisor--prestador:first-child{
+        left: 0;
+        right: auto;
+        background-position: left;
+    }
+
+    .home__como-usar-organizador{
+        padding: 14.6875rem 0 4rem;
+    }
+
+    .home__como-usar-prestador{
+        padding: 4rem 0 4rem;
+    }
+
+    .home__como-usar-organizador .home__como-usar-container,
+    .home__como-usar-prestador .home__como-usar-container{
+        margin: 0 auto;
+    }
+
+    .home__funcionalidades-prestador{
+        padding: 4.25rem 0 7.56rem;
+    }
+
+    .home__funcionalidades-container{
+        gap: 3rem;
+    }
+
+    .home__rodape-logo-links{
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .home__rodape-autores ul{
+        max-width: 575px;
+    }
+
+    .home__rodape-autores ul li:nth-child(3),
+    .home__rodape-autores ul li:nth-child(5){
+        padding-left: 0;
+    }
+
+    .home__rodape-autores ul li:nth-child(3):before,
+    .home__rodape-autores ul li:nth-child(5):before {
+        content: "";
+    }
+}
+
+@media screen and (max-width: 767px){
+    .home__banner-titulo{
+        font-size: 2.5rem;
+    }
+
+    .home__banner-container-imagem{
+        max-width: 350px;
+    }
+
+    .home__banner-divisor-amarelo{
+        height: 3rem;
+    }
+
+    .home__oquee-titulo,
+    .home__como-usar-titulo,
+    .home__funcionalidades-titulo{
+        font-size: 2.5rem;
+    }
+
+    .home__como-usar-card-titulo{
+        font-size: 1.6rem;
+        line-height: 1.5;
+    }
+}
+
 @media screen and (max-width: 700px){
     .home__cabecalho-container-logo{
         max-width: 9.0625rem;
+    }
+
+    .home__oquee-titulo,
+    .home__como-usar-titulo,
+    .home__funcionalidades-titulo{
+        font-size: 2rem;
+        padding: 0 .5rem;
+    }
+
+    .home__oquee-container-logo{
+        max-width: 15rem;
+        flex-shrink: 0;
+    }
+    
+    .home__como-usar-card{
+        margin: 0;
+    }
+
+    .home__como-usar-card img{
+        max-width: 100%;
+    }
+
+    .home__oquee-container-texto,
+    .home__chamada-container{
+        padding: 0 1rem;
+    }
+
+    .home__oquee-texto{
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 575px){
+    .home__cabecalho-botoes-acoes-mobile{
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 1rem;
+        flex-direction: column;
+        width: 100%;
+        padding: 2rem;
+        background-color: var(--purple-900);
+        border-bottom: 1px solid white;
+    }
+
+    .home__cabecalho-scroll .home__cabecalho-secoes div button{
+        border: none;
+    }
+
+    .home__cabecalho-botoes-acoes-pc{
+        display: none;
+    }
+
+    .home__banner-divisor-amarelo{
+        height: 2rem;
+    }
+
+    .home__oquee-titulo,
+    .home__como-usar-titulo,
+    .home__funcionalidades-titulo{
+        font-size: 1.8rem;
+    }
+
+    .home__funcionalidades-titulo{
+        margin-bottom: 3rem;
+    }
+
+    .home__como-usar-card-titulo{
+        font-size: 1.3rem;
+    }
+
+    .home__como-usar-container{
+        width: 100%;
+    }
+
+    .home__chamada-titulo{
+        font-size: 2rem;
+        line-height: 1.5;
+    }
+
+    .home__rodape-links ul li a{
+        font-size: 0.875rem;
+    }
+
+    .home__rodape-autores ul{
+        flex-direction: column;
+    }
+
+    .home__rodape-autores ul li{
+        padding-left: 0;
+    }
+
+    .home__rodape-autores ul li:not(:first-child)::before,
+    .home__rodape-autores ul li::before{
+        content: "";
+    }
+}
+
+@media screen and (max-width: 400px){
+    .home__banner-titulo{
+        font-size: 2rem;
+    }
+
+    .home__banner-descricao{
+        font-size: 0.875rem;
+    }
+
+    .home__banner-container-imagem{
+        max-width: 300px;
+    }
+    
+    .home__rodape-links ul{
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .home__rodape-links ul li:not(:first-child)::before {
+        content: "";
+        margin: 0;
+        width: 0;
     }
 }
