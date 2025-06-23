@@ -5,6 +5,8 @@ import { useParams } from 'react-router';
 import api from '../../axios';
 import { Helmet } from 'react-helmet-async';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const InformacoesPedido = () => {
     const {idPedido} = useParams();
     const [itensPedido, setItensPedido] = useState<any[]>([]);
@@ -57,7 +59,7 @@ const InformacoesPedido = () => {
                         <div className="informacoes-pedido-item__ordenacao">
                             <div className="informacoes-pedido-item__infos">
                                 <div className="informacoes-pedido-item__imagem">
-                                    <img src={`http://localhost:3000/files/${item.Servico.imagem1}`} alt={item.nome} className="informacoes-pedido-item__imagem" />
+                                    <img src={`${apiUrl}/files/${item.Servico.imagem1}`} alt={item.nome} className="informacoes-pedido-item__imagem" />
                                 </div>
                                 <div className="informacoes-pedido-item__nome-preco">
                                     <div className='informacoes-pedido-item__nome'>{item.nomeItem}</div>

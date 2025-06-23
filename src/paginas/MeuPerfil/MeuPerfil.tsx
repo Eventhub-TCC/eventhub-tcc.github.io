@@ -14,6 +14,8 @@ import logoPrestador from '../../assets/eventhub_logo_prestador.png';
 import { jwtDecode } from 'jwt-decode'
 import { Helmet } from 'react-helmet-async'
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Usuario { 
   nomeUsu: string;
   sobrenomeUsu: string;
@@ -112,7 +114,7 @@ useEffect(() => {
       setNomeEmpresaExibido(response.data.nomeEmpresa);
       setCpfOriginal(response.data.cpfUsu);
       setCnpjOriginal(response.data.cnpjEmpresa);
-      setPreview(isOrganizador ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '' : '');
+      setPreview(isOrganizador ? response.data.fotoUsu ? `${apiUrl}/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `${apiUrl}/files/${response.data.fotoEmpresa}` : '' : '');
       if (tipo.find((value) => value === 'prestador')) {
         setTipoUsuario(prestador => ({ ...prestador, prestador: true }));
       } 

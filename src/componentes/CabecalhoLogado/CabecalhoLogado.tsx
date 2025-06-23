@@ -10,6 +10,7 @@ import api from '../../axios';
 import {jwtDecode} from 'jwt-decode';
 // import Input from '../Input/Input';
 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
     const [ModalAberto, setModalAberto] = useState(false);
@@ -51,7 +52,7 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
       const obterFoto = async () => {
         try {
           const response = await api.get(`/users/get-user`);
-          setPreview(tipo === 'organizador' || tipo === 'marketplace' ? response.data.fotoUsu ? `http://localhost:3000/files/${response.data.fotoUsu}` : '' : response.data.fotoEmpresa ? `http://localhost:3000/files/${response.data.fotoEmpresa}` : '');
+          setPreview(tipo === 'organizador' || tipo === 'marketplace' ? response.data.fotoUsu ? `${apiUrl}/files/${response.data.fotoUsu}` : '' : response.data.fotoEmpresa ? `${apiUrl}/files/${response.data.fotoEmpresa}` : '');
           } catch (error) {
             console.error('Erro ao obter foto do usuário:', error);
             console.error(error);

@@ -13,6 +13,8 @@ import Seta from "../../componentes/Seta/Seta";
 import Input from "../../componentes/Input/Input";
 import Alerta from "../../componentes/Alerta/Alerta";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface ItemCarrinho {
   CEP?: string;
   bairro?: string;
@@ -265,7 +267,7 @@ const formatarPreco = (valor: number) => {
                     <div className="container-carrinho-item-info__produto">
                       <div className="container-carrinho-item-info__produto-imagem">
                         {item.imagem ? (
-                          <img src={`http://localhost:3000/files/${item.imagem}`} alt={item.nomeItem} />
+                          <img src={`${apiUrl}/files/${item.imagem}`} alt={item.nomeItem} />
                         ) : (
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

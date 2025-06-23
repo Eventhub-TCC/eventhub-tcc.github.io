@@ -16,6 +16,8 @@ import Seta from '../Seta/Seta'
 import { PatternFormat } from 'react-number-format';
 import axios from 'axios'
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 interface TipoServico {
   idTipoServico: string;
@@ -287,7 +289,7 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
         imagemServico: imagemServico instanceof File ? URL.createObjectURL(imagemServico) : servico.imagemServico,
       })
       const imagens = [data.servico.imagem1, data.servico.imagem2, data.servico.imagem3, data.servico.imagem4, data.servico.imagem5, data.servico.imagem6];
-      setPreviewSv(imagens.map((imagem) => imagem !== null ? `http://localhost:3000/files/${imagem}` : null));
+      setPreviewSv(imagens.map((imagem) => imagem !== null ? `${apiUrl}/files/${imagem}` : null));
     } 
     catch (err) {
       console.error("Erro ao editar Servico:", err);

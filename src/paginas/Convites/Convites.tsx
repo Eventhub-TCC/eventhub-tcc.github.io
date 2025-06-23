@@ -10,6 +10,8 @@ import CheckBox from "../../componentes/CheckBox/CheckBox";
 import Secao from "../../componentes/Secao/Secao";
 import { Helmet } from "react-helmet-async";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Evento {
   idEvento: number;
   nomeEvento: string;
@@ -65,7 +67,7 @@ const Convites = () => {
               setEvento(res.data);
               setQtdAcompanhantes(res.data.qtdMaxAcompanhantes);
               const urlPreview = res.data.imagemEvento
-                ? `http://localhost:3000/files/${res.data.imagemEvento}`
+                ? `${apiUrl}/files/${res.data.imagemEvento}`
                 : '';
               setPreview(urlPreview);
               const status = definirStatusEvento(res.data);

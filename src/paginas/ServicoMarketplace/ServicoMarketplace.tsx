@@ -14,6 +14,8 @@ import Alerta from '../../componentes/Alerta/Alerta'
 import Seta from '../../componentes/Seta/Seta'
 import Input from '../../componentes/Input/Input'
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface TipoServico {
     idTipoServico: string
     descricaoTipoServico: string
@@ -506,7 +508,7 @@ const ServicoMarketplace = () => {
                             </div>
                             <div className='d-flex gap-5'>
                                 <div className='servico-marketplace__imagens-container'>
-                                    <img className={'servico-marketplace__imagens'} src={`http://localhost:3000/files/${imagens[0]}`} />
+                                    <img className={'servico-marketplace__imagens'} src={`${apiUrl}/files/${imagens[0]}`} />
                                 </div>
                                 <div className='servico-marketplace__compra-info'>
                                     <div className='servico-marketplace__compra-info-titulo'>Informações de compra</div>                                   

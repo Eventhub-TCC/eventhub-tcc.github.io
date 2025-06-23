@@ -11,6 +11,8 @@ import InputQuantidade from '../../componentes/InputQuantidade/InputQuantidade';
 import { Helmet } from 'react-helmet-async';
 import FeedbackFormulario from '../../componentes/FeedbackFormulario/FeedbackFormulario';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Acompanhante {
     nome: string;
     email: string;
@@ -172,7 +174,7 @@ const ConfirmarPresenca = () => {
                                             {
                                                 imagemEvento &&
                                                 <div>
-                                                    <img className='confirmar-evento__imagem' src={`http://localhost:3000/files/${imagemEvento}`} />
+                                                    <img className='confirmar-evento__imagem' src={`${apiUrl}/files/${imagemEvento}`} />
                                                 </div>
                                             }
                                             <div className={`informacoes-evento-convite ${!imagemEvento ? 'informacoes-evento-convite--sem-imagem' : ''}`}>

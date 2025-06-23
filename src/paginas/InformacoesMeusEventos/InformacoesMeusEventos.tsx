@@ -5,6 +5,9 @@ import { useParams } from 'react-router';
 import api from '../../axios';
 import Secao from '../../componentes/Secao/Secao';
 import { Helmet } from 'react-helmet-async';
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Evento{
     idEvento: number;
     nomeEvento: string;
@@ -53,7 +56,7 @@ const InformacoesMeusEventos = () => {
                     .then((res) => {
                         setEvento(res.data);
                         const urlPreview = res.data.imagemEvento
-                        ? `http://localhost:3000/files/${res.data.imagemEvento}`
+                        ? `${apiUrl}/files/${res.data.imagemEvento}`
                         : '';
                         setPreview(urlPreview);
                         const status = definirStatusEvento(res.data);

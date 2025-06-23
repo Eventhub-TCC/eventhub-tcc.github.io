@@ -9,6 +9,8 @@ import Secao from "../../componentes/Secao/Secao";
 import React from "react";
 import { Helmet } from "react-helmet-async";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Evento {
     idEvento: number;
     nomeEvento: string;
@@ -80,7 +82,7 @@ const Convidados = () => {
                             setEvento(res.data);
                             const status = definirStatusEvento(res.data);
                             const urlPreview = res.data.imagemEvento
-                                ? `http://localhost:3000/files/${res.data.imagemEvento}`
+                                ? `${apiUrl}/files/${res.data.imagemEvento}`
                                 : '';
                             setPreview(urlPreview);
                             setEvento({ ...res.data, status });

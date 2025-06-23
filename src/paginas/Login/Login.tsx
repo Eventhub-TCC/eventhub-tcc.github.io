@@ -29,7 +29,6 @@ const Login = () => {
         email,
         senha
       })
-      console.log(`Usuário autenticado! Token: ${data.token}`)
       localStorage.setItem('token', data.token);
       const token:any = jwtDecode(data.token);
       if(token.tipo.includes('organizador')){

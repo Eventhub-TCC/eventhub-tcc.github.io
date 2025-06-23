@@ -1,6 +1,8 @@
 import { Link } from 'react-router'
 import './CardMarketplace.css'
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const CardMarketplace = ({idServico, fotoServico, nomeServico, nomePrestador, preco, precoPromo, unidade}: any) => {
   
   const formatarPreco = (valor: number) => {
@@ -12,7 +14,7 @@ const CardMarketplace = ({idServico, fotoServico, nomeServico, nomePrestador, pr
       <Link to={`servico/${idServico}`} style={{ textDecoration: 'none'}}>
         <div className="card-marketplace">
           <div className='card-marketplace__imagem'>
-            <img src={`http://localhost:3000/files/${fotoServico}`} alt="Imagem do serviço" />
+            <img src={`${apiUrl}/files/${fotoServico}`} alt="Imagem do serviço" />
           </div>
           <div className='card-marketplace__descricao'>
             <span className='card-marketplace__nome-servico' title={nomeServico}>{nomeServico}</span>

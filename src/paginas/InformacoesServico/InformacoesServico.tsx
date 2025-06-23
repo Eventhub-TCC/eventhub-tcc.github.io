@@ -6,6 +6,8 @@ import CabecalhoServico from '../../componentes/CabecalhoServico/CabecalhoServic
 import Secao from '../../componentes/Secao/Secao';
 import { Helmet } from 'react-helmet-async';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Servico{
     idServico: number;
     nomeServico: string;
@@ -47,7 +49,7 @@ const InformacoesServico = () => {
                     .then((res) => {
                         setServico(res.data);
                         const imagens = [res.data.imagem1, res.data.imagem2, res.data.imagem3, res.data.imagem4, res.data.imagem5, res.data.imagem6];
-                        setPreview(imagens.map((imagem) => imagem !== null ? `http://localhost:3000/files/${imagem}` : null));
+                        setPreview(imagens.map((imagem) => imagem !== null ? `${apiUrl}/files/${imagem}` : null));
                     })
                     .catch((err) => {
                         console.error("Erro ao buscar o serviço", err);

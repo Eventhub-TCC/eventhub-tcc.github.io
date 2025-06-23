@@ -5,6 +5,8 @@ import api from '../../axios';
 import './InformacoesPedidoPrestador.css';
 import TextArea from '../../componentes/TextArea/TextArea';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface itens {
   Servico: {
     imagem1: string;
@@ -112,7 +114,7 @@ const InformacoesPedidoPrestador = () => {
               <div className="info-pedido-prestador__item-img-qtd-preco">
                 <div className="info-pedido-prestador__item-img-informacoes">
                   <div className="info-pedido-prestador__item-imagem">
-                    <img src={`http://localhost:3000/files/${item.Servico.imagem1}`} alt={item.nomeItem} />
+                    <img src={`${apiUrl}/files/${item.Servico.imagem1}`} alt={item.nomeItem} />
                   </div>
                   <div className="info-pedido-prestador__item-nome-preco">
                     <div className="info-pedido-prestador__item-nome">{item.nomeItem}</div>

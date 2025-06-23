@@ -2,6 +2,8 @@ import React from 'react'
 import './CardEvento.css'
 import { Link } from 'react-router'
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const CardEvento = ({titulo, status='confirmado', dataEvento = 'Sem data definida', horaInicio, horaFim, endereco = 'Sem endereço definido', imagem, id}:any) => {
   const corStatus = status === 'confirmado' ? 'var(--purple-700)' : status === 'em andamento' ? '#C8B757' : '#52AD58'
 
@@ -10,7 +12,7 @@ const CardEvento = ({titulo, status='confirmado', dataEvento = 'Sem data definid
     <div className="card-evento" style={{'--cor-status': corStatus}as React.CSSProperties}>
       <div className="card-evento__centro">
         <div className="card-evento__frente">
-          <div className="card-evento__imagem" style={imagem?{backgroundImage:`url(http://localhost:3000/files/${imagem})`}:{}}>
+          <div className="card-evento__imagem" style={imagem?{backgroundImage:`url(${apiUrl}/files/${imagem})`}:{}}>
             {!imagem ? <i className="fa-solid fa-image card-evento__sem-imagem"></i>:''} 
           </div>
           <div className="card-evento__container-titulo">
