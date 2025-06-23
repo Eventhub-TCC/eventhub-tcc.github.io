@@ -18,7 +18,6 @@ interface Pedido {
 
 
 const Pedidos = () => {
-    const [pedidos, setPedidos] = useState<Pedido[]>([]);
     const [pedidosPorEvento, setPedidosPorEvento] = useState<{ [evento: string]: Pedido[] }>({});
 
   const obterPedidos = async () => {

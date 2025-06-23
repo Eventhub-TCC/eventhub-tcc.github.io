@@ -8,7 +8,7 @@ import logoMarketplace from '../../assets/eventhub_logo_marketplace.png';
 import { Link, useNavigate } from 'react-router';
 import api from '../../axios';
 import {jwtDecode} from 'jwt-decode';
-import Input from '../Input/Input';
+// import Input from '../Input/Input';
 
 
 const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
@@ -22,7 +22,7 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
         prestador: false,
     });
 
-    const [ pesquisa, setPesquisa ] = useState('');
+    // const [ pesquisa, setPesquisa ] = useState('');
 
     const AbrirModal = () => {
         setModalAberto(!ModalAberto);  

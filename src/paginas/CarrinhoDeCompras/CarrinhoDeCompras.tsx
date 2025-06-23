@@ -11,6 +11,7 @@ import ErroCampoForm from "../../componentes/ErroCampoForm/ErroCampoForm";
 import { Helmet } from "react-helmet-async";
 import Seta from "../../componentes/Seta/Seta";
 import Input from "../../componentes/Input/Input";
+import Alerta from "../../componentes/Alerta/Alerta";
 
 interface ItemCarrinho {
   CEP?: string;
@@ -649,6 +650,11 @@ const formatarPreco = (valor: number) => {
               />
             </FeedbackFormulario>
           </div>
+        )}
+      </div>
+      <div className='comprar-servico__alertas'>
+        {eventoOk && (
+          <Alerta texto="Evento atualizado com sucesso!" status="sucesso" ativado={true} />
         )}
       </div>
     </>

@@ -1,6 +1,6 @@
 import './CabecalhoServico.css'
 import Botao from '../../componentes/Botao/Botao'
-import { data, NavLink, useNavigate } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import { Modal } from '../Modal/Modal'
 import Input from '../Input/Input'
 import { ChangeEvent, useEffect, useRef, useState } from 'react';

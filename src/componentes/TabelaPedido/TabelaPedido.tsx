@@ -1,17 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './TabelaPedido.css';
 import { NavLink } from 'react-router';
-
-interface ItemPedido {
-  idItemPedido: number;
-  idPedido: string;
-  idServico: number;
-  valorUnitario: number;
-  nomeItem: string;
-  quantidade: string;
-  instrucao?: string;
-  valorTotal?: number;
-}
 
 interface Pedido {
     Evento: {

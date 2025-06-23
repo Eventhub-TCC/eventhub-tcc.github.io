@@ -42,7 +42,6 @@ const [ordemCrescente, setOrdemCrescente] = useState<boolean>(true);
 const [criterioOrdenacao, setCriterioOrdenacao] = useState<string>("");
 const [ mostrarFiltros, setMostrarFiltros ] = useState<boolean>(false);
 const [ categorias, setCategorias] = useState<categoria[]>([]);
-const [servicosOrdenados, setServicosOrdenados] = useState<Servico[]>([]);
 
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(0);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState("");
@@ -142,7 +141,6 @@ const obterServicos = async () => {
       );
   
       setServicosFiltrados(servicosFiltradosOrdenados);
-      setServicosOrdenados(servicosOrdenados);
       setServicosClassificados(classificados);
     }, [servicos, criterioOrdenacao, ordemCrescente]);
     

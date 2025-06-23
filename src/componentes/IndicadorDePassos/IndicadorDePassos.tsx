@@ -4,7 +4,7 @@ const IndicadorDePassos = ({qtdPassos = 3, passoAtual = 0, cor = 'var(--purple-7
     return (
         <div className='indicador-passos'>
             {
-                Array.from({length: qtdPassos}).map((item, index) => {
+                Array.from({length: qtdPassos}).map((_, index) => {
                     return(
                         <div key={index} className='indicador-passos__container' style={{'--cor-indicador': cor} as React.CSSProperties}>
                             {

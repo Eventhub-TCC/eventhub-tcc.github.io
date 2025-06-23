@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import './QuickGuide.css';
 
-
-interface Passo {
-  titulo: string;
-  detalhe: string;
-  imagem: string;
-}
-
 const QuickGuide = ({ passos, corPrincipal = 'var(--purple-800)', onClose }: any) => {
   const [index, setIndex] = useState(0);
 

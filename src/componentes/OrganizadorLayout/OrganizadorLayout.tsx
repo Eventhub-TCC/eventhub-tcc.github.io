@@ -6,7 +6,7 @@ import ItemBarraLateral from "../ItemBarraLateral/ItemBarraLateral";
 import { Navigate, Outlet } from "react-router";
 import { jwtDecode } from "jwt-decode";
 import api from "../../axios";
-import CategoriasMarketplace from "../CategoriasMarketplace/CategoriasMarketplace";
+// import CategoriasMarketplace from "../CategoriasMarketplace/CategoriasMarketplace";
 
 const OrganizadorLayout = () => {
   const [minimizada, setMinimizada] = useState(() => window.innerWidth <= 1024);
@@ -14,7 +14,7 @@ const OrganizadorLayout = () => {
 
   const marketplace = window.location.pathname.includes('marketplace');
   const categoriasPrincipais = ['Alimentação', 'Decoração', 'Fotografia', 'Locação de Espaço', 'Música'];
-  const [outrasCategorias, setOutrasCategorias] = useState<any[]>([]);
+  const [, setOutrasCategorias] = useState<any[]>([]); // colocar outrasCategorias
 
   useEffect(() => {
     const token = localStorage.getItem('token');

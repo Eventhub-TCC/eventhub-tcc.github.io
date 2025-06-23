@@ -15,8 +15,6 @@ import { useNavigate } from "react-router"
 import { Helmet } from "react-helmet-async"
 import Seta from "../../componentes/Seta/Seta"
 import axios from "axios"
-import { use } from "framer-motion/client"
-
 
 interface tipoServico{
   idTipoServico: number
