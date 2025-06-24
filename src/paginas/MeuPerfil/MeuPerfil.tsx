@@ -114,7 +114,15 @@ useEffect(() => {
       setNomeEmpresaExibido(response.data.nomeEmpresa);
       setCpfOriginal(response.data.cpfUsu);
       setCnpjOriginal(response.data.cnpjEmpresa);
-      setPreview(isOrganizador ? response.data.fotoUsu ? `${apiUrl}/files/${response.data.fotoUsu}` : '' : isPrestador? response.data.fotoEmpresa ? `${apiUrl}/files/${response.data.fotoEmpresa}` : '' : '');
+
+      let previewUrl = '';
+      if (isOrganizador) {
+        previewUrl = response.data.fotoUsu ? `${apiUrl}/files/${response.data.fotoUsu}` : '';
+      } else if (isPrestador) {
+        previewUrl = response.data.fotoEmpresa ? `${apiUrl}/files/${response.data.fotoEmpresa}` : '';
+      }
+      setPreview(previewUrl);
+
       if (tipo.find((value) => value === 'prestador')) {
         setTipoUsuario(prestador => ({ ...prestador, prestador: true }));
       } 
@@ -198,10 +206,11 @@ const validarCampos = async (): Promise<boolean> => {
           mensagem: 'A confirmação da senha não confere',
         };
 
-      case 'telefone':
-        const telefone = usuario?.telUsu?.trim() || '';
+      case 'telefone': {
+        const telefone = usuario?.telUsu?.trim() ?? '';
         const telefoneValido = /^\d{10,11}$/.test(telefone);
         return { ...erro, ativo: !telefoneValido };
+      }
 
       case 'nome':
         return { ...erro, ativo: !usuario?.nomeUsu?.trim() };
@@ -210,7 +219,7 @@ const validarCampos = async (): Promise<boolean> => {
         return { ...erro, ativo: !usuario?.sobrenomeUsu?.trim() };
 
       case 'dataNascimento': {
-        const dataNascimento = new Date(usuario?.dtNasUsu || '');
+        const dataNascimento = new Date(usuario?.dtNasUsu ?? '');
         const hoje = new Date();
         const idade =
           hoje.getFullYear() - dataNascimento.getFullYear() -
@@ -282,8 +291,8 @@ const deletarPerfil = async () => {
     await api.delete(`/users/delete-user`);
     localStorage.removeItem('token');
     navigate('/');
-    } catch (error) {
-      console.error('Erro ao deletar usuário');
+  } catch (error) {
+    console.error('Erro ao deletar usuário', error);
   }
 }
 
@@ -323,7 +332,7 @@ const editarPerfil = async () => {
       setModoEdicao(false);
       setErros(erros.map(erro => ({ ...erro, ativo: false })));
       setNomeExibido(`${usuario?.nomeUsu} ${usuario?.sobrenomeUsu}`);
-      setNomeEmpresaExibido(usuario?.nomeEmpresa || '');
+      setNomeEmpresaExibido(usuario?.nomeEmpresa ?? '');
       setSenhaAtual('');
       setNovaSenha('');
       setConfirmarSenha('');
@@ -356,8 +365,13 @@ const editarPerfil = async () => {
     try {
       const valido = await validarCampos();
       if (!valido) return;
-      const novoTipo = tipoUsuario.prestador ? { organizador: true } :
-                      tipoUsuario.organizador ? { prestador: true } : null;
+      let novoTipo = null;
+      if (tipoUsuario.prestador) {
+        novoTipo = { organizador: true };
+      } else if (tipoUsuario.organizador) {
+        novoTipo = { prestador: true };
+      }
+
       if (novoTipo) {
         setTipoUsuario(anterior => ({ ...anterior, ...novoTipo }));
 
@@ -372,7 +386,11 @@ const editarPerfil = async () => {
         }
       }
       setModalCompletarCadastroDados(false);
-      novoTipo!.organizador ? navigate('/organizador/meus-eventos') : navigate('/prestador/meus-servicos');
+      if (novoTipo && (novoTipo as any).organizador) {
+        navigate('/organizador/meus-eventos');
+      } else {
+        navigate('/prestador/meus-servicos');
+      }
     } catch (error) {
       console.error('Erro ao editar usuário');
       console.error(error); 
@@ -394,9 +412,15 @@ return (
               tipoUsuario.prestador && tipoUsuario.organizador ?
               ''
               :
-              <div className="perfil--botao-notificacao" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
+              <button
+                type="button"
+                className="perfil--botao-notificacao"
+                onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}
+                aria-label="Notificações"
+                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+              >
                 <i className="fa-regular fa-bell"></i>
-              </div>
+              </button>
 
             }
 

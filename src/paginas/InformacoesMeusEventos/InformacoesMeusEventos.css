@@ -13,8 +13,8 @@
 }
 
 .informacoes-evento__cronometro{
-    background-color: var(--purple-800);
     background: url(../../assets/fundo_cronometro_evento.png);
+    background-color: var(--purple-800);
     background-size: 20%;
     background-repeat: repeat;
     border-radius: 32px;

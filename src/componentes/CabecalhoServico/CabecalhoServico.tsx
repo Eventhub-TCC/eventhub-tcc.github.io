@@ -53,14 +53,16 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
                       0
                     )
                   : 0;
-  const dataFormatada =
+  let dataFormatada = '';
+  if (
     dataInicioAnuncio &&
     !isNaN(dataInicioAnuncio.getTime()) &&
     new Date(dataInicioAnuncio).setHours(0, 0, 0, 0) === hoje.getTime()
-      ? 'hoje'
-      : dataInicioAnuncio
-      ? `${dataInicioAnuncio.toLocaleDateString('pt-BR')}`
-      : '';
+  ) {
+    dataFormatada = 'hoje';
+  } else if (dataInicioAnuncio) {
+    dataFormatada = `${dataInicioAnuncio.toLocaleDateString('pt-BR')}`;
+  }
 
   const [modalAnunciarServico, setModalAnunciarServico] = useState(false);
   const [erroDataInicio, setErroDataInicio] = useState<string | null>(null);
@@ -246,13 +248,13 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
       const formData = new FormData();
             
       formData.append("nomeServico", servicoEditado.nomeServico);
-      formData.append("descricaoServico", servicoEditado.descricaoServico || '');
+      formData.append("descricaoServico", servicoEditado.descricaoServico ?? '');
       formData.append("idTipoServico", servicoEditado.tipoServico);
       formData.append("unidadeCobranca", servicoEditado.unidadeCobranca);
       formData.append("qntMinima", servicoEditado.qntMinima);
       formData.append("qntMaxima", servicoEditado.qntMaxima);
       formData.append("valorServico", servicoEditado.valorServico);
-      formData.append("valorPromoServico", servicoEditado.valorPromoServico||'');
+      formData.append("valorPromoServico", servicoEditado.valorPromoServico??'');
       formData.append("servicoCep",servicoEditado.cep);
       formData.append("servicoEndereco",servicoEditado.endereco);
       formData.append("servicoNumero",servicoEditado.numero);
@@ -261,11 +263,11 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
       formData.append("servicoCidade",servicoEditado.cidade);
       formData.append("servicoEstado",servicoEditado.estado);
       
-      imagemOriginal.map((imagem: string) => {
+      imagemOriginal.forEach((imagem: string) => {
         const imagemSemLink = imagem.split('/')
         formData.append("imagensMantidas", imagemSemLink[imagemSemLink.length - 1]);
       })
-      imagemServico.map((imagem: File)=>{
+      imagemServico.forEach((imagem: File) => {
         formData.append("files", imagem);
       })
 

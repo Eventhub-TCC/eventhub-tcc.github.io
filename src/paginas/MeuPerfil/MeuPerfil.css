@@ -87,7 +87,7 @@
 
 .nome-perfil-organizador{
   color: #000;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -122,7 +122,7 @@
 
 .texto-informacoes-pessoal{
   color: var(--purple-700);
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 22px;
   font-style: normal;
   font-weight: 400;
@@ -132,7 +132,7 @@
 
 .texto-input-perfil{
   color: #000;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 300;
@@ -214,7 +214,7 @@
 
 .texto-informacoes-empresa{
   color: var(--yellow-700);
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 22px;
   font-style: normal;
   font-weight: 400;
@@ -252,7 +252,6 @@
   padding-top: 16px;
   justify-content: center;
   flex-direction: column;
-  align-items: flex-start;
   gap: 8px;
   align-items: center;
 }
@@ -260,7 +259,7 @@
 .completar-cadastro--titulo-texto{
   color: var(--yellow-800);
   text-align: center;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -270,7 +269,7 @@
 .completar-cadastro-prestador--titulo-texto{
     color: var(--purple-700);
   text-align: center;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -279,7 +278,7 @@
 
 .completar-cadastro--descricao{
   color: #414141;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
@@ -295,7 +294,7 @@
   align-self: stretch;
   flex: 1 0 0;
   color: #414141;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
@@ -311,7 +310,7 @@
   gap: 10px;
   align-self: stretch;
   color: #000;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;
