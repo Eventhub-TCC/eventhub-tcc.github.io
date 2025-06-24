@@ -444,8 +444,8 @@ const ConfirmarPresenca = () => {
                                         <FeedbackFormulario 
                                             erro
                                             icone='fa-regular fa-circle-xmark'
-                                            titulo='Convite recusado'
-                                            texto={`Sua solicitação de participação foi recusada pelo organizador do evento. Se tiver dúvidas, entre em contato com quem enviou o convite.\n\nMas não desanime! Sabia que você também pode organizar seus próprios eventos por aqui? Aproveite para conhecer a plataforma e ver tudo o que ela pode te oferecer.`}
+                                            titulo='Ops... parece que algo deu errado'
+                                            texto={`Se tiver dúvidas, entre em contato com quem enviou o convite.\n\nMas não desanime! Sabia que você também pode organizar seus próprios eventos por aqui? Aproveite para conhecer a plataforma e ver tudo o que ela pode te oferecer.`}
                                             textoBotao='Conheça a plataforma'
                                             caminhoBotao='/'
                                         />

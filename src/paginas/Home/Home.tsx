@@ -436,6 +436,9 @@ const Home = () => {
                                         <div>
                                             <span className='home__rodape-autor-nome'>Matheus Alves de Paula</span>
                                             <div className='home__rodape-autores-links'>
+                                                <a href="https://www.linkedin.com/in/matheus-alves-990922370" target='_blank' title='LinkedIn do Matheus Alves'>
+                                                    <i className="fa-brands fa-linkedin"></i>
+                                                </a>
                                                 <a href="https://github.com/mapa-mundo" target='_blank' title='GitHub do Matheus Alves'>
                                                     <i className="fa-brands fa-github"></i>
                                                 </a>

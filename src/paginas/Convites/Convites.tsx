@@ -234,7 +234,7 @@ const Convites = () => {
                   {
                     convites.map(convite => (
                       <tr key={convite.idConvite}>
-                        <td><a href={`${window.location.origin}/confirmar-presenca/${convite.idConvite}`} target="_blank" className="link-convite">{convite.idConvite}</a></td>
+                        <td><a href={`${window.location.origin}/#/confirmar-presenca/${convite.idConvite}`} target="_blank" className="link-convite">{convite.idConvite}</a></td>
                         <td>{convite.dataConvite.slice(0,10).split('-').reverse().join('/')}</td>
                         <td>
                           <span className={`status-convidado ${convite.status.toLowerCase()}`}>

@@ -526,7 +526,7 @@ const CadastroUsuario = () => {
                     }}
                     disabled = {!lido}
                     >
-                    <a onClick={() => setLido(true)} style={{color:'var(--purple-700)'}} href="/politicas-e-termos" target="_blank">politicas e termos da plataforma
+                    <a onClick={() => setLido(true)} style={{color:'var(--purple-700)'}} href="/#/politicas-e-termos" target="_blank">politicas e termos da plataforma
                     </a>
                     </CheckBox>
                         {

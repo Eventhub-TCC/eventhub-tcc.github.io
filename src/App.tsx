@@ -1,5 +1,5 @@
 import { HelmetProvider } from 'react-helmet-async'
-import { BrowserRouter, Routes, Route } from 'react-router'
+import { Routes, Route, HashRouter } from 'react-router'
 import Login from './paginas/Login/Login'
 import CadastroUsuario from './paginas/CadastroUsuario/CadastroUsuario'
 import CadastroEvento from './paginas/CadastroEvento/CadastroEvento'
@@ -33,7 +33,7 @@ import InformacoesPedidoPrestador from './paginas/InformacoesPedidoPrestador/Inf
 const App = () => {
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route index element={<Home />} />
           <Route element={<UsuarioLayout />}>
@@ -72,7 +72,7 @@ const App = () => {
           </Route>
           <Route path='Confirmar-presenca/:idConvite' element={<ConfirmarPresenca/>}/>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </HelmetProvider>
   )
 }

@@ -6,7 +6,7 @@
 }
 
 .politicas-termos__topo {
-  background-image: url('src/assets/imagem-termos.svg');
+  background-image: url(../../../src/assets/imagem-termos.svg);
   background-size: cover;
   background-repeat: no-repeat;
   height: 203px;
