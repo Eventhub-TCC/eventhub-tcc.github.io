@@ -54,7 +54,23 @@ const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', c
     <aside style={{'--cor-barra-lateral': cor} as React.CSSProperties} className={`barra-lateral ${minimizado ? 'barra-lateral--minimizada' : ''}`}>
       <ul className='barra-lateral__itens'>
         {
-          Children.map(children, (child) => <div onClick={minimizarMobile}>{cloneElement(child, { minimizado })}</div>)
+          Children.map(children, (child, idx) => (
+            <button
+              key={child+idx}
+              type="button"
+              onClick={minimizarMobile}
+              tabIndex={0}
+              style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}
+              aria-label="Minimizar item da barra lateral"
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  minimizarMobile();
+                }
+              }}
+            >
+              {cloneElement(child, { minimizado })}
+            </button>
+          ))
         }
       </ul>
       {
@@ -75,12 +91,18 @@ const BarraLateral = ({enviaMinimizada, minimizada, cor = 'var(--purple-800)', c
         :
         <>
           { tipoUsuario.organizador && tipoUsuario.prestador ? <ItemBarraLateral icone="fa fa-refresh" texto='Alterar Função' caminho={tipo === 'organizador' || tipo === 'marketplace' ? '/prestador/meus-servicos' : '/organizador/meus-eventos'}/> : '' }
-          <div onClick={() => {
-            navigate('/login'); 
-            localStorage.removeItem("token");
-          }}>
+          <button
+            type="button"
+            className="barra-lateral__sair-botao"
+            onClick={() => {
+              navigate('/login');
+              localStorage.removeItem("token");
+            }}
+            style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}
+            aria-label="Sair"
+          >
             <ItemBarraLateral texto="Sair" caminho="/login" icone="fa-solid fa-arrow-right-from-bracket" />
-          </div>
+          </button>
         </>
       }
     </aside>

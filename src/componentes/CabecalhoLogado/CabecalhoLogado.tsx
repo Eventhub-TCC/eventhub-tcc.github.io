@@ -8,7 +8,6 @@ import logoMarketplace from '../../assets/eventhub_logo_marketplace.png';
 import { Link, useNavigate } from 'react-router';
 import api from '../../axios';
 import {jwtDecode} from 'jwt-decode';
-// import Input from '../Input/Input';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -23,7 +22,6 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
         prestador: false,
     });
 
-    // const [ pesquisa, setPesquisa ] = useState('');
 
     const AbrirModal = () => {
         setModalAberto(!ModalAberto);  
@@ -52,7 +50,13 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
       const obterFoto = async () => {
         try {
           const response = await api.get(`/users/get-user`);
-          setPreview(tipo === 'organizador' || tipo === 'marketplace' ? response.data.fotoUsu ? `${apiUrl}/files/${response.data.fotoUsu}` : '' : response.data.fotoEmpresa ? `${apiUrl}/files/${response.data.fotoEmpresa}` : '');
+          let previewUrl = '';
+          if (tipo === 'organizador' || tipo === 'marketplace') {
+            previewUrl = response.data.fotoUsu ? `${apiUrl}/files/${response.data.fotoUsu}` : '';
+          } else {
+            previewUrl = response.data.fotoEmpresa ? `${apiUrl}/files/${response.data.fotoEmpresa}` : '';
+          }
+          setPreview(previewUrl);
           } catch (error) {
             console.error('Erro ao obter foto do usuário:', error);
             console.error(error);
@@ -125,7 +129,9 @@ const CabecalhoLogado = ({minimizada, enviaMinimizada, tipo}: any) => {
                     {
                         larguraTela > 1024 ?
                             preView ?
-                            <img className='imagem-perfil-modal' src={preView} alt="Imagem de perfil" onClick={AbrirModal} />
+                            <button 
+                            style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }} 
+                            onClick={AbrirModal}><img className='imagem-perfil-modal' src={preView} alt="Imagem de perfil"  /></button>
                             :
                             <svg className='icone-perfil' onClick={AbrirModal} xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
                                 <circle cx="24" cy="24" r="23.5" fill="#D9D9D9" stroke="#D9D9D9"/>

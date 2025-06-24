@@ -35,7 +35,7 @@
 .pedidos-componente__cliente-nome{
     color: var(--yellow-700);
     text-align: justify;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 700;
@@ -45,7 +45,7 @@
 .pedidos-componente__cliente-pedido{
     color: var(--Neutral-600, #6C757D);
     text-align: justify;
-    font-family: Inter;
+   font-family: Inter, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -55,7 +55,7 @@
 .pedidos-componente__cliente-evento{
     color: var(--yellow-900, #FA812F);
     text-align: justify;
-    font-family: Inter;
+   font-family: Inter, sans-serif;
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
@@ -72,7 +72,7 @@
 .pedidos-componente__cliente-data{
     color: var(--Neutral-600, #6C757D);
     text-align: justify;
-    font-family: Inter;
+   font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -82,7 +82,7 @@
 .pedidos-componente__cliente-itens{
     color: var(--Neutral-600, #6C757D);
     text-align: justify;
-    font-family: Inter;
+   font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -99,7 +99,7 @@
 .pedidos-componente__infos-valor{
     color: #000;
     text-align: justify;
-    font-family: Inter;
+   font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

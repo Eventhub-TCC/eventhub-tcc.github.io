@@ -17,10 +17,15 @@ const Secao = ({titulo, children, corBorda = 'var(--purple-700)', corTitulo = 'v
 
   return (
     <section style={{'--cor-borda-secao': corBorda} as CSSProperties} className="secao-organizador">
-      <div style={{'--cor-titulo-secao': corTitulo} as CSSProperties} className="secao-organizador__container-titulo" onClick={() => setAberto(!aberto)}>
-        <i className={`fa-solid fa-chevron-right secao-organizador__seta ${aberto ? 'secao-organizador__seta-baixo' : ''}`}/>
-        <span className="secao-organizador__titulo">{titulo}</span>
-      </div>
+      <button
+        style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}
+        onClick={() => setAberto(!aberto)}
+        >
+          <div style={{'--cor-titulo-secao': corTitulo} as CSSProperties} className="secao-organizador__container-titulo">
+            <i className={`fa-solid fa-chevron-right secao-organizador__seta ${aberto ? 'secao-organizador__seta-baixo' : ''}`}/>
+            <span className="secao-organizador__titulo">{titulo}</span>
+          </div>
+        </button>
       <div 
         className='secao-organizador__conteudo' 
         ref={conteudoRef} 

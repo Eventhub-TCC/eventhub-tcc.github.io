@@ -21,7 +21,7 @@ api.interceptors.response.use(
             localStorage.removeItem('token');
             window.location.href = '/login';
         }
-        return Promise.reject(erro);
+        return Promise.reject(new Error(erro?.message ?? 'Erro desconhecido ao acessar a API'));
     }
 );
 

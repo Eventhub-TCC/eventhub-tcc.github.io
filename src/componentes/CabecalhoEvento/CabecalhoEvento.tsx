@@ -152,7 +152,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
       const formData = new FormData();
 
       formData.append("nomeEvento", eventoEditado.nomeEvento);
-      formData.append("descricaoEvento", eventoEditado.descricaoEvento || '');
+      formData.append("descricaoEvento", eventoEditado.descricaoEvento ?? '');
       formData.append("idTipoEvento", eventoEditado.tipoEvento);
       formData.append("dataEvento", eventoEditado.dataEvento);
       formData.append("horaInicio", eventoEditado.horaInicio);
@@ -339,7 +339,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='textos'>Nome do evento</div>
                     <div className="input-tamanho">
                       <Input
-                        value={eventoEditado?.nomeEvento || ""}
+                        value={eventoEditado?.nomeEvento ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, nomeEvento: e.target.value } : null
                         )}
@@ -359,7 +359,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                         funcao={(e: ChangeEvent<HTMLSelectElement>) => setEventoEditado((prev: any) => prev ? { ...prev, tipoEvento: e.target.value } : null)}
                         required={true}
                       >
-                        {tipoEventoDisponiveis.map(tipo => <option value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
+                        {tipoEventoDisponiveis.map(tipo => <option key={tipo.idTipoEvento} value={tipo.idTipoEvento}>{tipo.descricaoTipoEvento}</option>)}
                       </Select>
                       {erros.tipoEvento && <ErroCampoForm mensagem={erros.tipoEvento} />}
                     </div>
@@ -371,7 +371,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                       titulo='Descrição do evento (opcional)'
                       placeholder='Digite uma descrição para o seu evento...'
                       name='descricao-evento'
-                      valor={eventoEditado?.descricaoEvento || ""}
+                      valor={eventoEditado?.descricaoEvento ?? ""}
                       onChange={(e: any) => setEventoEditado((prev: any) =>
                         prev ? { ...prev, descricaoEvento: e.target.value } : null
                       )}
@@ -400,7 +400,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                             }
                           }}
                         />
-                        {preView ? <img src={preView} className='cadastro-evento__imagem' /> : <div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone' /></div>}
+                        {preView ? <img src={preView} alt="" className='cadastro-evento__imagem' /> : <div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone' /></div>}
                       </div>
                       <div className='botoes-imagem'>
                         <Botao
@@ -431,7 +431,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                   <div className='textos'>Data do evento</div>
                   <div className='input-data-evento'>
                     <Input
-                      value={eventoEditado?.dataEvento || ""}
+                      value={eventoEditado?.dataEvento ?? ""}
                       onChange={(e: any) => setEventoEditado((prev: any) =>
                         prev ? { ...prev, dataEvento: e.target.value } : null
                       )}
@@ -446,7 +446,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='textos'>Hora ínicio do evento</div>
                     <div className='input-tamanho'>
                       <Input
-                        value={eventoEditado?.horaInicio || ""}
+                        value={eventoEditado?.horaInicio ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, horaInicio: e.target.value } : null
                         )}
@@ -460,7 +460,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='textos'>Hora fim do evento</div>
                     <div className='input-tamanho'>
                       <Input
-                        value={eventoEditado?.horaFim || ""}
+                        value={eventoEditado?.horaFim ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, horaFim: e.target.value } : null
                         )}
@@ -478,7 +478,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                       <PatternFormat
                         format={'#####-###'}
                         mask={'_'}
-                        value={eventoEditado?.cepLocal || ""}
+                        value={eventoEditado?.cepLocal ?? ""}
                         onValueChange={(values: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, cepLocal: values.value } : null
                         )}
@@ -493,7 +493,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='input-tamanho-endereco-complemento'>
                       <Input
                         disabled={travado}
-                        value={eventoEditado?.enderecoLocal || ""}
+                        value={eventoEditado?.enderecoLocal ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, enderecoLocal: e.target.value } : null
                         )}
@@ -509,7 +509,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='textos'>Número</div>
                     <div className='input-tamanho-cep-numero'>
                       <Input
-                        value={eventoEditado?.numeroLocal || ""}
+                        value={eventoEditado?.numeroLocal ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, numeroLocal: e.target.value } : null
                         )}
@@ -523,7 +523,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='textos'>Complemento(Opcional)</div>
                     <div className='input-tamanho-endereco-complemento'>
                       <Input
-                        value={eventoEditado?.complementoLocal || ""}
+                        value={eventoEditado?.complementoLocal ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, complementoLocal: e.target.value } : null
                         )}
@@ -538,7 +538,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                   <div className='input-bairro'>
                     <Input
                       disabled={travado}
-                      value={eventoEditado?.bairroLocal || ""}
+                      value={eventoEditado?.bairroLocal ?? ""}
                       onChange={(e: any) => setEventoEditado((prev: any) =>
                         prev ? { ...prev, bairroLocal: e.target.value } : null
                       )}
@@ -553,7 +553,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='input-tamanho-cidade'>
                       <Input
                         disabled={travado}
-                        value={eventoEditado?.cidadeLocal || ""}
+                        value={eventoEditado?.cidadeLocal ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, cidadeLocal: e.target.value } : null
                         )}
@@ -567,7 +567,7 @@ const CabecalhoEvento = ({ idEvento, evento, preViewEv, setEvento, idUsuario }: 
                     <div className='input-tamanho-uf'>
                       <Input
                         disabled={travado}
-                        value={eventoEditado?.ufLocal || ""}
+                        value={eventoEditado?.ufLocal ?? ""}
                         onChange={(e: any) => setEventoEditado((prev: any) =>
                           prev ? { ...prev, ufLocal: e.target.value } : null
                         )}

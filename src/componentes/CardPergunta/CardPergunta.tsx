@@ -6,13 +6,17 @@ const CardPergunta = ({ pergunta, resposta }: any) => {
 
   return (
     <div className={`card-pergunta__container ${aberto ? 'aberto' : ''}`}>
-      <div className="card-pergunta__topo" onClick={() => setAberto(!aberto)}>
-        <p className="card-pergunta__texto">{pergunta}</p>
-    
-        <div className={`card-pergunta__icone ${aberto ? 'rotacionado' : ''}`}>
-            <i className='fa-solid fa-chevron-down'></i>
+      <button 
+      style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }} 
+      onClick={() => setAberto(!aberto)}>
+        <div className="card-pergunta__topo">
+          <p className="card-pergunta__texto">{pergunta}</p>
+      
+          <div className={`card-pergunta__icone ${aberto ? 'rotacionado' : ''}`}>
+              <i className='fa-solid fa-chevron-down'></i>
+          </div>
         </div>
-      </div>
+      </button>
       {aberto && (
         <div className="card-pergunta__resposta">
           <p>{resposta}</p>
