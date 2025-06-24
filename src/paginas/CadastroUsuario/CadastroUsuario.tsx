@@ -494,7 +494,9 @@ const CadastroUsuario = () => {
                     }
                     funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
                 />,
-                <div onClick={() => {
+                <button 
+                style={{background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer'}}
+                onClick={() => {
                     lido ? 
                      setErros(erros=> erros.map(erro => {
                         if(erro.tipo === 'termos-nao-lidos'){
@@ -539,7 +541,7 @@ const CadastroUsuario = () => {
                             <ErroCampoForm mensagem={erros.find(({tipo}) => tipo === 'termos-e-politicas')?.mensagem}/>
                             : ''
                         }
-                </div>
+                </button>
             ]
         }
     ]
@@ -728,8 +730,8 @@ const CadastroUsuario = () => {
                         <>
                             <div className='cadastro-usuario__opcoes-container'>
                                 <div className='cadastro-usuario__opcoes'>
-                                    <div 
-                                        className={`cadastro-usuario__opcao ${organizador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
+                                    <button
+                                        style={{background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer'}}
                                         onClick={() => {
                                             setOrganizador(!organizador);
                                             setErros(erros => erros.map(erro => {
@@ -740,15 +742,18 @@ const CadastroUsuario = () => {
                                             }))
                                         }}
                                     >
-                                        <span>Organizar eventos</span>
-                                        {!organizador &&
-                                            <div className="cadastro-usuario__tooltip">
-                                                <ToolTip direcao={mobile ? 'esquerda' : 'cima'} mensagem='Você deseja organizar festas, shows, casamentos ou outros eventos? Essa opção de cadastro vai permitir que você crie e gerencie seus eventos aqui, distribua convites, gere listas de presenças e conecte-se em um marketplace com os melhores prestadores de serviços e fornecedores!'/>
-                                            </div>
-                                        }
-                                    </div>
-                                    <div 
-                                        className={`cadastro-usuario__opcao ${prestador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
+                                        <div 
+                                            className={`cadastro-usuario__opcao ${organizador ? 'cadastro-usuario__opcao--selecionada' : ''}`} >
+                                            <span>Organizar eventos</span>
+                                            {!organizador &&
+                                                <div className="cadastro-usuario__tooltip">
+                                                    <ToolTip direcao={mobile ? 'esquerda' : 'cima'} mensagem='Você deseja organizar festas, shows, casamentos ou outros eventos? Essa opção de cadastro vai permitir que você crie e gerencie seus eventos aqui, distribua convites, gere listas de presenças e conecte-se em um marketplace com os melhores prestadores de serviços e fornecedores!'/>
+                                                </div>
+                                            }
+                                        </div>
+                                    </button>
+                                    <button
+                                        style={{background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer'}}
                                         onClick={() => {
                                             setPrestador(!prestador);
                                             setErros(erros => erros.map(erro => {
@@ -758,14 +763,18 @@ const CadastroUsuario = () => {
                                                 return erro;
                                             }))
                                         }}
-                                    >
-                                        <span>Prestar serviços</span>
-                                        {!prestador &&
-                                            <div className="cadastro-usuario__tooltip">
-                                                <ToolTip direcao={mobile ? 'esquerda' : 'cima'} mensagem='Você deseja oferecer serviços ou produtos para eventos, como por exemplo, buffet, som, decoração, fotografia ou entrega de doces, salgados ou outros produtos? Essa opção de cadastro vai permitir que você anuncie seus serviços ou produtos para ser encontrado por organizadores que precisam do seu trabalho!'/>
+                                        >
+                                            <div 
+                                                className={`cadastro-usuario__opcao ${prestador ? 'cadastro-usuario__opcao--selecionada' : ''}`} 
+                                            >
+                                                <span>Prestar serviços</span>
+                                                {!prestador &&
+                                                    <div className="cadastro-usuario__tooltip">
+                                                        <ToolTip direcao={mobile ? 'esquerda' : 'cima'} mensagem='Você deseja oferecer serviços ou produtos para eventos, como por exemplo, buffet, som, decoração, fotografia ou entrega de doces, salgados ou outros produtos? Essa opção de cadastro vai permitir que você anuncie seus serviços ou produtos para ser encontrado por organizadores que precisam do seu trabalho!'/>
+                                                    </div>
+                                                }
                                             </div>
-                                        }
-                                    </div>
+                                        </button>
                                 </div>
                                 {
                                     erros.find(({tipo}) => tipo === 'funcao')?.ativo ?

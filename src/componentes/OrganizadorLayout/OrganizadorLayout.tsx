@@ -12,7 +12,7 @@ const OrganizadorLayout = () => {
   const [minimizada, setMinimizada] = useState(() => window.innerWidth <= 1024);
   const [ autenticado, setAutenticado ] = useState<null | boolean>(null);
 
-  const marketplace = window.location.pathname.includes('marketplace');
+  const marketplace = window.location.hash.includes('marketplace');
   const categoriasPrincipais = ['Alimentação', 'Decoração', 'Fotografia', 'Locação de Espaço', 'Música'];
   const [, setOutrasCategorias] = useState<any[]>([]); // colocar outrasCategorias
 

@@ -95,17 +95,11 @@
 
   .tabela-acompanhantes th{
     border-bottom: 1px solid white;
-  }
-
-  .tabela-acompanhantes td{
-    border-bottom: 1px solid var(--purple-700);
-  }
-
-  .tabela-acompanhantes th{
     background-color: var(--purple-900);
   }
 
   .tabela-acompanhantes td{
+    border-bottom: 1px solid var(--purple-700);
     background-color: var(--purple-800);
     color: #FFF;
   }
@@ -165,7 +159,7 @@
   .texto-atualizar-convidados{
     color: #000;
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -203,7 +197,7 @@
   .numero-pendentes{
     color: #FFF;
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 32px;
     font-style: normal;
     font-weight: 700;
@@ -213,7 +207,7 @@
   .texto-convidados-pendentes{
     color: #FFF;
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
@@ -244,7 +238,7 @@
   
   .titulo-campos{
     color: var(--Purple-700, #8C5DFF);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
@@ -253,7 +247,7 @@
   
   .dados-convidado{
     color: #000;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;

@@ -174,7 +174,7 @@ const ConfirmarPresenca = () => {
                                             {
                                                 imagemEvento &&
                                                 <div>
-                                                    <img className='confirmar-evento__imagem' src={`${apiUrl}/files/${imagemEvento}`} />
+                                                    <img alt='' className='confirmar-evento__imagem' src={`${apiUrl}/files/${imagemEvento}`} />
                                                 </div>
                                             }
                                             <div className={`informacoes-evento-convite ${!imagemEvento ? 'informacoes-evento-convite--sem-imagem' : ''}`}>

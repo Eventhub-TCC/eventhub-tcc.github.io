@@ -84,7 +84,6 @@
 
 .mensagem-titulo{
     display: flex;
-    width: 329px;
     flex-direction: column;
     gap: 8px;
     width: 100%;

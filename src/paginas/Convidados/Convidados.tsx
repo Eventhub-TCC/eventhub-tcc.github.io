@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento'
 import './Convidados.css';
@@ -6,7 +6,6 @@ import Botao from "../../componentes/Botao/Botao";
 import { Modal } from "../../componentes/Modal/Modal";
 import api from "../../axios";
 import Secao from "../../componentes/Secao/Secao";
-import React from "react";
 import { Helmet } from "react-helmet-async";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -164,7 +163,7 @@ const Convidados = () => {
 
 
             if (indiceConvidadoPendente < convidadosPendentes.length - 1) {
-                setIndiceConvidadoPendente(indiceConvidadoPendente);
+                setIndiceConvidadoPendente(indiceConvidadoPendente + 1);
             } else {
                 setModalConfirmarPresencas(false);
             }

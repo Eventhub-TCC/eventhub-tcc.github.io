@@ -361,7 +361,7 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
     <div className='row'>
       <div className='d-flex gap-3 cadastro-evento__container-imagem-botoes'>
         <div className='cadastro-evento__container-imagem'>
-        {imagemEvento?<img src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
+        {imagemEvento?<img alt='' src={preView} className='cadastro-evento__imagem'/>:<div className='cadastro-evento__sem-imagem'> <i className='fa-solid fa-image cadastro-evento__sem-imagem-icone'/></div>}
         </div>
         <div className='d-flex flex-column cadastro-evento__container-imagem-botoes'>
           {instrucoes[passoAtual].campos && instrucoes[passoAtual].campos[0]}
