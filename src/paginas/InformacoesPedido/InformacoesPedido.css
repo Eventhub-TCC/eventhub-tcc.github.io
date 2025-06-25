@@ -9,7 +9,7 @@
 
 .informacoes-pedido-titulo{
     color: #2F2F2F;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 40px;
     font-style: normal;
     font-weight: 300;
@@ -18,7 +18,7 @@
 
 .informacoes-pedido-numero-pedido{
     color: var(--purple-700);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
@@ -52,7 +52,7 @@
     justify-content: center;
     flex: 1 0 0;
     color: var(--purple-800);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 22px;
     font-style: normal;
     font-weight: 400;
@@ -105,7 +105,7 @@
     color: #42464D;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -114,11 +114,16 @@
 
 .informacoes-pedido-item__preco{
     color: var(--purple-700);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }
 
 .informacoes-pedido-item__preco-unidade{
@@ -129,7 +134,7 @@
 
 .informacoes-pedido-item__unidade{
     color: #42464D;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -147,7 +152,7 @@
 
 .informacoes-pedido-quantidade__texto{
     color: #000;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
@@ -177,17 +182,9 @@
     box-shadow: 0px 2px 2px 0px rgba(33, 37, 41, 0.06), 0px 0px 1px 0px rgba(33, 37, 41, 0.08);
 }
 
-.informacoes-pedido-item__preco{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-}
-
 .informacoes-pedido-item__preco-total{
     color: #000;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
@@ -197,7 +194,7 @@
 .informacoes-pedido-item__valor{
     color: var(--purple-700);
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 22px;
     font-style: normal;
     font-weight: 700;
@@ -215,7 +212,7 @@
     gap: 16px;
     align-self: stretch;
     color: #000;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
@@ -233,7 +230,7 @@
 
 .informacoes-pedido-item__sumario{
     color: #000;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;

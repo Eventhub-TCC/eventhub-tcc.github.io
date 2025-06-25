@@ -35,7 +35,7 @@
     justify-content: center;
     flex: 1 0 0;
     color: var(--yellow-700);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 22px;
     font-style: normal;
     font-weight: 400;
@@ -127,7 +127,7 @@
 .info-pedido-prestador__item-preco-valor{
     color: var(--yellow-700);
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 22px;
     font-style: normal;
     font-weight: 700;
@@ -146,7 +146,7 @@
 
 .info-pedido-prestador__ordenacao-itens strong{
     color: var(--yellow-800);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

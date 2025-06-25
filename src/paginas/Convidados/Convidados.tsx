@@ -331,16 +331,22 @@ const Convidados = () => {
                                                                 convidado.acompanhantes.length === 0 ?
                                                                 '—'
                                                                 : 
-                                                                <span className="nome-acompanhante" onClick={() => alternarAccordionAcompanhantes(convidado.idConvidado)}>
-                                                                    {
-                                                                        convidado.acompanhantes.length === 1 ?
-                                                                            convidado.acompanhantes[0].nome.split(' ')[0]
-                                                                        : convidado.acompanhantes.length === 2 ?
-                                                                            `${convidado.acompanhantes[0].nome.split(' ')[0]} e ${convidado.acompanhantes[1].nome.split(' ')[0]}`
-                                                                            
-                                                                        : `${convidado.acompanhantes[0].nome.split(' ')[0]}, ${convidado.acompanhantes[1].nome.split(' ')[0]} e +${convidado.acompanhantes.length - 2}`
-                                                                    }
-                                                                </span>
+                                                                <button
+                                                                style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                                                                onClick={() => alternarAccordionAcompanhantes(convidado.idConvidado)}
+                                                                >
+                                                                    <span className="nome-acompanhante">
+                                                                        {
+                                                                            convidado.acompanhantes.length === 1 ?
+                                                                                convidado.acompanhantes[0].nome.split(' ')[0]
+                                                                            : convidado.acompanhantes.length === 2 ?
+                                                                                `${convidado.acompanhantes[0].nome.split(' ')[0]} e ${convidado.acompanhantes[1].nome.split(' ')[0]}`
+                                                                                
+                                                                            : `${convidado.acompanhantes[0].nome.split(' ')[0]}, ${convidado.acompanhantes[1].nome.split(' ')[0]} e +${convidado.acompanhantes.length - 2}`
+                                                                        }
+                                                                    </span>
+
+                                                                </button>
                                                             }
                                                         </td>
                                                     </tr>

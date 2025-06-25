@@ -291,9 +291,13 @@ const obterServicos = async () => {
               </div>
               <div
                 className="conteudo-principal-meus-servicos__limpar-filtros"
-                onClick={LimparFiltros}
               >
-                Limpar filtros
+                <button
+                className="conteudo-principal-meus-servicos__limpar-filtros"
+                onClick={LimparFiltros}
+                style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}>
+                  Limpar filtros
+                </button>
               </div>
             </div>
           
@@ -427,30 +431,33 @@ const obterServicos = async () => {
                       
                 )}
               </div>
-              <div
-                onClick={() => navigate("/prestador/criar-servico")}
-                className="botao-criar-servicos"
-              >
-                <div
-                  className="botao-criar-servicos-meus-servicos"
-                  title="Criar servico"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="33"
-                    height="33"
-                    viewBox="0 0 33 33"
-                    fill="none"
+              <button
+                style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }} 
+                onClick={() => navigate("/prestador/criar-servico")}>
+                  <div
+                    className="botao-criar-servicos"
                   >
-                    <path
-                      d="M16.5001 6.59961L16.5001 26.3996M26.4001 16.4996L6.6001 16.4996"
-                      stroke="white"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
-              </div>
+                    <div
+                      className="botao-criar-servicos-meus-servicos"
+                      title="Criar servico"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="33"
+                        height="33"
+                        viewBox="0 0 33 33"
+                        fill="none"
+                      >
+                        <path
+                          d="M16.5001 6.59961L16.5001 26.3996M26.4001 16.4996L6.6001 16.4996"
+                          stroke="white"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </button>
             </div>
           )
           :

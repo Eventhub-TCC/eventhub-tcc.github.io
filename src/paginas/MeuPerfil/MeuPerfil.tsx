@@ -864,9 +864,13 @@ return (
               tipoUsuario.prestador && tipoUsuario.organizador ?
               ''
               :
-              <div className="perfil--botao-notificacao-prestador" onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
-                <i className="fa-regular fa-bell"></i>
-              </div>
+              <button
+              style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+              onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}>
+                <div className="perfil--botao-notificacao-prestador">
+                  <i className="fa-regular fa-bell"></i>
+                </div>
+              </button>
 
             }
         </div>

@@ -87,7 +87,9 @@ const Convites = () => {
   }, [idEvento]);
 
   useEffect(() => {
-    Number(evento?.qtdMaxAcompanhantes) !== qtdAcompanhantes ? setQtdAcompanhantes(Number(evento?.qtdMaxAcompanhantes)) : ''
+    if (Number(evento?.qtdMaxAcompanhantes) !== qtdAcompanhantes) {
+      setQtdAcompanhantes(Number(evento?.qtdMaxAcompanhantes));
+    }
   }, [evento])
 
   const gerarConvite = async () => {
@@ -243,11 +245,17 @@ const Convites = () => {
                         </td>
                         <td>
                           { convite.status === 'Pendente' &&
-                            <div className="excluir-convite" onClick={() => abrirModalApagarConvite(convite.idConvite)}>
+                          <button
+                          style={{ background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}
+                          onClick={() => abrirModalApagarConvite(convite.idConvite)}
+                          >
+                            <div className="excluir-convite">
                               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13" fill="none">
                                 <path d="M12.3828 2.58853C12.8711 2.12466 12.8711 1.37134 12.3828 0.907471C11.8945 0.443604 11.1016 0.443604 10.6133 0.907471L6.5 4.8188L2.38281 0.911182C1.89453 0.447314 1.10156 0.447314 0.613281 0.911182C0.125 1.37505 0.125 2.12837 0.613281 2.59224L4.73047 6.49985L0.617188 10.4112C0.128906 10.875 0.128906 11.6284 0.617188 12.0922C1.10547 12.5561 1.89844 12.5561 2.38672 12.0922L6.5 8.18091L10.6172 12.0885C11.1055 12.5524 11.8984 12.5524 12.3867 12.0885C12.875 11.6247 12.875 10.8713 12.3867 10.4075L8.26953 6.49985L12.3828 2.58853Z" fill="#CED4DA" />
                               </svg>
                             </div>
+                          </button>
+
                           }
                         </td>
                       </tr>

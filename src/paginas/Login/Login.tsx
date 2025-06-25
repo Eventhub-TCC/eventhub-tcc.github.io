@@ -61,11 +61,11 @@ const Login = () => {
     (async () => {
       try{
         await api.get('/users/authenticate');
-        tokenDecodificado.tipo.includes('organizador') ?
-        navigate('/organizador/meus-eventos') :
-        tokenDecodificado.tipo.includes('prestador') ?
-        navigate('/prestador/meu-perfil') :
-        ''
+        if (tokenDecodificado.tipo.includes('organizador')) {
+          navigate('/organizador/meus-eventos');
+        } else if (tokenDecodificado.tipo.includes('prestador')) {
+          navigate('/prestador/meu-perfil');
+        }
       }
       catch(erro){
         localStorage.removeItem('token');
