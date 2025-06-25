@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet-async";
 import Seta from "../../componentes/Seta/Seta";
 import Input from "../../componentes/Input/Input";
 import Alerta from "../../componentes/Alerta/Alerta";
+import { useNavigate } from "react-router";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -34,6 +35,7 @@ interface ItemCarrinho {
 }
 
 const CarrinhoDeCompras = () => {
+  const navigate = useNavigate();
 const [carrinho, setCarrinho] = useState<ItemCarrinho[]>(() => {
   const carrinhoSalvo = localStorage.getItem("carrinho");
   return carrinhoSalvo ? JSON.parse(carrinhoSalvo) : [];
@@ -617,7 +619,7 @@ const formatarPreco = (valor: number) => {
                 tamanho="max"
                 texto="Continuar comprando"
                 funcao={() => {
-                window.location.href = "/marketplace";
+                navigate('/marketplace');
                 }}
                 cor='#1A7A56'
               />
@@ -627,7 +629,7 @@ const formatarPreco = (valor: number) => {
                 tamanho="max"
                 texto="Ver meus pedidos"
                 funcao={() => {
-                window.location.href = "/organizador/pedidos";
+                  navigate('/organizador/pedidos');
                 }}
                 cor='#1A7A56' />
               </div>

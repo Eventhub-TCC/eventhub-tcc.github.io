@@ -102,7 +102,7 @@ const Convites = () => {
       if(qtdPadraoEvento) {
         setEvento(prevEvento => prevEvento ? ({...prevEvento, qtdMaxAcompanhantes: qtdAcompanhantes.toString()}) : prevEvento)
       }
-      setLinkConvite(`${window.location.origin}/confirmar-presenca/${response.data.convite.idConvite}`);
+      setLinkConvite(`${window.location.origin}/#/confirmar-presenca/${response.data.convite.idConvite}`);
       setQtdPadraoEvento(false);
       setGerarLink(true);
     } catch (error) {

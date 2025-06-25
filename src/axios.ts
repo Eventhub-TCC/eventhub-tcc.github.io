@@ -19,7 +19,7 @@ api.interceptors.response.use(
     (erro) => {
         if (erro.response && erro.response.status === 401 && erro.response.data.mensagem.toLowerCase().includes('token')) {
             localStorage.removeItem('token');
-            window.location.href = '/login';
+            window.location.href = '/#/login';
         }
         return Promise.reject(new Error(erro?.message ?? 'Erro desconhecido ao acessar a API'));
     }

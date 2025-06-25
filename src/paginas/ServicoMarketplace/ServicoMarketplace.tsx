@@ -8,7 +8,7 @@ import TextArea from '../../componentes/TextArea/TextArea'
 import InputQuantidade from '../../componentes/InputQuantidade/InputQuantidade'
 import Select from '../../componentes/Select/Select'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { Helmet } from 'react-helmet-async'
 import Alerta from '../../componentes/Alerta/Alerta'
 import Seta from '../../componentes/Seta/Seta'
@@ -22,6 +22,7 @@ interface TipoServico {
 }
 
 const ServicoMarketplace = () => {
+    const navigate = useNavigate();
     const [nomeServico, setNomeServico] = useState('')
     const [tipoServico, setTipoServico] = useState<TipoServico>({
         idTipoServico: '',
@@ -469,7 +470,7 @@ const ServicoMarketplace = () => {
                                         tamanho="max"
                                         texto="Continuar comprando"
                                         funcao={() => {
-                                            window.location.href = "/marketplace";
+                                            navigate('/marketplace');
                                         }}
                                         cor='#1A7A56'
                                     />
@@ -479,7 +480,7 @@ const ServicoMarketplace = () => {
                                         tamanho="max"
                                         texto="Ver meus pedidos"
                                         funcao={() => {
-                                            window.location.href = "/organizador/pedidos";
+                                            navigate('/organizador/pedidos');
                                         }}
                                         cor='#1A7A56' />
                                 </div>

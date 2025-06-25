@@ -234,14 +234,15 @@ const CabecalhoServico = ({idServico, servico, preViewSv, setServico, idUsuario,
     }
   }, [servico]);
 
-  const validaCep = ()=>{
-    if (servicoEditado.cep.lenght !==8 && servicoEditado.tipoServico===5)
-      setErroCepInvalido(true)
-  }
+const validaCep = (): boolean => {
+  const cepValido = servicoEditado.cep?.length === 8 || servicoEditado.tipoServico !== 5;
+  setErroCepInvalido(!cepValido);
+  return cepValido;
+};
 
   const editarServico = async () => {
-    if (!await validarFormulario()) return;
-    validaCep()
+  if (!validaCep()) return; 
+  if (!await validarFormulario()) return;
     if(erroCepInvalido)return;
     if (!servicoEditado) return alert("Serviço não carregado corretamente!");    
     try {
