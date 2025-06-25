@@ -399,7 +399,7 @@ const MeusEventos = () => {
           
         </div>
               <div className="ordenacao-ordem-exibicao">
-                <div
+                <button
                   className={`botao-ordernar-eventos ${
                     ordemCrescente ? "crescente" : "decrescente"
                   }`}
@@ -424,7 +424,7 @@ const MeusEventos = () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </div>
+                </button>
                 <Select
                   textoPadrao="Ordenar por"
                   value={criterioOrdenacao}

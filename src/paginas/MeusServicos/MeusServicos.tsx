@@ -303,7 +303,7 @@ const obterServicos = async () => {
           
         </div>
               <div className="ordenacao-ordem-exibicao">
-                <div
+                <button
                   className={`botao-ordernar-servicos ${
                     ordemCrescente ? "crescente" : "decrescente"
                   }`}
@@ -328,7 +328,7 @@ const obterServicos = async () => {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </div>
+                </button>
                 <Select
                   textoPadrao="Ordenar por"
                   value={criterioOrdenacao}
