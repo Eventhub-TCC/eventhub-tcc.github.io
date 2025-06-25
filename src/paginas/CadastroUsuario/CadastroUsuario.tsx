@@ -115,13 +115,9 @@ const CadastroUsuario = () => {
                 });
                 return;
             }
-            setErros(erros => erros.map(erro => {
-                if(erro.tipo === nomeCampo){
-                    erro.mensagem = e.response.data.mensagem;
-                    erro.ativo = true;
-                }
-                return erro;
-            }));
+            setErros(erros => erros.map(erro => 
+                erro.tipo === nomeCampo ? { ...erro, ativo: true } : erro
+            ));
             return false;
         }
         finally{
