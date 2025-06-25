@@ -1,16 +1,16 @@
 .exibicao-servicos {
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
     align-self: stretch;
-    display: block
+    transition: transform 0.3s ease;
 }
 
 
 .sumario-servicos {
     color: var(--yellow-700);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
@@ -22,12 +22,9 @@
     cursor: pointer;
 }
 
+
 .sumario-servicos::-webkit-details-marker {
     display: none;
-}
-
-.exibicao-servicos {
-    transition: transform 0.3s ease;
 }
 
 .exibicao-servicos__seta {
@@ -52,15 +49,6 @@
     align-self: stretch;
 }
 
-.sumario-servicos{
-    color: var(--yellow-800);
-    font-family: Inter;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    margin-bottom: 32px;
-}
 
 .botao-criar-servicos{
     position: fixed;
@@ -102,6 +90,7 @@
     background: var(--yellow-800);
     cursor: pointer;
     transition: background-color .3s ease-in-out, transform .3s ease-in-out;
+    border: none;
 }
 
 .botao-ordernar-servicos.crescente{

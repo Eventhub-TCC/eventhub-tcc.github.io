@@ -20,7 +20,7 @@
     transition: all 250ms ease-in-out;
 }
 .checkbox_span{
-    display: block;
+    display: flex;
     min-width: 16px;
     width: 16px;
     height: 16px;

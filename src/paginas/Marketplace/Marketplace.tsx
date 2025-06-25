@@ -48,8 +48,8 @@ const Marketplace = () => {
   const [outros, setOutros] = useState<Servico[]>([]);
 
   useEffect(() => {
-    try{
-      (async () => {
+    (async () => {
+      try {
         const { data: servicos } = await api.get('users/services/obter-anuncios');
         setAlimentacao(servicos.filter((servico: Servico) => servico.tipoServico.descricaoTipoServico === 'Alimentação'));
         setDecoracao(servicos.filter((servico: Servico) => servico.tipoServico.descricaoTipoServico === 'Decoração'));
@@ -57,11 +57,10 @@ const Marketplace = () => {
         setFotografia(servicos.filter((servico: Servico) => servico.tipoServico.descricaoTipoServico === 'Fotografia'));
         setLocacaoEspaco(servicos.filter((servico: Servico) => servico.tipoServico.descricaoTipoServico === 'Locação de Espaço'));
         setOutros(servicos.filter((servico: Servico) => !['Alimentação', 'Decoração', 'Música', 'Fotografia', 'Locação de Espaço'].includes(servico.tipoServico.descricaoTipoServico)));
-      })();
-    }
-    catch(erro){
-      console.error('Erro ao obter serviços: ', erro);
-    }
+      } catch (erro) {
+        console.error('Erro ao obter serviços: ', erro);
+      }
+    })();
   }, []);
 
   const unidadeValor = [

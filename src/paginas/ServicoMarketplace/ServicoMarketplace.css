@@ -96,9 +96,7 @@
 .servico-marketplace__descricao-texto{
     white-space: pre-line;
 }
-.servico-marketplace__descricao-texto{
-    white-space: pre-line;
-}
+
 .comprar-servico__alertas {
     position: fixed;
     top: 10%;
@@ -126,7 +124,7 @@
 .servico-marketplace__finalizado-titulo{
     color: #1A7A56;
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 48px;
     font-style: normal;
     font-weight: 700;
@@ -136,7 +134,7 @@
 .servico-marketplace__finalizado-texto{
     color: #000;
     text-align: center;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 300;

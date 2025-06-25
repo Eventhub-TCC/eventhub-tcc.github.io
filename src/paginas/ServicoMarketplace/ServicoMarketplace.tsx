@@ -447,7 +447,7 @@ const ServicoMarketplace = () => {
                         <div className="servico-marketplace__finalizado">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
-                                    <g clip-path="url(#clip0_40607_16373)">
+                                    <g clipPath="url(#clip0_40607_16373)">
                                         <path d="M50 9.375C60.7744 9.375 71.1076 13.6551 78.7262 21.2738C86.3449 28.8925 90.625 39.2256 90.625 50C90.625 60.7744 86.3449 71.1076 78.7262 78.7262C71.1076 86.3449 60.7744 90.625 50 90.625C39.2256 90.625 28.8925 86.3449 21.2738 78.7262C13.6551 71.1076 9.375 60.7744 9.375 50C9.375 39.2256 13.6551 28.8925 21.2738 21.2738C28.8925 13.6551 39.2256 9.375 50 9.375ZM50 100C63.2608 100 75.9785 94.7322 85.3553 85.3553C94.7322 75.9785 100 63.2608 100 50C100 36.7392 94.7322 24.0215 85.3553 14.6447C75.9785 5.26784 63.2608 0 50 0C36.7392 0 24.0215 5.26784 14.6447 14.6447C5.26784 24.0215 0 36.7392 0 50C0 63.2608 5.26784 75.9785 14.6447 85.3553C24.0215 94.7322 36.7392 100 50 100ZM72.0703 40.8203C73.9062 38.9844 73.9062 36.0156 72.0703 34.1992C70.2344 32.3828 67.2656 32.3633 65.4492 34.1992L43.7695 55.8789L34.5898 46.6992C32.7539 44.8633 29.7852 44.8633 27.9688 46.6992C26.1523 48.5352 26.1328 51.5039 27.9688 53.3203L40.4688 65.8203C42.3047 67.6562 45.2734 67.6562 47.0898 65.8203L72.0703 40.8203Z" fill="#1A7A56" />
                                     </g>
                                     <defs>
@@ -508,7 +508,7 @@ const ServicoMarketplace = () => {
                             </div>
                             <div className='d-flex gap-5'>
                                 <div className='servico-marketplace__imagens-container'>
-                                    <img className={'servico-marketplace__imagens'} src={`${apiUrl}/files/${imagens[0]}`} />
+                                    <img alt='imagem_marketplace' className={'servico-marketplace__imagens'} src={`${apiUrl}/files/${imagens[0]}`} />
                                 </div>
                                 <div className='servico-marketplace__compra-info'>
                                     <div className='servico-marketplace__compra-info-titulo'>Informações de compra</div>                                   

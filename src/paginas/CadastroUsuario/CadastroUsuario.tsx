@@ -490,8 +490,9 @@ const CadastroUsuario = () => {
                     }
                     funcaoIcone={() => setConfirmarSenhaOculta(!confirmarSenhaOculta)}
                 />,
-                <button 
-                style={{background: 'none', border: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer'}}
+                <button
+                type='button'
+                style={{display:'flex', border: 'none', background: 'none', padding: 0, margin: 0, width: '100%', textAlign: 'left', cursor: 'pointer'}}
                 onClick={() => {
                     lido ? 
                      setErros(erros=> erros.map(erro => {
