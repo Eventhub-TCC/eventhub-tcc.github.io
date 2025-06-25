@@ -1,5 +1,5 @@
 .exibicao-servicos {
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
@@ -90,6 +90,7 @@
     background: var(--yellow-800);
     cursor: pointer;
     transition: background-color .3s ease-in-out, transform .3s ease-in-out;
+    border: none;
 }
 
 .botao-ordernar-servicos.crescente{
