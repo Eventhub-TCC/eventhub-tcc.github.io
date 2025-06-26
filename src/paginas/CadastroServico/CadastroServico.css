@@ -130,7 +130,7 @@
     font-weight: 300;
 }
 
-.cadastro-servico__botoes div{
+.cadastro-servico__botoes > div{
     width: 150px;
 }
 

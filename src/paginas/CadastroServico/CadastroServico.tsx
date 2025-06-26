@@ -69,6 +69,8 @@ const CadastroServico = () => {
   const [passoAtual, setPassoAtual] = useState(0)
   const [travado, setTravado] = useState(false)
 
+  const [executando, setExecutando] = useState(false)
+
   const inputImagemRef = useRef<HTMLInputElement>(null)
 
   const qntPassos = tipoServico === '5'? 4 : 3
@@ -535,6 +537,8 @@ const CadastroServico = () => {
   ]
 
   const CadastroServico = async () => {
+    if(executando) return;
+    setExecutando(true)
     try{
       const formData = new FormData()
       imagensServico.forEach((imagem)=>{
@@ -562,6 +566,7 @@ const CadastroServico = () => {
     catch(erro){
       console.log('erro ao cadastrar Serviço: ',erro)
     }
+    setExecutando(false)
   }
 
   const onSubimit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -619,7 +624,14 @@ const CadastroServico = () => {
             </div> : ''}
             <div>
               <Botao 
-              texto={passoAtual+1 < qntPassos ?'Próximo':'Cadastrar'}
+              texto={
+                executando ? 
+                  <div className="spinner-border spinner-border-sm" role="status">
+                      <span className="visually-hidden">Carregando...</span>
+                  </div>
+              :
+                passoAtual+1 !== qntPassos ? 'Próximo' : 'Cadastrar'
+              }
               submit
               cor='#F3C623'
               tamanho='max'

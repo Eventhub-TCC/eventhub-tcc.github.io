@@ -74,6 +74,8 @@ const CadastroEvento = () => {
       cepNaoEncontrado: false
     }
   )
+
+  const[executando, setExecutando] = useState(false)
   
 
   const [localObrigatorio, setLocalObrigatorio] = useState(false)
@@ -130,7 +132,17 @@ const CadastroEvento = () => {
   const qntPassos = 4
 
   const botaoProximo = <Botao texto='Próximo' tamanho='max' submit/>
-  const botaoCadastrar = <Botao texto='Cadastrar' submit tamanho='max'/>
+  const botaoCadastrar = <Botao 
+                            texto={
+                              executando ? 
+                                  <div className="spinner-border spinner-border-sm" role="status">
+                                      <span className="visually-hidden">Carregando...</span>
+                                  </div>
+                              :
+                              passoAtual+1 !== qntPassos ? 'Próximo' : 'Cadastrar'
+                          }
+                            submit 
+                            tamanho='max'/>
 
   
 const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>([])
@@ -425,6 +437,8 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
 
   const CadastrarEvento = async(e: FormEvent) => {
     e.preventDefault()
+    if(executando)return
+    setExecutando(true)
     if(dataEvento?.toISOString().split('T')[0] === dataMinima.toISOString().split('T')[0]){
       if(horaInicio<dataMinima.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })){
         setAvisos(prevstate =>({...prevstate, horaInicioInvalida: true}))
@@ -471,7 +485,8 @@ const [tipoEventoDisponiveis, setTipoEventoDisponiveis] = useState<TipoEvento[]>
     catch (error) {
         console.log('ocorreu algum erro: ',error)
       }
-      }}
+      }
+    setExecutando(false)}
 
   const avancarPasso = (e: FormEvent) => {
     e.preventDefault()
