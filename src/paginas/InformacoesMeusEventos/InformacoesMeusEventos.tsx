@@ -46,7 +46,6 @@ const InformacoesMeusEventos = () => {
     const [tamanhoTela, setTamanhoTela] = useState(window.innerWidth);
     const [tempoRestante, setTempoRestante] = useState<Cronometro>({dias: 0, horas: 0, minutos: 0, segundos: 0 });
     const [convidados, setConvidados] = useState({confirmados: 0, pendentes: 0, recusados: 0});
-    const navigate = useNavigate();
     
     useEffect(() => {
         try {
