@@ -8,7 +8,7 @@ import TextArea from '../../componentes/TextArea/TextArea'
 import InputQuantidade from '../../componentes/InputQuantidade/InputQuantidade'
 import Select from '../../componentes/Select/Select'
 import ErroCampoForm from '../../componentes/ErroCampoForm/ErroCampoForm'
-import { useNavigate, useParams } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import { Helmet } from 'react-helmet-async'
 import Alerta from '../../componentes/Alerta/Alerta'
 import Seta from '../../componentes/Seta/Seta'
@@ -134,9 +134,9 @@ const ServicoMarketplace = () => {
         { id: 2, nome: "Hora" },
         { id: 3, nome: "Turno" },
         { id: 4, nome: "Diaria" },
-        { id: 5, nome: "Alugel" },
-        { id: 6, nome: "sessão" },
-        { id: 7, nome: "pessoa" },
+        { id: 5, nome: "Aluguel" },
+        { id: 6, nome: "Sessão" },
+        { id: 7, nome: "Pessoa" },
     ]
 
     const abrirModal = () => {
@@ -491,11 +491,11 @@ const ServicoMarketplace = () => {
                             <div>
                                 <div>
                                     <div className='d-flex gap-1'>
-                                        <a href="" className='hiperlink'>Marketplace</a>
+                                        <Link to="/marketplace" style={{textDecoration: 'none', color: 'var(--purple-700)'}}>Marketplace</Link>
                                         <p>&gt;</p>
                                         {/* <a href="" className='hiperlink'>{tipoServico.descricaoTipoServico}</a>
                             <p>&gt;</p> */}
-                                        <a href="" className='hiperlink'>{nomeServico}</a>
+                                        <p className='hiperlink'>{nomeServico}</p>
                                     </div>
                                     <div className='traco-roxo' />
                                     <h1 className='layout-titulo'>
@@ -504,7 +504,7 @@ const ServicoMarketplace = () => {
                                 </div>
                                 <div className='d-flex gap-1'>
                                     <p>Oferecido por</p>
-                                    <a href="" className='servico-marketplace__prestador'>{nomePrestador}</a>
+                                    <p className='servico-marketplace__prestador'>{nomePrestador}</p>
                                 </div>
                             </div>
                             <div className='row g-5'>

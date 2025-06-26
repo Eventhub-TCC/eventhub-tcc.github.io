@@ -79,9 +79,9 @@ const InformacoesServico = () => {
         { id: 2, nome: "Hora" },
         { id: 3, nome: "Turno" },
         { id: 4, nome: "Diaria" },
-        { id: 5, nome: "Alugel" },
-        { id: 6, nome: "sessão" },
-        { id: 7, nome: "pessoa" },
+        { id: 5, nome: "Aluguel" },
+        { id: 6, nome: "Sessão" },
+        { id: 7, nome: "Pessoa" },
     ]
 
     return (

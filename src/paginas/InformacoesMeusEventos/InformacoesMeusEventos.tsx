@@ -1,7 +1,7 @@
 import './InformacoesMeusEventos.css';
 import { useEffect, useState } from 'react';
 import CabecalhoEvento from '../../componentes/CabecalhoEvento/CabecalhoEvento';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import api from '../../axios';
 import Secao from '../../componentes/Secao/Secao';
 import { Helmet } from 'react-helmet-async';
