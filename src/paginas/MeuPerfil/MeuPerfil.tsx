@@ -414,12 +414,12 @@ return (
               :
               <button
                 type="button"
-                className="perfil--botao-notificacao"
                 onClick={() => {setModalCompletarCadastro(!modalCompletarCadastro)}}
-                aria-label="Notificações"
                 style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
               >
-                <i className="fa-regular fa-bell"></i>
+                <div className="perfil--botao-notificacao">
+                  <i className="fa-regular fa-bell"></i>
+                </div>
               </button>
 
             }

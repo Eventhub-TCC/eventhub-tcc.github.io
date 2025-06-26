@@ -82,7 +82,7 @@ const ServicoMarketplace = () => {
     useEffect(() => {
         const buscarServico = async() =>{
         try{
-            const servico = await (await api.get(`users/erro/services/${idServico}`)).data
+            const servico = await (await api.get(`users/services/marketplace/${idServico}`)).data
             setNomeServico(servico.nomeServico)
             setTipoServico({...servico.tipoServico})
             setImagens([servico.imagem1,servico.imagem2,servico.imagem3,servico.imagem4,servico.imagem5,servico.imagem6].filter((img) => img !== null))
