@@ -74,6 +74,16 @@ const InformacoesServico = () => {
         return valorFormatado;
     }
 
+    const unidadeValor = [
+        { id: 1, nome: "Unidade" },
+        { id: 2, nome: "Hora" },
+        { id: 3, nome: "Turno" },
+        { id: 4, nome: "Diaria" },
+        { id: 5, nome: "Alugel" },
+        { id: 6, nome: "sessão" },
+        { id: 7, nome: "pessoa" },
+    ]
+
     return (
         <>
             <Helmet>
@@ -119,7 +129,7 @@ const InformacoesServico = () => {
                                 <div className='col-12 col-sm-6'>
                                     <p className='informacoes-servico__titulo-detalhes'>Unidade de cobrança</p>
                                     <p className={`informacoes-servico__texto-detalhes`}>
-                                        {servico.unidadeCobranca}
+                                        {unidadeValor[Number(servico.unidadeCobranca)-1].nome}
                                     </p>
                                 </div>    
                             </div>

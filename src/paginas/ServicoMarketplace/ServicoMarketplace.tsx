@@ -30,7 +30,7 @@ const ServicoMarketplace = () => {
     })
     const [imagens, setImagens] = useState<string[]>([])
     const [valor, setValor] = useState(0)
-    const [unidade, setUnidade] = useState('')
+    const [unidade, setUnidade] = useState(0)
     const [descricao, setDescricao] = useState('')
     const [quantidade, setQuantidade] = useState(0)
     const [valorTotal, setValorTotal] = useState(0)
@@ -87,7 +87,7 @@ const ServicoMarketplace = () => {
             setTipoServico({...servico.tipoServico})
             setImagens([servico.imagem1,servico.imagem2,servico.imagem3,servico.imagem4,servico.imagem5,servico.imagem6].filter((img) => img !== null))
             setValor(servico.valorServico)
-            setUnidade(servico.unidadeCobranca)
+            setUnidade(Number(servico.unidadeCobranca)-1)
             setDescricao(servico.descricaoServico)
             setQuantidade(servico.qntMinima)
             setValorTotal(servico.valorServico * servico.qntMinima)
@@ -507,25 +507,25 @@ const ServicoMarketplace = () => {
                                     <a href="" className='servico-marketplace__prestador'>{nomePrestador}</a>
                                 </div>
                             </div>
-                            <div className='d-flex gap-5'>
-                                <div className='servico-marketplace__imagens-container'>
+                            <div className='row g-5'>
+                                <div className='servico-marketplace__imagens-container col-12 col-lg-6'>
                                     <img alt='imagem_marketplace' className={'servico-marketplace__imagens'} src={`${apiUrl}/files/${imagens[0]}`} />
                                 </div>
-                                <div className='servico-marketplace__compra-info'>
+                                <div className='servico-marketplace__compra-info col-12 col-lg-6'>
                                     <div className='servico-marketplace__compra-info-titulo'>Informações de compra</div>                                   
                                         <div className='d-flex gap-3'>
                                             <div className='d-flex flex-column gap-2'>
                                                 <div className={'servico-marketplace__compra-info-texto'}>Preço</div>
                                                 <div className='d-flex align-items-baseline'>
                                                     <div className={`servico-marketplace__compra-info-preco ${valorPromo ? 'servico-marketplace__preço-antigo' : ''}`}>{formatarPreco(valor)}</div>
-                                                    <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
+                                                    <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[unidade].nome}</div>
                                                 </div>
                                             </div>
                                             {valorPromo ? <div className='d-flex flex-column gap-2'>
                                                 <div className='servico-marketplace__compra-info-texto'>Preço promocional</div>
                                                 <div className='d-flex align-items-baseline'>
                                                     <div className='servico-marketplace__compra-info-preco'>{formatarPreco(valorPromo)}</div>
-                                                    <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[Number(unidade)].nome}</div>
+                                                    <div className='servico-marketplace__compra-info-unidade'>/{unidadeValor[unidade].nome}</div>
                                                 </div>
                                             </div> : ''}
                                         </div>
@@ -542,7 +542,7 @@ const ServicoMarketplace = () => {
                                                             name='quantidade'
                                                         />
                                                         :
-                                                        <p>{qntMinima} {unidadeValor[Number(unidade)].nome}</p>}
+                                                        <p>{qntMinima} {unidadeValor[unidade].nome}</p>}
                                                 </div>
                                             </div>
                                             <div className='d-flex flex-column gap-3 col-6'>
